@@ -8,5 +8,5 @@ dependencies {
   testImplementation flexoFoundationTest()
 
   // Test resource center
-  testRuntimeOnly project(':xmlconnector-test-rc')
+  testRuntimeOnly project(':xml-ta-test-rc')
 }

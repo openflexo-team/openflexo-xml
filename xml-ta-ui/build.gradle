@@ -1,6 +1,6 @@
 dependencies {
   // openflexo dep
-  implementation project(":xmlconnector")
+  implementation project(":xml-ta")
 
   implementation flexoUi()
   implementation flexoOntologyUi()
