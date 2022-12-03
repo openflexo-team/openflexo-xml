@@ -80,6 +80,7 @@ public abstract class XMLFileResourceImpl extends FlexoResourceImpl<XMLModel> im
 
 	// Properties
 
+	@Deprecated
 	private boolean isLoaded = false;
 
 	/**
@@ -235,10 +236,10 @@ public abstract class XMLFileResourceImpl extends FlexoResourceImpl<XMLModel> im
 
 	}
 
-	@Override
+	/*@Override
 	public XMLModel getResourceData()
 			throws ResourceLoadingCancelledException, ResourceLoadingCancelledException, FileNotFoundException, FlexoException {
-
+	
 		if (isLoading()) {
 			logger.warning("trying to load a resource data from itself, please investigate");
 			return null;
@@ -252,7 +253,7 @@ public abstract class XMLFileResourceImpl extends FlexoResourceImpl<XMLModel> im
 			notifyResourceLoaded();
 		}
 		return resourceData;
-	}
+	}*/
 
 	// Lifecycle Management
 
