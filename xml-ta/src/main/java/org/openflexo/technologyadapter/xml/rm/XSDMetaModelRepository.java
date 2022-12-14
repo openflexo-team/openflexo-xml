@@ -42,7 +42,7 @@ import org.openflexo.foundation.resource.FlexoResourceCenter;
 import org.openflexo.foundation.technologyadapter.MetaModelRepository;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.exceptions.ModelDefinitionException;
-import org.openflexo.pamela.factory.ModelFactory;
+import org.openflexo.pamela.factory.PamelaModelFactory;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
 import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModel;
 import org.openflexo.technologyadapter.xml.model.XMLModel;
@@ -53,9 +53,9 @@ public interface XSDMetaModelRepository<I>
 
 	public static <I> XSDMetaModelRepository<I> instanciateNewRepository(XMLTechnologyAdapter technologyAdapter,
 			FlexoResourceCenter<I> resourceCenter) {
-		ModelFactory factory;
+		PamelaModelFactory factory;
 		try {
-			factory = new ModelFactory(XSDMetaModelRepository.class);
+			factory = new PamelaModelFactory(XSDMetaModelRepository.class);
 			XSDMetaModelRepository<I> newRepository = factory.newInstance(XSDMetaModelRepository.class);
 			newRepository.setTechnologyAdapter(technologyAdapter);
 			newRepository.setResourceCenter(resourceCenter);

@@ -99,8 +99,8 @@ public class XMLFileResourceFactory extends TechnologySpecificFlexoResourceFacto
 	/*public static XMLFileResource makeXMLFileResource(File xmlFile, XMLTechnologyContextManager technologyContextManager,
 			FlexoResourceCenter<?> resourceCenter) {
 		try {
-			ModelFactory factory = new ModelFactory(
-					ModelContextLibrary.getCompoundModelContext(FileFlexoIODelegate.class, XMLFileResource.class));
+			PamelaModelFactory factory = new PamelaModelFactory(
+					PamelaMetaModelLibrary.getCompoundModelContext(FileFlexoIODelegate.class, XMLFileResource.class));
 			XMLFileResourceImpl returned = (XMLFileResourceImpl) factory.newInstance(XMLFileResource.class);
 			returned.initName(xmlFile.getName());
 			returned.setFlexoIODelegate(FileFlexoIODelegateImpl.makeFileFlexoIODelegate(xmlFile, factory));

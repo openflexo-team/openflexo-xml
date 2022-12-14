@@ -91,7 +91,7 @@ public class XSDMetaModelResourceFactory
 	/*public static XSDMetaModelResource makeXSDMetaModelResource(File xsdMetaModelFile, String uri,
 			XMLTechnologyContextManager technologyContextManager) {
 		try {
-			ModelFactory factory = new ModelFactory(ModelContextLibrary.getCompoundModelContext(FileFlexoIODelegate.class,
+			PamelaModelFactory factory = new PamelaModelFactory(PamelaMetaModelLibrary.getCompoundModelContext(FileFlexoIODelegate.class,
 					XSDMetaModelResource.class));
 			XSDMetaModelResource returned = factory.newInstance(XSDMetaModelResource.class);
 			returned.setTechnologyAdapter(technologyContextManager.getTechnologyAdapter());
