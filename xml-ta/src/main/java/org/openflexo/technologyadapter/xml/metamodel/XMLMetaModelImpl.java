@@ -73,7 +73,7 @@ public abstract class XMLMetaModelImpl extends FlexoObjectImpl implements XMLMet
 
 	static {
 		try {
-			MF = new PamelaModelFactory(PamelaMetaModelLibrary.getCompoundModelContext(XMLModel.class, XMLType.class, XMLComplexType.class,
+			MF = new PamelaModelFactory(PamelaMetaModelLibrary.retrieveMetaModel(XMLModel.class, XMLType.class, XMLComplexType.class,
 					XMLSimpleType.class, XMLProperty.class, XMLDataProperty.class, XMLObjectProperty.class));
 		} catch (ModelDefinitionException e) {
 			e.printStackTrace();
