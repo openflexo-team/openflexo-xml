@@ -51,6 +51,7 @@ import org.openflexo.foundation.fml.annotations.DeclareActorReferences;
 import org.openflexo.foundation.fml.annotations.DeclareEditionActions;
 import org.openflexo.foundation.fml.annotations.DeclareFlexoRoles;
 import org.openflexo.foundation.fml.annotations.FML;
+import org.openflexo.foundation.fml.annotations.FMLAttribute;
 import org.openflexo.foundation.ontology.DuplicateURIException;
 import org.openflexo.foundation.resource.FileSystemBasedResourceCenter;
 import org.openflexo.foundation.resource.FlexoResourceCenter;
@@ -65,6 +66,7 @@ import org.openflexo.pamela.annotations.Import;
 import org.openflexo.pamela.annotations.Imports;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.PropertyIdentifier;
+import org.openflexo.pamela.annotations.Setter;
 import org.openflexo.pamela.annotations.XMLElement;
 import org.openflexo.pamela.exceptions.ModelDefinitionException;
 import org.openflexo.technologyadapter.xml.XMLURIProcessor.XMLURIProcessorImpl;
@@ -102,10 +104,17 @@ import org.openflexo.technologyadapter.xml.rm.XSDMetaModelResource;
 public interface XMLModelSlot extends TypeAwareModelSlot<XMLModel, XMLMetaModel>, AbstractXMLModelSlot<XMLURIProcessor> {
 
 	@PropertyIdentifier(type = XMLMetaModel.class)
-	public static final String METAMODEL = "metamodel";
+	public static final String META_MODEL_KEY = "metaModel";
 
-	@Getter(value = METAMODEL)
-	public XMLMetaModel getMetamodel();
+	@Override
+	public XMLTechnologyAdapter getModelSlotTechnologyAdapter();
+
+	@Getter(value = META_MODEL_KEY, ignoreType = true)
+	@FMLAttribute(value = META_MODEL_KEY, required = true)
+	public XMLMetaModel getMetaModel();
+
+	@Setter(META_MODEL_KEY)
+	public void setMetaModel(XMLMetaModel aMetaModel);
 
 	// public static abstract class XMLModelSlotImpl extends AbstractXMLModelSlot.AbstractXMLModelSlotImpl<XMLURIProcessor> implements
 	// XMLModelSlot {
@@ -275,13 +284,21 @@ public interface XMLModelSlot extends TypeAwareModelSlot<XMLModel, XMLMetaModel>
 		}
 
 		@Override
-		@Getter(value = METAMODEL)
-		public XMLMetaModel getMetamodel() {
-			FlexoMetaModelResource<XMLModel, XMLMetaModel, ?> mmRes = this.getMetaModelResource();
-			if (mmRes != null) {
-				return mmRes.getMetaModelData();
+		public boolean isStrictMetaModelling() {
+			return true;
+		}
+
+		@Override
+		public XMLMetaModel getMetaModel() {
+			if (getMetaModelResource() != null) {
+				return getMetaModelResource().getMetaModelData();
 			}
 			return null;
+		}
+
+		@Override
+		public void setMetaModel(XMLMetaModel aMetaModel) {
+			setMetaModelResource(aMetaModel != null ? (FlexoMetaModelResource<XMLModel, XMLMetaModel, ?>) aMetaModel.getResource() : null);
 		}
 
 		@Override

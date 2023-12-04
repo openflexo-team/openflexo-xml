@@ -38,8 +38,9 @@
 
 package org.openflexo.technologyadapter.xml.metamodel;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.openflexo.foundation.FlexoObject.FlexoObjectImpl;
@@ -109,8 +110,9 @@ public abstract class XMLMetaModelImpl extends FlexoObjectImpl implements XMLMet
 	}
 
 	@Override
-	public Collection<? extends XMLType> getTypes() {
-		return types.values();
+	public List<? extends XMLType> getTypes() {
+		// TODO: perf issue
+		return new ArrayList<>(types.values());
 	}
 
 	@Override

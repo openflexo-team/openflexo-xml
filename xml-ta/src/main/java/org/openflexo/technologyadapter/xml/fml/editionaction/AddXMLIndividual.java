@@ -48,6 +48,7 @@ import org.openflexo.foundation.ontology.DuplicateURIException;
 import org.openflexo.foundation.ontology.fml.editionaction.DataPropertyAssertion;
 import org.openflexo.pamela.annotations.Adder;
 import org.openflexo.pamela.annotations.Getter;
+import org.openflexo.pamela.annotations.Getter.Cardinality;
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.Import;
 import org.openflexo.pamela.annotations.Imports;
@@ -57,7 +58,6 @@ import org.openflexo.pamela.annotations.Remover;
 import org.openflexo.pamela.annotations.Setter;
 import org.openflexo.pamela.annotations.XMLAttribute;
 import org.openflexo.pamela.annotations.XMLElement;
-import org.openflexo.pamela.annotations.Getter.Cardinality;
 import org.openflexo.technologyadapter.xml.XMLModelSlot;
 import org.openflexo.technologyadapter.xml.fml.XMLActorReference;
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
@@ -127,7 +127,7 @@ public interface AddXMLIndividual extends XMLAction<XMLModelSlot, XMLIndividual>
 		@Override
 		public XMLMetaModel getMetamodel() {
 			if (getInferedModelSlot() != null) {
-				return getInferedModelSlot().getMetamodel();
+				return getInferedModelSlot().getMetaModel();
 			}
 			return null;
 			// return this.getModelSlot().getMetamodel();
@@ -150,7 +150,7 @@ public interface AddXMLIndividual extends XMLAction<XMLModelSlot, XMLIndividual>
 		private void rebindTypeURI() {
 			String aTypeURI = getTypeURI();
 			if (aTypeURI != null && getInferedModelSlot() != null) {
-				XMLType t = getInferedModelSlot().getMetamodel().getTypeFromURI(aTypeURI);
+				XMLType t = getInferedModelSlot().getMetaModel().getTypeFromURI(aTypeURI);
 
 				if (t instanceof XMLComplexType) {
 					xmlType = (XMLComplexType) t;
