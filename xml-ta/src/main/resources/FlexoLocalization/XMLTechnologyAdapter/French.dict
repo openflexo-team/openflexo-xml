@@ -1,1 +1,13 @@
+Default=Default
+Loaded\ XML\ MetaModel=Loaded XML MetaModel
+Private=Private
+Protected=Protected
+Public=Public
+author=author
+mappingStyle=mappingStyle
+metamodel=metamodel
 object_type=object_type
+property=property
+uri_processors=uri_processors
+viewpoint=viewpoint
+visibility=visibility
