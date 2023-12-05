@@ -387,7 +387,7 @@ public interface XMLModelSlot extends TypeAwareModelSlot<XMLModel, XMLMetaModel>
 
 		@Override
 		public Type getType() {
-			return XMLModelSlot.class;
+			return XMLModel.class;
 		}
 
 		@Override
