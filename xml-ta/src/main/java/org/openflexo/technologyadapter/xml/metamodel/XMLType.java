@@ -40,6 +40,7 @@ package org.openflexo.technologyadapter.xml.metamodel;
 
 import java.lang.reflect.Type;
 
+import org.openflexo.foundation.InnerResourceData;
 import org.openflexo.pamela.annotations.Getter;
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.Initializer;
@@ -49,7 +50,7 @@ import org.openflexo.pamela.annotations.Setter;
 
 @ModelEntity
 @ImplementationClass(XMLTypeImpl.class)
-public interface XMLType extends XMLObject, Type {
+public interface XMLType extends XMLObject, Type, InnerResourceData<XSDMetaModel> {
 
 	public final String MM = "metamodel";
 
@@ -68,7 +69,7 @@ public interface XMLType extends XMLObject, Type {
 	public String getFullyQualifiedName();
 
 	@Getter(MM)
-	XMLMetaModel getMetamodel();
+	XSDMetaModel getMetamodel();
 
 	@Setter(NAME)
 	public void setName(String name);

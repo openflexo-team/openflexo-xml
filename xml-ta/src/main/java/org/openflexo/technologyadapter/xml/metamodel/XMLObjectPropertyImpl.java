@@ -42,7 +42,6 @@ import org.openflexo.toolbox.StringUtils;
 
 public abstract class XMLObjectPropertyImpl extends XMLPropertyImpl implements XMLObjectProperty {
 
-
 	@Override
 	public boolean hasDefaultValue() {
 		return StringUtils.isNotEmpty(getDefaultValue());
@@ -74,7 +73,8 @@ public abstract class XMLObjectPropertyImpl extends XMLPropertyImpl implements X
 		buffer.append(" (").append(getType().toString()).append(") is ");
 		if (isRequired()) {
 			buffer.append("required");
-		} else {
+		}
+		else {
 			buffer.append("optional");
 		}
 		if (hasDefaultValue()) {
@@ -105,4 +105,8 @@ public abstract class XMLObjectPropertyImpl extends XMLPropertyImpl implements X
 		return true;
 	}
 
+	@Override
+	public Class<?> getImplementedInterface() {
+		return XMLObjectProperty.class;
+	}
 }

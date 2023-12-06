@@ -76,4 +76,12 @@ public abstract class XMLPropertyImpl extends FlexoObjectImpl implements XMLProp
 			return "(Unknown)";
 	}
 
+	@Override
+	public XSDMetaModel getResourceData() {
+		if (getContainer() != null) {
+			return getContainer().getMetamodel();
+		}
+		return null;
+	}
+
 }

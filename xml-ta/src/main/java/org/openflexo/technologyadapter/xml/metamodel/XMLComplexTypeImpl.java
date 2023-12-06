@@ -139,4 +139,9 @@ public abstract class XMLComplexTypeImpl extends XMLTypeImpl implements XMLCompl
 		return null;
 	}
 
+	@Override
+	public Class<?> getImplementedInterface() {
+		return XMLComplexType.class;
+	}
+
 }

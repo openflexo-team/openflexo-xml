@@ -71,9 +71,10 @@ import org.openflexo.technologyadapter.xml.model.XMLModel;
 @ImplementationClass(XMLMetaModelSlot.XMLMetaModelSlotImpl.class)
 @XMLElement
 @FML("XMLMetaModelSlot")
-public interface XMLMetaModelSlot extends FreeModelSlot<XMLMetaModel> {
+public interface XMLMetaModelSlot<MM extends XMLMetaModel<MM>> extends FreeModelSlot<MM> {
 
-	public static abstract class XMLMetaModelSlotImpl extends FreeModelSlotImpl<XMLMetaModel> implements XMLMetaModelSlot {
+	public static abstract class XMLMetaModelSlotImpl<MM extends XMLMetaModel<MM>> extends FreeModelSlotImpl<MM>
+			implements XMLMetaModelSlot<MM> {
 
 		static final Logger logger = Logger.getLogger(XMLMetaModelSlot.class.getPackage().getName());
 

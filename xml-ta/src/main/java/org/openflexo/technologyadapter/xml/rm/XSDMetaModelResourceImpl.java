@@ -49,6 +49,8 @@ import org.openflexo.foundation.resource.ResourceLoadingCancelledException;
 import org.openflexo.foundation.resource.StreamIODelegate;
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModel;
+import org.openflexo.technologyadapter.xml.metamodel.XMLObject;
+import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModelImpl;
@@ -67,7 +69,7 @@ import com.sun.xml.xsom.XSType;
  * 
  */
 
-public abstract class XSDMetaModelResourceImpl extends FlexoResourceImpl<XMLMetaModel> implements XSDMetaModelResource {
+public abstract class XSDMetaModelResourceImpl extends FlexoResourceImpl<XSDMetaModel> implements XSDMetaModelResource {
 
 	private static final Logger logger = Logger.getLogger(XSDMetaModelResourceImpl.class.getPackage().getName());
 
@@ -81,7 +83,7 @@ public abstract class XSDMetaModelResourceImpl extends FlexoResourceImpl<XMLMeta
 	private boolean isReadOnly = true;
 
 	@Override
-	public XMLMetaModel getMetaModelData() {
+	public XSDMetaModel getMetaModelData() {
 		try {
 			return getResourceData();
 		} catch (FileNotFoundException e) {
@@ -104,7 +106,7 @@ public abstract class XSDMetaModelResourceImpl extends FlexoResourceImpl<XMLMeta
 	 * @throws FlexoException
 	 */
 	@Override
-	public XMLMetaModel loadResourceData() throws ResourceLoadingCancelledException, FlexoException {
+	public XSDMetaModel loadResourceData() throws ResourceLoadingCancelledException, FlexoException {
 
 		if (getFlexoIOStreamDelegate() == null) {
 			throw new FlexoException("Cannot load XML document with this IO/delegate: " + getIODelegate());
@@ -315,8 +317,8 @@ public abstract class XSDMetaModelResourceImpl extends FlexoResourceImpl<XMLMeta
 	}
 
 	@Override
-	public Class<XMLMetaModel> getResourceDataClass() {
-		return XMLMetaModel.class;
+	public Class<XSDMetaModel> getResourceDataClass() {
+		return XSDMetaModel.class;
 	}
 
 	/**
@@ -342,6 +344,65 @@ public abstract class XSDMetaModelResourceImpl extends FlexoResourceImpl<XMLMeta
 		if (getFlexoIOStreamDelegate() != null) {
 			return getFlexoIOStreamDelegate().getOutputStream();
 		}
+		return null;
+	}
+
+	@Override
+	public XMLObject findObject(String objectIdentifier, String userIdentifier) {
+		XMLMetaModel metaModel;
+		try {
+			metaModel = getResourceData();
+
+			// Easyest way
+			String uri = metaModel.getURI() + "#" + objectIdentifier;
+			//System.out.println("Je cherche " + uri);
+			XMLType returned = metaModel.getTypeFromURI(uri);
+			//System.out.println("Je trouve " + returned);
+
+			/*if (returned instanceof XMLComplexType) {
+				XMLComplexType cType = (XMLComplexType) returned;
+				for (XMLProperty xmlProperty : cType.getProperties()) {
+					System.out.println(" > " + xmlProperty + " name=" + xmlProperty.getName());
+				}
+			}*/
+
+			return returned;
+
+			/*OWLConcept<?> object = ontology.getOntologyObject(uri);
+			if (object != null) {
+				return object;
+			}
+			for (OWLClass owlClass : ontology.getClasses()) {
+				if (owlClass.getName().equals(objectIdentifier)) {
+					return owlClass;
+				}
+			}
+			for (OWLObjectProperty owlProperty : ontology.getObjectProperties()) {
+				if (owlProperty.getName().equals(objectIdentifier)) {
+					return owlProperty;
+				}
+			}
+			for (OWLDataProperty owlProperty : ontology.getDataProperties()) {
+				if (owlProperty.getName().equals(objectIdentifier)) {
+					return owlProperty;
+				}
+			}
+			for (OWLIndividual owlIndividual : ontology.getIndividuals()) {
+				if (owlIndividual.getName().equals(objectIdentifier)) {
+					return owlIndividual;
+				}
+			}*/
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ResourceLoadingCancelledException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FlexoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		return null;
 	}
 

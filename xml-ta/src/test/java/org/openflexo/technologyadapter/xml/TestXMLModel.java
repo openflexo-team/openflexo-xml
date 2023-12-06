@@ -52,6 +52,7 @@ import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModelImpl;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLSimpleType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.model.XMLIndividual;
 import org.openflexo.technologyadapter.xml.model.XMLModel;
 import org.openflexo.technologyadapter.xml.model.XMLModelImpl;
@@ -94,7 +95,7 @@ public class TestXMLModel extends OpenflexoTestCase {
 		assertNotNull(MMF);
 		assertNotNull(MF);
 
-		XMLMetaModel metamodel = MMF.newInstance(XMLMetaModel.class);
+		XSDMetaModel metamodel = MMF.newInstance(XSDMetaModel.class);
 		metamodel.setReadOnly(false);
 
 		metamodel.setURI("http://www.openflexo.org/aTestModel");

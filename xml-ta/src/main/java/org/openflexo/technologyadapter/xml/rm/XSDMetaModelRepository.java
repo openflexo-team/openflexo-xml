@@ -44,12 +44,12 @@ import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.exceptions.ModelDefinitionException;
 import org.openflexo.pamela.factory.PamelaModelFactory;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
-import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModel;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.model.XMLModel;
 
 @ModelEntity
 public interface XSDMetaModelRepository<I>
-		extends MetaModelRepository<XSDMetaModelResource, XMLModel, XMLMetaModel, XMLTechnologyAdapter, I> {
+		extends MetaModelRepository<XSDMetaModelResource, XMLModel, XSDMetaModel, XMLTechnologyAdapter, I> {
 
 	public static <I> XSDMetaModelRepository<I> instanciateNewRepository(XMLTechnologyAdapter technologyAdapter,
 			FlexoResourceCenter<I> resourceCenter) {

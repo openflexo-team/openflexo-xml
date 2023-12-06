@@ -40,6 +40,7 @@ package org.openflexo.technologyadapter.xml.metamodel;
 
 import java.lang.reflect.Type;
 
+import org.openflexo.foundation.InnerResourceData;
 import org.openflexo.pamela.annotations.Getter;
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.Initializer;
@@ -56,7 +57,7 @@ import org.openflexo.pamela.annotations.Setter;
  */
 @ModelEntity
 @ImplementationClass(XMLPropertyImpl.class)
-public interface XMLProperty extends XMLObject, Comparable<XMLProperty> {
+public interface XMLProperty extends XMLObject, Comparable<XMLProperty>, InnerResourceData<XSDMetaModel> {
 
 	/**
 	 * The Type of the given attribute. This might be a simple type

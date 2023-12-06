@@ -36,7 +36,6 @@
  * 
  */
 
-
 package org.openflexo.technologyadapter.xml.rm;
 
 import java.io.IOException;
@@ -49,17 +48,18 @@ import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.Setter;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
 import org.openflexo.technologyadapter.xml.XMLTechnologyContextManager;
-import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModel;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.model.XMLModel;
 
 @ModelEntity
 @ImplementationClass(XMLResourceImpl.class)
 public interface XMLResource extends TechnologyAdapterResource<XMLModel, XMLTechnologyAdapter>,
-		FlexoModelResource<XMLModel, XMLMetaModel, XMLTechnologyAdapter, XMLTechnologyAdapter> {
+		FlexoModelResource<XMLModel, XSDMetaModel, XMLTechnologyAdapter, XMLTechnologyAdapter> {
 
 	public static final String TECHNOLOGY_CONTEXT_MANAGER = "XMLTechnologyContextManager";
 	public static final String TARGET_NAMESPACE = "targetNamespace";
 
+	@Override
 	@Getter(value = TECHNOLOGY_CONTEXT_MANAGER, ignoreType = true)
 	public XMLTechnologyContextManager getTechnologyContextManager();
 

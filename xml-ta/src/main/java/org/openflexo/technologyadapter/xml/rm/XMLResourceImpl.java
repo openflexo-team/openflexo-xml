@@ -46,7 +46,7 @@ import org.openflexo.foundation.resource.FlexoResourceImpl;
 import org.openflexo.foundation.resource.ResourceLoadingCancelledException;
 import org.openflexo.foundation.technologyadapter.FlexoMetaModelResource;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
-import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModel;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.model.XMLModel;
 import org.openflexo.technologyadapter.xml.model.XMLModelImpl;
 
@@ -86,7 +86,7 @@ public abstract class XMLResourceImpl extends FlexoResourceImpl<XMLModel> implem
 
 	@Override
 	public void attachMetamodel() {
-		FlexoMetaModelResource<XMLModel, XMLMetaModel, XMLTechnologyAdapter> mmRes = this.getMetaModelResource();
+		FlexoMetaModelResource<XMLModel, XSDMetaModel, XMLTechnologyAdapter> mmRes = this.getMetaModelResource();
 		if (mmRes != null) {
 			resourceData.setMetaModel(mmRes.getMetaModelData());
 		}

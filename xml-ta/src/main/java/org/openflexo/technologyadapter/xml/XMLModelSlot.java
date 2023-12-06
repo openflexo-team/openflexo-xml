@@ -79,6 +79,7 @@ import org.openflexo.technologyadapter.xml.fml.editionaction.SetXMLDocumentRoot;
 import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModel;
 import org.openflexo.technologyadapter.xml.metamodel.XMLObject;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.model.XMLIndividual;
 import org.openflexo.technologyadapter.xml.model.XMLModel;
 import org.openflexo.technologyadapter.xml.rm.XMLFileResource;
@@ -101,7 +102,7 @@ import org.openflexo.technologyadapter.xml.rm.XSDMetaModelResource;
 @ImplementationClass(XMLModelSlot.XMLModelSlotImpl.class)
 @Imports({ @Import(XMLURIProcessor.class), })
 @FML("XMLModelSlot")
-public interface XMLModelSlot extends TypeAwareModelSlot<XMLModel, XMLMetaModel>, AbstractXMLModelSlot<XMLURIProcessor> {
+public interface XMLModelSlot extends TypeAwareModelSlot<XMLModel, XSDMetaModel>, AbstractXMLModelSlot<XMLURIProcessor> {
 
 	@PropertyIdentifier(type = XMLMetaModel.class)
 	public static final String META_MODEL_KEY = "metaModel";
@@ -111,15 +112,15 @@ public interface XMLModelSlot extends TypeAwareModelSlot<XMLModel, XMLMetaModel>
 
 	@Getter(value = META_MODEL_KEY, ignoreType = true)
 	@FMLAttribute(value = META_MODEL_KEY, required = true)
-	public XMLMetaModel getMetaModel();
+	public XSDMetaModel getMetaModel();
 
 	@Setter(META_MODEL_KEY)
-	public void setMetaModel(XMLMetaModel aMetaModel);
+	public void setMetaModel(XSDMetaModel aMetaModel);
 
 	// public static abstract class XMLModelSlotImpl extends AbstractXMLModelSlot.AbstractXMLModelSlotImpl<XMLURIProcessor> implements
 	// XMLModelSlot {
 	// TODO : check for multiple inheritance issues in PAMELA
-	public static abstract class XMLModelSlotImpl extends TypeAwareModelSlotImpl<XMLModel, XMLMetaModel> implements XMLModelSlot {
+	public static abstract class XMLModelSlotImpl extends TypeAwareModelSlotImpl<XMLModel, XSDMetaModel> implements XMLModelSlot {
 
 		private static final Logger logger = Logger.getLogger(XMLModelSlot.class.getPackage().getName());
 
@@ -289,7 +290,7 @@ public interface XMLModelSlot extends TypeAwareModelSlot<XMLModel, XMLMetaModel>
 		}
 
 		@Override
-		public XMLMetaModel getMetaModel() {
+		public XSDMetaModel getMetaModel() {
 			if (getMetaModelResource() != null) {
 				return getMetaModelResource().getMetaModelData();
 			}
@@ -297,13 +298,13 @@ public interface XMLModelSlot extends TypeAwareModelSlot<XMLModel, XMLMetaModel>
 		}
 
 		@Override
-		public void setMetaModel(XMLMetaModel aMetaModel) {
-			setMetaModelResource(aMetaModel != null ? (FlexoMetaModelResource<XMLModel, XMLMetaModel, ?>) aMetaModel.getResource() : null);
+		public void setMetaModel(XSDMetaModel aMetaModel) {
+			setMetaModelResource(aMetaModel != null ? (FlexoMetaModelResource<XMLModel, XSDMetaModel, ?>) aMetaModel.getResource() : null);
 		}
 
 		@Override
 		public XMLFileResource createProjectSpecificEmptyModel(FlexoResourceCenter<?> rc, String filename, String relativePath,
-				String modelUri, FlexoMetaModelResource<XMLModel, XMLMetaModel, ?> metaModelResource) {
+				String modelUri, FlexoMetaModelResource<XMLModel, XSDMetaModel, ?> metaModelResource) {
 
 			XMLTechnologyAdapter xmlTA = getServiceManager().getTechnologyAdapterService().getTechnologyAdapter(XMLTechnologyAdapter.class);
 			XMLFileResourceFactory factory = getModelSlotTechnologyAdapter().getXMLFileResourceFactory();
@@ -326,7 +327,7 @@ public interface XMLModelSlot extends TypeAwareModelSlot<XMLModel, XMLMetaModel>
 
 		@Override
 		public XMLFileResource createSharedEmptyModel(FlexoResourceCenter<?> resourceCenter, String relativePath, String filename,
-				String modelUri, FlexoMetaModelResource<XMLModel, XMLMetaModel, ?> metaModelResource) {
+				String modelUri, FlexoMetaModelResource<XMLModel, XSDMetaModel, ?> metaModelResource) {
 
 			// Unused XMLFileResource returned = null;
 

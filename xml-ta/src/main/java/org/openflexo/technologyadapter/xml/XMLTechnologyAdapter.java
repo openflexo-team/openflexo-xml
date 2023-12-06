@@ -42,14 +42,22 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
+import org.openflexo.foundation.fml.ElementImportDeclaration;
+import org.openflexo.foundation.fml.FMLCompilationUnit;
+import org.openflexo.foundation.fml.TechnologySpecificType;
 import org.openflexo.foundation.fml.annotations.DeclareModelSlots;
 import org.openflexo.foundation.fml.annotations.DeclareResourceFactories;
+import org.openflexo.foundation.fml.annotations.DeclareTechnologySpecificTypes;
 import org.openflexo.foundation.resource.FlexoResource;
 import org.openflexo.foundation.resource.FlexoResourceCenter;
 import org.openflexo.foundation.resource.FlexoResourceCenterService;
+import org.openflexo.foundation.technologyadapter.SpecificTypeInfo;
 import org.openflexo.foundation.technologyadapter.TechnologyAdapter;
+import org.openflexo.foundation.technologyadapter.TechnologyAdapterService;
+import org.openflexo.technologyadapter.xml.XMLIndividualType.XMLIndividualTypeFactory;
 import org.openflexo.technologyadapter.xml.fml.binding.XMLBindingFactory;
-import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModel;
+import org.openflexo.technologyadapter.xml.metamodel.XMLType;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.model.XMLModel;
 import org.openflexo.technologyadapter.xml.model.XMLModelFactory;
 import org.openflexo.technologyadapter.xml.rm.XMLFileResourceFactory;
@@ -64,6 +72,7 @@ import org.openflexo.technologyadapter.xml.rm.XSDMetaModelResourceFactory;
  */
 
 @DeclareModelSlots({ FreeXMLModelSlot.class, XMLModelSlot.class, XMLMetaModelSlot.class })
+@DeclareTechnologySpecificTypes({ XMLIndividualType.class })
 @DeclareResourceFactories({ XSDMetaModelResourceFactory.class, XMLFileResourceFactory.class })
 public class XMLTechnologyAdapter extends TechnologyAdapter<XMLTechnologyAdapter> {
 
@@ -75,7 +84,7 @@ public class XMLTechnologyAdapter extends TechnologyAdapter<XMLTechnologyAdapter
 
 	private static final XMLBindingFactory BINDING_FACTORY = new XMLBindingFactory();
 
-	protected HashMap<String, XMLMetaModel> privateMetamodels = null;
+	protected HashMap<String, XSDMetaModel> privateMetamodels = null;
 
 	public XMLTechnologyAdapter() {
 		super();
@@ -151,6 +160,62 @@ public class XMLTechnologyAdapter extends TechnologyAdapter<XMLTechnologyAdapter
 
 	public XSDMetaModelResourceFactory getXSDMetaModelResourceFactory() {
 		return getResourceFactory(XSDMetaModelResourceFactory.class);
+	}
+
+	@Override
+	public void initTechnologySpecificTypes(TechnologyAdapterService taService) {
+		taService.registerTypeClass(XMLIndividualType.class, getOWLIndividualTypeFactory());
+	}
+
+	private XMLIndividualTypeFactory xmlIndividualTypeFactory;
+
+	public XMLIndividualTypeFactory getOWLIndividualTypeFactory() {
+		if (xmlIndividualTypeFactory == null) {
+			xmlIndividualTypeFactory = new XMLIndividualTypeFactory(this);
+		}
+		return xmlIndividualTypeFactory;
+	}
+
+	@Override
+	public <T extends TechnologySpecificType<XMLTechnologyAdapter>> T instantiateType(
+			SpecificTypeInfo<XMLTechnologyAdapter> specificTypeInfo) {
+
+		T returned = null;
+		if (specificTypeInfo.getTechnologySpecificTypeClass().equals(XMLIndividualType.class)) {
+			if (specificTypeInfo.getParameter("type") != null) {
+				XMLType type = (XMLType) specificTypeInfo.getParameter("type");
+				returned = (T) XMLIndividualType.getXMLIndividualOfType(type);
+
+			}
+			else {
+				returned = (T) XMLIndividualType.UNDEFINED_XML_INDIVIDUAL_TYPE;
+			}
+		}
+
+		if (returned != null) {
+			returned.registerSpecificTypeInfo(specificTypeInfo);
+			return returned;
+		}
+
+		return null;
+	}
+
+	@Override
+	public String serializeType(TechnologySpecificType<XMLTechnologyAdapter> type, FMLCompilationUnit compilationUnit,
+			boolean useTypeDefinitions) {
+		if (type instanceof XMLIndividualType) {
+			XMLIndividualType individualType = (XMLIndividualType) type;
+			if (useTypeDefinitions && compilationUnit.getTypeDeclaration(type) != null) {
+				return compilationUnit.getTypeDeclaration(type).getAbbrev();
+			}
+			if (individualType.getXMLType() != null) {
+				XMLType xmlType = individualType.getXMLType();
+				ElementImportDeclaration typeImport = compilationUnit.ensureElementImport(xmlType);
+				return "XMLIndividualType(type=" + typeImport.getAbbrev() + ")";
+			}
+			return "XMLIndividualType()";
+		}
+		return super.serializeType(type, compilationUnit, useTypeDefinitions);
 	}
 
 }

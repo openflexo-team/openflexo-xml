@@ -44,39 +44,35 @@ import org.openflexo.pamela.factory.PamelaModelFactory;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
 import org.openflexo.technologyadapter.xml.rm.XSDMetaModelResource;
 
+public abstract class XSDMetaModelImpl extends XMLMetaModelImpl<XSDMetaModel> implements XSDMetaModel {
+	// public abstract class XSDMetaModelImpl extends XSOntology implements XMLMetaModel {
 
-public abstract class XSDMetaModelImpl extends XMLMetaModelImpl implements XSDMetaModel {
-//public abstract class XSDMetaModelImpl extends XSOntology implements XMLMetaModel {
-
-	private static final java.util.logging.Logger logger = org.openflexo.logging.FlexoLogger.getLogger(XSDMetaModelImpl.class.getPackage()
-			.getName());
-	
+	private static final java.util.logging.Logger logger = org.openflexo.logging.FlexoLogger
+			.getLogger(XSDMetaModelImpl.class.getPackage().getName());
 
 	private XSDMetaModelResource xsdResource;
-	
-    private static PamelaModelFactory MF;
-    
-    static{
-    	try {
-			 MF = new PamelaModelFactory(XSDMetaModel.class);
+
+	private static PamelaModelFactory MF;
+
+	static {
+		try {
+			MF = new PamelaModelFactory(XSDMetaModel.class);
 		} catch (ModelDefinitionException e) {
 			e.printStackTrace();
 		}
-    }
-    
+	}
 
 	public static PamelaModelFactory getModelFactory() {
 		return MF;
 	}
 
-
 	@Override
-	public FlexoResource<XMLMetaModel> getResource() {
+	public FlexoResource<XSDMetaModel> getResource() {
 		return xsdResource;
 	}
-	
+
 	@Override
-	public void setResource(FlexoResource<XMLMetaModel> resource) {
+	public void setResource(FlexoResource<XSDMetaModel> resource) {
 		this.xsdResource = (XSDMetaModelResource) resource;
 	}
 
@@ -95,9 +91,9 @@ public abstract class XSDMetaModelImpl extends XMLMetaModelImpl implements XSDMe
 			return xsdResource.getTechnologyAdapter();
 		return null;
 	}
-	
+
 	@Override
-	public String getName(){
+	public String getName() {
 		return this.getURI();
 	}
 

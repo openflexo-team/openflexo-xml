@@ -56,7 +56,7 @@ import org.openflexo.pamela.annotations.Setter;
 
 @ModelEntity
 @ImplementationClass(XMLMetaModelImpl.class)
-public interface XMLMetaModel extends XMLObject, FlexoMetaModel<XMLMetaModel> {
+public interface XMLMetaModel<MM extends XMLMetaModel<MM>> extends XMLObject, FlexoMetaModel<MM> {
 
 	public static String TYPES = "types";
 	public static String READ_ONLY = "readOnly";

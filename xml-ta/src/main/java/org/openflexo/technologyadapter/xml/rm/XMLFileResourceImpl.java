@@ -60,8 +60,8 @@ import org.openflexo.foundation.resource.SaveResourcePermissionDeniedException;
 import org.openflexo.foundation.resource.StreamIODelegate;
 import org.openflexo.foundation.technologyadapter.FlexoMetaModelResource;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
-import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModel;
 import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModelImpl;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.model.XMLModel;
 import org.openflexo.technologyadapter.xml.model.XMLModelFactory;
 import org.openflexo.technologyadapter.xml.model.XMLModelImpl;
@@ -145,7 +145,7 @@ public abstract class XMLFileResourceImpl extends FlexoResourceImpl<XMLModel> im
 
 			try {
 
-				FlexoMetaModelResource<XMLModel, XMLMetaModel, XMLTechnologyAdapter> mmRes = getMetaModelResource();
+				FlexoMetaModelResource<XMLModel, XSDMetaModel, XMLTechnologyAdapter> mmRes = getMetaModelResource();
 
 				XMLModelFactory factory = getTechnologyAdapter().getXMLModelFactory();
 
@@ -211,14 +211,14 @@ public abstract class XMLFileResourceImpl extends FlexoResourceImpl<XMLModel> im
 	@Override
 	public void attachMetamodel() {
 
-		FlexoMetaModelResource<XMLModel, XMLMetaModel, XMLTechnologyAdapter> mmRes = getMetaModelResource();
+		FlexoMetaModelResource<XMLModel, XSDMetaModel, XMLTechnologyAdapter> mmRes = getMetaModelResource();
 		if (mmRes != null) {
 			resourceData.setMetaModel(mmRes.getMetaModelData());
 		}
 		else {
 			// Create default meta-model, on the fly
 
-			XMLMetaModel mm = XMLMetaModelImpl.getModelFactory().newInstance(XMLMetaModel.class);
+			XSDMetaModel mm = XMLMetaModelImpl.getModelFactory().newInstance(XSDMetaModel.class);
 			mm.setURI(getURI() + "/Metamodel");
 			mm.setReadOnly(false);
 

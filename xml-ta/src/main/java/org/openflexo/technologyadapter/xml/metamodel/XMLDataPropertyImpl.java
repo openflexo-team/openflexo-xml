@@ -42,13 +42,13 @@ import org.openflexo.toolbox.StringUtils;
 
 /**
  * An attribute with only simple values
+ * 
  * @author xtof
  *
  */
-public abstract class XMLDataPropertyImpl extends XMLPropertyImpl implements XMLDataProperty  {
+public abstract class XMLDataPropertyImpl extends XMLPropertyImpl implements XMLDataProperty {
 	// TODO .... get anything from there
-	//private final XSAttributeUse attributeUse = null;
-
+	// private final XSAttributeUse attributeUse = null;
 
 	@Override
 	public boolean hasDefaultValue() {
@@ -57,12 +57,12 @@ public abstract class XMLDataPropertyImpl extends XMLPropertyImpl implements XML
 
 	@Override
 	public String getDefaultValue() {
-	/*	if (attributeUse != null) {
-			if (attributeUse.getDefaultValue() != null) {
-				return attributeUse.getDefaultValue().toString();
+		/*	if (attributeUse != null) {
+				if (attributeUse.getDefaultValue() != null) {
+					return attributeUse.getDefaultValue().toString();
+				}
 			}
-		}
-		*/
+			*/
 		return null;
 	}
 
@@ -96,7 +96,8 @@ public abstract class XMLDataPropertyImpl extends XMLPropertyImpl implements XML
 		buffer.append(getName());
 		if (isRequired()) {
 			buffer.append("required");
-		} else {
+		}
+		else {
 			buffer.append("optional");
 		}
 		if (hasDefaultValue()) {
@@ -119,6 +120,11 @@ public abstract class XMLDataPropertyImpl extends XMLPropertyImpl implements XML
 	@Override
 	public Integer getUpperBound() {
 		return 1;
+	}
+
+	@Override
+	public Class<?> getImplementedInterface() {
+		return XMLDataProperty.class;
 	}
 
 }

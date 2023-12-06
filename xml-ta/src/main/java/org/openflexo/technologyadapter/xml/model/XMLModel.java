@@ -45,9 +45,11 @@ import org.openflexo.foundation.resource.FlexoResource;
 import org.openflexo.foundation.technologyadapter.FlexoModel;
 import org.openflexo.pamela.annotations.Adder;
 import org.openflexo.pamela.annotations.CloningStrategy;
+import org.openflexo.pamela.annotations.CloningStrategy.StrategyType;
 import org.openflexo.pamela.annotations.Embedded;
 import org.openflexo.pamela.annotations.Finder;
 import org.openflexo.pamela.annotations.Getter;
+import org.openflexo.pamela.annotations.Getter.Cardinality;
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.Initializer;
 import org.openflexo.pamela.annotations.ModelEntity;
@@ -55,11 +57,10 @@ import org.openflexo.pamela.annotations.Parameter;
 import org.openflexo.pamela.annotations.PastingPoint;
 import org.openflexo.pamela.annotations.Remover;
 import org.openflexo.pamela.annotations.Setter;
-import org.openflexo.pamela.annotations.CloningStrategy.StrategyType;
-import org.openflexo.pamela.annotations.Getter.Cardinality;
 import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModel;
 import org.openflexo.technologyadapter.xml.metamodel.XMLObject;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 
 /**
  * @author xtof
@@ -70,7 +71,7 @@ import org.openflexo.technologyadapter.xml.metamodel.XMLType;
  */
 @ModelEntity
 @ImplementationClass(XMLModelImpl.class)
-public interface XMLModel extends XMLObject, FlexoModel<XMLModel, XMLMetaModel> {
+public interface XMLModel extends XMLObject, FlexoModel<XMLModel, XSDMetaModel> {
 
 	/**
 	 * Reference to the {@link XMLMetaModel} that this document is conformant to
@@ -103,14 +104,14 @@ public interface XMLModel extends XMLObject, FlexoModel<XMLModel, XMLMetaModel> 
 	public XMLModel init();
 
 	@Initializer
-	public XMLModel init(@Parameter(MM) XMLMetaModel mm);
+	public XMLModel init(@Parameter(MM) XSDMetaModel mm);
 
 	@Override
 	@Getter(MM)
-	XMLMetaModel getMetaModel();
+	XSDMetaModel getMetaModel();
 
 	@Setter(MM)
-	void setMetaModel(XMLMetaModel mm);
+	void setMetaModel(XSDMetaModel mm);
 
 	@Override
 	@Getter(RSC)

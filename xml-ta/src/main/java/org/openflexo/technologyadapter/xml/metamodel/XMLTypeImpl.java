@@ -68,4 +68,9 @@ public abstract class XMLTypeImpl extends FlexoObjectImpl implements XMLType {
 			return "(Unknown)";
 	}
 
+	@Override
+	public XSDMetaModel getResourceData() {
+		return getMetamodel();
+	}
+
 }

@@ -47,13 +47,13 @@ import org.openflexo.pamela.annotations.Setter;
 import org.openflexo.pamela.annotations.XMLElement;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
 import org.openflexo.technologyadapter.xml.XMLTechnologyContextManager;
-import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModel;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.model.XMLModel;
 
 @ModelEntity
 @ImplementationClass(XSDMetaModelResourceImpl.class)
 @XMLElement
-public interface XSDMetaModelResource extends FlexoMetaModelResource<XMLModel, XMLMetaModel, XMLTechnologyAdapter> {
+public interface XSDMetaModelResource extends FlexoMetaModelResource<XMLModel, XSDMetaModel, XMLTechnologyAdapter> {
 
 	public static final String TECHNOLOGY_CONTEXT_MANAGER = "XMLTechnologyContextManager";
 
@@ -65,7 +65,7 @@ public interface XSDMetaModelResource extends FlexoMetaModelResource<XMLModel, X
 	public void setTechnologyContextManager(XMLTechnologyContextManager technologyContextManager);
 
 	@Override
-	public XMLMetaModel getMetaModelData();
+	public XSDMetaModel getMetaModelData();
 
 	public FileIODelegate getFileFlexoIODelegate();
 }

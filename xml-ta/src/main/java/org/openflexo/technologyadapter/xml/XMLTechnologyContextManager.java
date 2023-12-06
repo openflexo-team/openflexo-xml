@@ -38,12 +38,38 @@
 
 package org.openflexo.technologyadapter.xml;
 
+import java.util.Hashtable;
+import java.util.logging.Logger;
+
 import org.openflexo.foundation.resource.FlexoResourceCenterService;
 import org.openflexo.foundation.technologyadapter.TechnologyContextManager;
+import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 
 public class XMLTechnologyContextManager extends TechnologyContextManager<XMLTechnologyAdapter> {
 
+	protected static final Logger logger = Logger.getLogger(XMLTechnologyContextManager.class.getPackage().getName());
+
 	public XMLTechnologyContextManager(XMLTechnologyAdapter adapter, FlexoResourceCenterService resourceCenterService) {
 		super(adapter, resourceCenterService);
+		individualsOfType = new Hashtable<>();
 	}
+
+	protected Hashtable<XMLType, XMLIndividualType> individualsOfType;
+
+	public XMLIndividualType getIndividualOfType(XMLType aType) {
+		if (individualsOfType.get(aType) != null) {
+			return individualsOfType.get(aType);
+		}
+		else {
+			try {
+				XMLIndividualType returned = new XMLIndividualType(aType);
+				individualsOfType.put(aType, returned);
+				return returned;
+			} catch (ClassCastException e) {
+				logger.warning(e.getMessage());
+				return null;
+			}
+		}
+	}
+
 }

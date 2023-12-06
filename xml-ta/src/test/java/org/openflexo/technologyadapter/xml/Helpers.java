@@ -36,16 +36,15 @@
  * 
  */
 
-
 package org.openflexo.technologyadapter.xml;
 
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLDataProperty;
-import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModel;
 import org.openflexo.technologyadapter.xml.metamodel.XMLObjectProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLSimpleType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.model.XMLIndividual;
 import org.openflexo.technologyadapter.xml.model.XMLObjectPropertyValue;
 import org.openflexo.technologyadapter.xml.model.XMLPropertyValue;
@@ -57,7 +56,7 @@ public class Helpers {
 	 * 
 	 * @param metamodel
 	 */
-	public static final void dumpTypes(XMLMetaModel metamodel) {
+	public static final void dumpTypes(XSDMetaModel metamodel) {
 
 		System.out.println("\n\n");
 
@@ -70,7 +69,8 @@ public class Helpers {
 			if (t.getSuperType() != null) {
 				System.out
 						.println("Parsed Type: " + prefix + t.getName() + " :: " + t.getSuperType().getName() + " [ " + t.getURI() + " ]");
-			} else {
+			}
+			else {
 				System.out.println("Parsed Type: " + prefix + t.getName() + " [ " + t.getURI() + " ]");
 
 			}
@@ -79,11 +79,13 @@ public class Helpers {
 					XMLType pt = x.getType();
 					if (pt instanceof XMLSimpleType) {
 						System.out.println("     -data: " + x.getName() + "  :: " + pt.getName() + " [ " + pt.getURI() + " ]");
-					} else {
+					}
+					else {
 						System.out.println("    --obj: " + x.getName() + "  :: " + pt.getName() + " [ " + pt.getURI() + " ]");
 					}
 				}
-			} else {
+			}
+			else {
 				System.out.println("Its a simple Type...");
 			}
 			System.out.flush();
@@ -97,24 +99,28 @@ public class Helpers {
 	public static final void dumpProperties(XMLIndividual indiv, XMLType aType, String prefix) {
 		if (aType == null) {
 			dumpProperties(indiv, indiv.getType(), prefix);
-		} else {
+		}
+		else {
 			if (aType instanceof XMLComplexType) {
 				for (XMLProperty prop : ((XMLComplexType) aType).getProperties()) {
 					if (prop instanceof XMLDataProperty) {
 						XMLPropertyValue val = indiv.getPropertyValue(prop);
 						if (val != null) {
 							System.out.println(prefix + "    * attr: " + prop.getName() + " = " + indiv.getPropertyValue(prop).toString());
-						} else {
+						}
+						else {
 							System.out.println(prefix + "    ! attr: " + prop.getName() + " n'est pas valuée");
 						}
-					} else if (prop instanceof XMLObjectProperty) {
+					}
+					else if (prop instanceof XMLObjectProperty) {
 						System.out.println(prefix + "    * obj: " + prop.getName());
 						XMLObjectPropertyValue vals = (XMLObjectPropertyValue) indiv.getPropertyValue(prop);
 						if (vals != null) {
 							for (XMLIndividual v : vals.getValues()) {
 								dumpIndividual(v, prefix + "          + ");
 							}
-						} else {
+						}
+						else {
 							System.out.println(" !! Etrange, la propriete " + prop.getName() + " ne contient rien ?!?");
 						}
 					}

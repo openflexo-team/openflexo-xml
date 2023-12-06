@@ -58,7 +58,7 @@ import org.openflexo.technologyadapter.xml.model.XMLModel;
  *
  */
 
-public abstract class XMLMetaModelImpl extends FlexoObjectImpl implements XMLMetaModel {
+public abstract class XMLMetaModelImpl<MM extends XMLMetaModel<MM>> extends FlexoObjectImpl implements XMLMetaModel<MM> {
 
 	private static final java.util.logging.Logger logger = org.openflexo.logging.FlexoLogger
 			.getLogger(XMLMetaModelImpl.class.getPackage().getName());
@@ -140,9 +140,9 @@ public abstract class XMLMetaModelImpl extends FlexoObjectImpl implements XMLMet
 	 * 
 	 * @return
 	 */
-	public static XMLMetaModel createEmptyMetaModel(String uri) {
+	public static XSDMetaModel createEmptyMetaModel(String uri) {
 
-		XMLMetaModel metamodel = MF.newInstance(XMLMetaModel.class);
+		XSDMetaModel metamodel = MF.newInstance(XSDMetaModel.class);
 		metamodel.setReadOnly(false);
 
 		metamodel.setURI(uri);
@@ -172,12 +172,12 @@ public abstract class XMLMetaModelImpl extends FlexoObjectImpl implements XMLMet
 	}
 
 	@Override
-	public FlexoResource<XMLMetaModel> getResource() {
+	public FlexoResource<MM> getResource() {
 		return null;
 	}
 
 	@Override
-	public void setResource(FlexoResource<XMLMetaModel> resource) {
+	public void setResource(FlexoResource<MM> resource) {
 
 	}
 

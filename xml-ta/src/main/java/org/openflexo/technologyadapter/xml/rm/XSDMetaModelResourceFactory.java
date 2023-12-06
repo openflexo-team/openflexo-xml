@@ -27,7 +27,7 @@ import org.openflexo.foundation.resource.FlexoResourceCenter;
 import org.openflexo.foundation.resource.TechnologySpecificFlexoResourceFactory;
 import org.openflexo.pamela.exceptions.ModelDefinitionException;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
-import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModel;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.toolbox.StringUtils;
 import org.openflexo.xml.XMLRootElementInfo;
 import org.openflexo.xml.XMLRootElementReader;
@@ -39,7 +39,7 @@ import org.openflexo.xml.XMLRootElementReader;
  *
  */
 public class XSDMetaModelResourceFactory
-		extends TechnologySpecificFlexoResourceFactory<XSDMetaModelResource, XMLMetaModel, XMLTechnologyAdapter> {
+		extends TechnologySpecificFlexoResourceFactory<XSDMetaModelResource, XSDMetaModel, XMLTechnologyAdapter> {
 
 	private static final Logger logger = Logger.getLogger(XSDMetaModelResourceFactory.class.getPackage().getName());
 
@@ -52,7 +52,7 @@ public class XSDMetaModelResourceFactory
 	}
 
 	@Override
-	public XMLMetaModel makeEmptyResourceData(XSDMetaModelResource resource) {
+	public XSDMetaModel makeEmptyResourceData(XSDMetaModelResource resource) {
 		// TODO
 		return null;
 	}

@@ -44,22 +44,20 @@ import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.Setter;
 
-
 @ModelEntity
 @ImplementationClass(XSDMetaModelImpl.class)
-public interface XSDMetaModel extends XMLMetaModel{
-	
-	public static final String RSC = "resource";
+public interface XSDMetaModel extends XMLMetaModel<XSDMetaModel> {
 
+	public static final String RSC = "resource";
 
 	@Override
 	@Getter(RSC)
-	public FlexoResource<XMLMetaModel> getResource();
+	public FlexoResource<XSDMetaModel> getResource();
 
 	@Override
 	@Setter(RSC)
-	public void setResource(FlexoResource<XMLMetaModel> resource);
-	
+	public void setResource(FlexoResource<XSDMetaModel> resource);
+
 	/*
 	 * 
 	public IFlexoOntologyDataProperty getDataProperty(String propertyURI);
