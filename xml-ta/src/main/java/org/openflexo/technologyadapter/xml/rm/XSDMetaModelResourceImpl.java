@@ -50,10 +50,10 @@ import org.openflexo.foundation.resource.StreamIODelegate;
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModel;
 import org.openflexo.technologyadapter.xml.metamodel.XMLObject;
-import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModelImpl;
+import org.openflexo.toolbox.JavaUtils;
 
 import com.sun.xml.xsom.XSAttributeDecl;
 import com.sun.xml.xsom.XSComplexType;
@@ -229,6 +229,7 @@ public abstract class XSDMetaModelResourceImpl extends FlexoResourceImpl<XSDMeta
 				String uri = fetcher.getUri(element);
 				XMLType t = resourceData.getTypeFromURI(fetcher.getUri(element));
 				String name = element.getName();
+				String propertyName = JavaUtils.getVariableName(name);
 
 				String ownerUri = fetcher.getOwnerURI(uri);
 
@@ -237,7 +238,7 @@ public abstract class XSDMetaModelResourceImpl extends FlexoResourceImpl<XSDMeta
 					if (owner != null && owner instanceof XMLComplexType) {
 
 						// TODO: better manage types
-						((XMLComplexType) owner).createProperty(name, t);
+						((XMLComplexType) owner).createProperty(propertyName, t);
 					}
 					else {
 						logger.warning("unable to find an owner type for attribute: " + uri);
@@ -355,9 +356,9 @@ public abstract class XSDMetaModelResourceImpl extends FlexoResourceImpl<XSDMeta
 
 			// Easyest way
 			String uri = metaModel.getURI() + "#" + objectIdentifier;
-			//System.out.println("Je cherche " + uri);
+			// System.out.println("Je cherche " + uri);
 			XMLType returned = metaModel.getTypeFromURI(uri);
-			//System.out.println("Je trouve " + returned);
+			// System.out.println("Je trouve " + returned);
 
 			/*if (returned instanceof XMLComplexType) {
 				XMLComplexType cType = (XMLComplexType) returned;
