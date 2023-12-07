@@ -38,52 +38,20 @@
 
 package org.openflexo.technologyadapter.xml.metamodel;
 
-import java.lang.reflect.Type;
+import java.util.logging.Logger;
 
-import org.openflexo.foundation.InnerResourceData;
-import org.openflexo.pamela.annotations.Getter;
-import org.openflexo.pamela.annotations.ImplementationClass;
-import org.openflexo.pamela.annotations.Initializer;
-import org.openflexo.pamela.annotations.ModelEntity;
-import org.openflexo.pamela.annotations.Parameter;
-import org.openflexo.pamela.annotations.Setter;
+public abstract class XMLSimpleTypeImpl extends XMLTypeImpl implements XMLSimpleType {
 
-@ModelEntity(isAbstract = true)
-@ImplementationClass(XMLTypeImpl.class)
-public interface XMLType extends XMLObject, Type, InnerResourceData<XSDMetaModel> {
+	private static final Logger logger = Logger.getLogger(XMLSimpleTypeImpl.class.getPackage().getName());
 
-	public final String MM = "metamodel";
+	@Override
+	public Class<?> getImplementedInterface() {
+		return XMLSimpleType.class;
+	}
 
-	// TODO : manage the calculation of FQN
-	// TODO: check emboitage avec URI et NSPrexiw => FQN
-	public final String FQN = "fullyQualifiedName";
-	public final String SUPERTYPE = "superType";
-	public final String ABSTRACT = "abstract";
-
-	static final String NAME_ATTR = "name";
-
-	@Initializer
-	public XMLType init(@Parameter(MM) XMLMetaModel mm);
-
-	@Getter(FQN)
-	public String getFullyQualifiedName();
-
-	@Getter(MM)
-	XSDMetaModel getMetamodel();
-
-	@Setter(NAME)
-	public void setName(String name);
-
-	@Getter(SUPERTYPE)
-	public XMLType getSuperType();
-
-	@Setter(SUPERTYPE)
-	public void setSuperType(XMLType t);
-
-	@Getter(value = ABSTRACT, defaultValue = "false")
-	public boolean isAbstract();
-
-	@Setter(ABSTRACT)
-	public void setIsAbstract(boolean t);
+	@Override
+	public String getDisplayableDescription() {
+		return "Simple XML Type named : " + this.getName();
+	}
 
 }

@@ -36,56 +36,28 @@
  * 
  */
 
-package org.openflexo.technologyadapter.xml.gui;
+package org.openflexo.technologyadapter.xml.controller;
 
+import java.util.logging.Logger;
+
+import org.openflexo.gina.model.FIBComponent;
 import org.openflexo.gina.model.container.FIBTab;
 import org.openflexo.gina.utils.FIBInspector;
-import org.openflexo.rm.Resource;
-import org.openflexo.rm.ResourceLocator;
-import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModel;
-import org.openflexo.technologyadapter.xml.metamodel.XMLObject;
-import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
-import org.openflexo.technologyadapter.xml.metamodel.XMLType;
+import org.openflexo.gina.view.GinaViewFactory;
+import org.openflexo.logging.FlexoLogger;
 import org.openflexo.view.controller.FlexoController;
-import org.openflexo.view.controller.model.FlexoPerspective;
+import org.openflexo.view.controller.FlexoFIBController;
 
-/**
- * This class represent the module view for an XSD meta model<br>
- * Underlying representation is supported by OntologyView implementation.
- * 
- * @author sylvain
- * 
- */
-@SuppressWarnings("serial")
-public class XMLMetaModelView extends AbstractXMLModuleView<XMLMetaModel> {
+public class XMLFIBController extends FlexoFIBController {
 
-	public static final Resource FIB_FILE = ResourceLocator.locateResource("Fib/FIBXMLMetaModelView.fib");
-	public static final Resource XMLType_FIB_FILE = ResourceLocator.locateResource("Fib/FIBPanelXMLType.fib");
-	public static final Resource XMLProperty_FIB_FILE = ResourceLocator.locateResource("Fib/FIBPanelXMLProperty.fib");
+	protected static final Logger logger = FlexoLogger.getLogger(XMLFIBController.class.getPackage().getName());
 
-	public XMLMetaModelView(XMLMetaModel object, FlexoController controller, FlexoPerspective perspective) {
-		super(controller, object, perspective, FIB_FILE);
+	public XMLFIBController(FIBComponent component, GinaViewFactory<?> viewFactory) {
+		super(component, viewFactory);
 	}
 
-	public XMLMetaModel getMetamodel() {
-		return representedObject;
-	}
-
-	/**
-	 * Selects the FIB Panel to display depending of selected Object type
-	 * 
-	 * @param object
-	 * @return
-	 */
-	public Resource getFibForXMLObject(XMLObject object) {
-		if (object instanceof XMLType) {
-			return XMLType_FIB_FILE;
-		}
-		else if (object instanceof XMLProperty) {
-			return XMLProperty_FIB_FILE;
-		}
-		else
-			return null;
+	public XMLFIBController(FIBComponent component, GinaViewFactory<?> viewFactory, FlexoController controller) {
+		super(component, viewFactory, controller);
 	}
 
 	public FIBInspector inspectorForObject(Object object) {
@@ -108,5 +80,4 @@ public class XMLMetaModelView extends AbstractXMLModuleView<XMLMetaModel> {
 		}
 		return null;
 	}
-
 }

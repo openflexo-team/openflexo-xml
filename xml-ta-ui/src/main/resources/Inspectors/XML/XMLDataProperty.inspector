@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Panel className="org.openflexo.gina.utils.FIBInspector"
 	layout="border" titleFont="SansSerif,0,12" darkLevel="0"
-	dataClassName="org.openflexo.technologyadapter.xml.metamodel.XMLObjectProperty"
+	dataClassName="org.openflexo.technologyadapter.xml.metamodel.XMLDataProperty"
 	controllerClassName="org.openflexo.inspector.FIBInspectorController"
 	font="SansSerif,0,12" name="Inspector">
 	<TabPanel name="Tab" constraints="border(location=center)">
@@ -49,6 +49,6 @@
 
 		</Tab>
 	</TabPanel>
-	<LocalizedDictionary/>
-	<Parameter name="title" value="XML Object Property" />
+	<LocalizedDictionary />
+	<Parameter name="title" value="XML Data Property" />
 </Panel>

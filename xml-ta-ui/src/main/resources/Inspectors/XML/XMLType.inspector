@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Panel className="org.openflexo.gina.utils.FIBInspector"
+	layout="border" titleFont="SansSerif,0,12" darkLevel="0"
+	dataClassName="org.openflexo.technologyadapter.xml.metamodel.XMLType"
+	controllerClassName="org.openflexo.inspector.FIBInspectorController"
+	font="SansSerif,0,12" name="Inspector">
+	<TabPanel name="Tab" constraints="border(location=center)">
+		<Tab title="Basic" layout="twocols" titleFont="SansSerif,0,11"
+			darkLevel="0" index="0" font="SansSerif,0,11" useScrollBar="true"
+			horizontalScrollbarPolicy="HORIZONTAL_SCROLLBAR_AS_NEEDED"
+			verticalScrollbarPolicy="VERTICAL_SCROLLBAR_AS_NEEDED"
+			name="BasicTab">
+			<Label label="super_type" index="3"
+				constraints="twocols(expandHorizontally=false;expandVertically=false;index=0;location=left)"
+				name="SuperTypeLabel" localize="true" />
+			<TextField index="4" data="data.superType.toString"
+				constraints="twocols(expandHorizontally=true;expandVertically=false;index=1;location=right)"
+				name="SuperType" localize="true" validateOnReturn="true" columns="10" readOnly="true"/>
+			<Label label="is_abstract" index="5"
+				constraints="twocols(expandHorizontally=false;expandVertically=false;index=0;location=left)"
+				localize="true" />
+			<CheckBox index="6"
+				data="data.isAbstract"
+				constraints="twocols(expandHorizontally=false;expandVertically=false;index=1;location=right)"
+				name="isAbstract" localize="true" />
+		</Tab>
+	</TabPanel>
+	<LocalizedDictionary/>
+	<Parameter name="title" value="XMLType" />
+</Panel>

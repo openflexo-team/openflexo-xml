@@ -95,10 +95,10 @@ public abstract class XMLDataPropertyImpl extends XMLPropertyImpl implements XML
 		StringBuffer buffer = new StringBuffer("Attribute ");
 		buffer.append(getName());
 		if (isRequired()) {
-			buffer.append("required");
+			buffer.append(" required");
 		}
 		else {
-			buffer.append("optional");
+			buffer.append(" optional");
 		}
 		if (hasDefaultValue()) {
 			buffer.append(", default: '").append(getDefaultValue()).append("'");

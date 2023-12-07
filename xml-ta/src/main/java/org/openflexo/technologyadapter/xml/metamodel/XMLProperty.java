@@ -71,7 +71,7 @@ public interface XMLProperty extends XMLObject, Comparable<XMLProperty>, InnerRe
 	 * This indicates if property was created from an XML element or attribute
 	 */
 
-	public static final String IS_FROM_ELEMENT = "isFromElement";
+	public static final String IS_FROM_ELEMENT = "isFromXMLElement";
 
 	@Initializer
 	public XMLProperty init(@Parameter(NAME) String s, @Parameter(TYPE) Type t, @Parameter(CONTAINER) XMLType container);
@@ -97,6 +97,6 @@ public interface XMLProperty extends XMLObject, Comparable<XMLProperty>, InnerRe
 	public boolean isFromXMLElement();
 
 	@Setter(IS_FROM_ELEMENT)
-	public void setIsFromElement(boolean fromElement);
+	public void setIsFromXMLElement(boolean fromElement);
 
 }

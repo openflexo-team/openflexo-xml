@@ -144,4 +144,9 @@ public abstract class XMLComplexTypeImpl extends XMLTypeImpl implements XMLCompl
 		return XMLComplexType.class;
 	}
 
+	@Override
+	public String getDisplayableDescription() {
+		return "Complex XML Type named : " + this.getName();
+	}
+
 }

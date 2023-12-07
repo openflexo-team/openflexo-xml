@@ -41,30 +41,30 @@ package org.openflexo.technologyadapter.xml.metamodel;
 import java.lang.reflect.Type;
 
 import org.openflexo.pamela.annotations.Getter;
+import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.Setter;
 
 @ModelEntity
-// @ImplementationClass(XMLTypeImpl.class)
-public interface XMLSimpleType  extends XMLType {
+@ImplementationClass(XMLSimpleTypeImpl.class)
+public interface XMLSimpleType extends XMLType {
 
 	final String BASICTYPE = "basicType";
 	/*
 	 * Property that indicates that this particular simpleType is extracted from an Element or an Attribute
 	 */
 	final String MAPSTOELEMENT = "mapsToElement";
-	
+
 	@Getter(value = BASICTYPE, ignoreType = true)
 	public Type getBasicType();
-	
+
 	@Setter(value = BASICTYPE)
 	public void setBasicType(Type aType);
-	
+
 	@Getter(value = MAPSTOELEMENT, defaultValue = "false")
 	public boolean mapsToElement();
-	
+
 	@Setter(value = MAPSTOELEMENT)
 	public void setMapsToElement(boolean val);
-	
-	
+
 }

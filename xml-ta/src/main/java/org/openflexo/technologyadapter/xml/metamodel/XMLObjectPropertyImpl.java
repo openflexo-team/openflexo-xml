@@ -70,12 +70,12 @@ public abstract class XMLObjectPropertyImpl extends XMLPropertyImpl implements X
 	@Override
 	public String getDisplayableDescription() {
 		StringBuffer buffer = new StringBuffer("InnerElement ");
-		buffer.append(" (").append(getType().toString()).append(") is ");
+		buffer.append(" (").append(getType().getName()).append(") is ");
 		if (isRequired()) {
-			buffer.append("required");
+			buffer.append(" required");
 		}
 		else {
-			buffer.append("optional");
+			buffer.append(" optional");
 		}
 		if (hasDefaultValue()) {
 			buffer.append(", default: '").append(getDefaultValue()).append("'");

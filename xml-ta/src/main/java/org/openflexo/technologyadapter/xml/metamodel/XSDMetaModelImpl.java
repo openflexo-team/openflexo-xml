@@ -97,4 +97,9 @@ public abstract class XSDMetaModelImpl extends XMLMetaModelImpl<XSDMetaModel> im
 		return this.getURI();
 	}
 
+	@Override
+	public Class<?> getImplementedInterface() {
+		return XSDMetaModel.class;
+	}
+
 }
