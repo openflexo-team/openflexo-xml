@@ -83,6 +83,8 @@ public interface XMLMetaModel<MM extends XMLMetaModel<MM>> extends XMLObject, Fl
 	@Finder(attribute = XMLType.URI, collection = TYPES, isMultiValued = true)
 	public XMLType getTypeFromURI(String string);
 
+	public XMLType getTypeFromURI(String string, boolean createsWhenNonExistant);
+
 	/**
 	 * Creates a new type in this MetaModel, simple or complex, depending on the parameters
 	 * 

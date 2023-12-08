@@ -374,7 +374,7 @@ public abstract class XSDMetaModelResourceImpl extends FlexoResourceImpl<XSDMeta
 			// Easyest way
 			String uri = metaModel.getURI() + "#" + objectIdentifier;
 			// System.out.println("Je cherche " + uri);
-			XMLType returned = metaModel.getTypeFromURI(uri);
+			XMLType returned = metaModel.getTypeFromURI(uri, false);
 			// System.out.println("Je trouve " + returned);
 
 			/*if (returned instanceof XMLComplexType) {

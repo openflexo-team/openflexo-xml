@@ -144,7 +144,7 @@ public class XSDeclarationsFetcher implements XSVisitor {
 		if (declaration.isLocal()) {
 			XSDeclaration owner = getOwner(declaration);
 			if (owner != null) {
-				return getNamespace(owner) + "/" + owner.getName();
+				return getNamespace(owner) + "#" + owner.getName();
 			}
 			else {
 				return "";
@@ -252,7 +252,6 @@ public class XSDeclarationsFetcher implements XSVisitor {
 	@Override
 	public void complexType(XSComplexType complexType) {
 
-		
 		if (complexType.isGlobal()) {
 			if (register(complexType) == false) {
 				return;

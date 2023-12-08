@@ -87,12 +87,24 @@ public abstract class XMLMetaModelImpl<MM extends XMLMetaModel<MM>> extends Flex
 
 	@Override
 	public XMLType getTypeFromURI(String uri) {
+		return getTypeFromURI(uri, true);
+	}
+
+	@Override
+	public XMLType getTypeFromURI(String uri, boolean createsWhenNonExistant) {
 
 		XMLType t = types.get(uri);
 
-		if (t == null) {
+		if (t == null && createsWhenNonExistant) {
 			return createNewType(uri, uri, true);
 		}
+
+		/*if (t == null) {
+			System.out.println("Tous les types que je connais");
+			for (XMLType xmlType : types.values()) {
+				System.out.println(" > " + xmlType + " of " + xmlType.getClass() + " uri=" + xmlType.getURI());
+			}
+		}*/
 
 		return t;
 
