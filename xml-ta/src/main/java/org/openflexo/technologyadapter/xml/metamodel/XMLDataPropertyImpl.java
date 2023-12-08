@@ -113,18 +113,18 @@ public abstract class XMLDataPropertyImpl extends XMLPropertyImpl implements XML
 		return buffer.toString();
 	}
 
-	@Override
+	/*@Override
 	public Integer getLowerBound() {
 		if (isRequired())
 			return 1;
 		else
 			return 0;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public Integer getUpperBound() {
 		return 1;
-	}
+	}*/
 
 	@Override
 	public Class<?> getImplementedInterface() {

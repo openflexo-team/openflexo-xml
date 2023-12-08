@@ -91,19 +91,19 @@ public abstract class XMLObjectPropertyImpl extends XMLPropertyImpl implements X
 		return buffer.toString();
 	}
 
-	@Override
+	/*@Override
 	public Integer getLowerBound() {
 		if (isRequired())
 			return 1;
 		else
 			return 0;
 	}
-
+	
 	@Override
 	public Integer getUpperBound() {
 		// Object Properties are unbound
 		return -1;
-	}
+	}*/
 
 	@Override
 	public boolean isFromXMLElement() {

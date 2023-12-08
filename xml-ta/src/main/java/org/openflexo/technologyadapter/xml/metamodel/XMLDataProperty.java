@@ -43,20 +43,6 @@ import org.openflexo.pamela.annotations.ModelEntity;
 
 @ModelEntity
 @ImplementationClass(XMLDataPropertyImpl.class)
-public interface XMLDataProperty extends XMLProperty  {
+public interface XMLDataProperty extends XMLProperty {
 
-	public boolean hasDefaultValue();
-
-	public String getDefaultValue() ;
-	
-	public boolean hasFixedValue();
-
-	public String getFixedValue();
-	
-	public boolean isRequired();
-
-	public Integer getLowerBound();
-
-	public Integer getUpperBound() ;
-	
 }

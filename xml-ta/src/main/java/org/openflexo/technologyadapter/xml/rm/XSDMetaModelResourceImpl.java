@@ -50,6 +50,7 @@ import org.openflexo.foundation.resource.StreamIODelegate;
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModel;
 import org.openflexo.technologyadapter.xml.metamodel.XMLObject;
+import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModelImpl;
@@ -58,6 +59,7 @@ import org.openflexo.toolbox.JavaUtils;
 import com.sun.xml.xsom.XSAttributeDecl;
 import com.sun.xml.xsom.XSComplexType;
 import com.sun.xml.xsom.XSElementDecl;
+import com.sun.xml.xsom.XSParticle;
 import com.sun.xml.xsom.XSSchemaSet;
 import com.sun.xml.xsom.XSType;
 
@@ -238,7 +240,14 @@ public abstract class XSDMetaModelResourceImpl extends FlexoResourceImpl<XSDMeta
 					if (owner != null && owner instanceof XMLComplexType) {
 
 						// TODO: better manage types
-						((XMLComplexType) owner).createProperty(propertyName, t);
+						XMLProperty newProperty = ((XMLComplexType) owner).createProperty(propertyName, t);
+						XSParticle particle = fetcher.getParticle(element);
+						if (particle != null) {
+							newProperty.setLowerBound(particle.getMinOccurs().intValue());
+							newProperty.setUpperBound(particle.getMaxOccurs().intValue());
+							// System.out.println("" + particle + " " + particle.getTerm() + " of " + particle.getTerm().getClass()
+							// + " minOccurs=" + particle.getMinOccurs() + " maxOccurs=" + particle.getMaxOccurs());
+						}
 					}
 					else {
 						logger.warning("unable to find an owner type for attribute: " + uri);
@@ -264,6 +273,7 @@ public abstract class XSDMetaModelResourceImpl extends FlexoResourceImpl<XSDMeta
 		isLoading = true;
 		isLoaded = false;
 		schemaSet = XSOMUtils.read(getInputStream());
+
 		if (schemaSet != null) {
 			fetcher = new XSDeclarationsFetcher();
 			fetcher.fetch(schemaSet);

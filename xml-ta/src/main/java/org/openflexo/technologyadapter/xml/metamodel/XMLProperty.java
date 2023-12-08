@@ -70,8 +70,10 @@ public interface XMLProperty extends XMLObject, Comparable<XMLProperty>, InnerRe
 	/**
 	 * This indicates if property was created from an XML element or attribute
 	 */
-
 	public static final String IS_FROM_ELEMENT = "isFromXMLElement";
+
+	public static final String LOWER_BOUND = "lowerBound";
+	public static final String UPPER_BOUND = "upperBound";
 
 	@Initializer
 	public XMLProperty init(@Parameter(NAME) String s, @Parameter(TYPE) Type t, @Parameter(CONTAINER) XMLType container);
@@ -106,4 +108,25 @@ public interface XMLProperty extends XMLObject, Comparable<XMLProperty>, InnerRe
 	@Setter(IS_FROM_ELEMENT)
 	public void setIsFromXMLElement(boolean fromElement);
 
+	public boolean hasDefaultValue();
+
+	public String getDefaultValue();
+
+	public boolean hasFixedValue();
+
+	public String getFixedValue();
+
+	public boolean isRequired();
+
+	@Getter(value = LOWER_BOUND, ignoreType = true)
+	public Integer getLowerBound();
+
+	@Setter(LOWER_BOUND)
+	public void setLowerBound(Integer b);
+
+	@Getter(value = UPPER_BOUND, ignoreType = true)
+	public Integer getUpperBound();
+
+	@Setter(UPPER_BOUND)
+	public void setUpperBound(Integer b);
 }

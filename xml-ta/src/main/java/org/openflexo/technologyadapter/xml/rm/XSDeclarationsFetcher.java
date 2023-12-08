@@ -72,8 +72,8 @@ import com.sun.xml.xsom.visitor.XSVisitor;
 
 public class XSDeclarationsFetcher implements XSVisitor {
 
-	private static final java.util.logging.Logger logger = org.openflexo.logging.FlexoLogger.getLogger(XSDeclarationsFetcher.class
-			.getPackage().getName());
+	private static final java.util.logging.Logger logger = org.openflexo.logging.FlexoLogger
+			.getLogger(XSDeclarationsFetcher.class.getPackage().getName());
 
 	private final Set<XSSimpleType> simpleTypes = new HashSet<>();
 	private final Set<XSComplexType> complexTypes = new HashSet<>();
@@ -90,11 +90,14 @@ public class XSDeclarationsFetcher implements XSVisitor {
 
 	private final Map<String, XSDeclaration> declarations = new HashMap<>();
 
+	private final Map<XSDeclaration, XSParticle> particles = new HashMap<>();
+
 	public void fetch(XSSchemaSet schemaSet) {
 		for (XSSchema schema : schemaSet.getSchemas()) {
 			if (StringUtils.isNotEmpty(schema.getTargetNamespace())) {
 				schema.visit(this);
-			} else {
+			}
+			else {
 				if (logger.isLoggable(Level.WARNING)) {
 					logger.warning("A schema was ignored because of a lack of target namespace.");
 				}
@@ -122,9 +125,9 @@ public class XSDeclarationsFetcher implements XSVisitor {
 	public String getOwnerURI(String uri) {
 		XSDeclaration declaration = getDeclaration(uri);
 		XSDeclaration declOwner = getOwner(declaration);
-		if (declOwner instanceof XSElementDecl ){
+		if (declOwner instanceof XSElementDecl) {
 			XSType xsType = ((XSElementDecl) declOwner).getType();
-			if (xsType.getName() != null ){
+			if (xsType.getName() != null) {
 				return this.getUri(xsType);
 			}
 			else {
@@ -141,10 +144,10 @@ public class XSDeclarationsFetcher implements XSVisitor {
 		if (declaration.isLocal()) {
 			XSDeclaration owner = getOwner(declaration);
 			if (owner != null) {
-			return getNamespace(owner) + "/" + owner.getName();
+				return getNamespace(owner) + "/" + owner.getName();
 			}
 			else {
-				return "" ;
+				return "";
 			}
 		}
 		return declaration.getTargetNamespace();
@@ -158,6 +161,10 @@ public class XSDeclarationsFetcher implements XSVisitor {
 		return attributeUses.get(declaration);
 	}
 
+	public XSParticle getParticle(XSDeclaration declaration) {
+		return particles.get(declaration);
+	}
+
 	private boolean register(XSDeclaration decl) {
 		if (decl.isLocal()) {
 			localOwners.put(decl, path.lastElement());
@@ -168,7 +175,8 @@ public class XSDeclarationsFetcher implements XSVisitor {
 				logger.warning("Duplicate URI " + uri);
 			}
 			return false;
-		} else {
+		}
+		else {
 			declarations.put(uri, decl);
 			return true;
 		}
@@ -345,9 +353,9 @@ public class XSDeclarationsFetcher implements XSVisitor {
 
 		if (elementDecl.getType().isLocal()) {
 			// TODO If it's global it has already been visited, make sure.
-			elementDecl.getType().visit(this);			
+			elementDecl.getType().visit(this);
 		}
-		else if (elementDecl.getType().isComplexType()){
+		else if (elementDecl.getType().isComplexType()) {
 			attContainer(elementDecl);
 		}
 
@@ -357,6 +365,9 @@ public class XSDeclarationsFetcher implements XSVisitor {
 	@Override
 	public void particle(XSParticle particle) {
 		particle.getTerm().visit(this);
+		if (particle.getTerm() instanceof XSDeclaration) {
+			particles.put((XSDeclaration) particle.getTerm(), particle);
+		}
 	}
 
 	@Override
