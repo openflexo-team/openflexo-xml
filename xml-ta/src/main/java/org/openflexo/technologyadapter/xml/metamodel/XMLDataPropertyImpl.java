@@ -38,6 +38,10 @@
 
 package org.openflexo.technologyadapter.xml.metamodel;
 
+import java.lang.reflect.Type;
+import java.util.List;
+
+import org.openflexo.connie.type.ParameterizedTypeImpl;
 import org.openflexo.toolbox.StringUtils;
 
 /**
@@ -125,6 +129,21 @@ public abstract class XMLDataPropertyImpl extends XMLPropertyImpl implements XML
 	@Override
 	public Class<?> getImplementedInterface() {
 		return XMLDataProperty.class;
+	}
+
+	@Override
+	public Type getAccessedType() {
+		if (getUpperBound() == null || (getUpperBound() >= 0 && getUpperBound() <= 1)) {
+			// Single cardinality
+			if (getType() != null) {
+				return getType();
+			}
+			return Object.class;
+		}
+		if (getType() != null) {
+			return new ParameterizedTypeImpl(List.class, getType());
+		}
+		return new ParameterizedTypeImpl(List.class, Object.class);
 	}
 
 }

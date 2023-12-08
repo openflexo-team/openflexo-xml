@@ -39,7 +39,6 @@
 package org.openflexo.technologyadapter.xml.fml.binding;
 
 import java.lang.reflect.Type;
-import java.util.List;
 import java.util.logging.Logger;
 
 import org.openflexo.connie.Bindable;
@@ -48,7 +47,6 @@ import org.openflexo.connie.binding.IBindingPathElement;
 import org.openflexo.connie.binding.SimplePathElementImpl;
 import org.openflexo.connie.exception.NullReferenceException;
 import org.openflexo.connie.exception.TypeMismatchException;
-import org.openflexo.connie.type.ParameterizedTypeImpl;
 import org.openflexo.technologyadapter.xml.metamodel.XMLDataProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
 import org.openflexo.technologyadapter.xml.model.XMLDataPropertyValue;
@@ -61,30 +59,12 @@ public class XMLDataPropertyPathElement extends SimplePathElementImpl {
 	private static final Logger logger = Logger.getLogger(XMLDataPropertyPathElement.class.getPackage().getName());
 
 	public XMLDataPropertyPathElement(IBindingPathElement parent, XMLDataProperty property, Bindable bindable) {
-		super(parent, property.getName(), property.getType(), bindable);
+		super(parent, property.getName(), property.getAccessedType(), bindable);
 		this.property = property;
 	}
 
 	public XMLDataProperty getDataProperty() {
 		return property;
-	}
-
-	@Override
-	public Type getType() {
-		if (property != null) {
-			if (property.getUpperBound() == null || (property.getUpperBound() >= 0 && property.getUpperBound() <= 1)) {
-				// Single cardinality
-				if (property.getType() != null) {
-					return property.getType();
-				}
-				return Object.class;
-			}
-			if (property != null && property.getType() != null) {
-				return new ParameterizedTypeImpl(List.class, property.getType());
-			}
-			return new ParameterizedTypeImpl(List.class, Object.class);
-		}
-		return null;
 	}
 
 	@Override

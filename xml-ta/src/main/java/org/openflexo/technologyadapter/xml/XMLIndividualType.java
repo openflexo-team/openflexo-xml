@@ -219,7 +219,7 @@ public class XMLIndividualType extends PropertyChangedSupportDefaultImplementati
 		if (getSpecificTypeInfo() != null && StringUtils.isNotEmpty(getSpecificTypeInfo().getSerializationForm())) {
 			return getSpecificTypeInfo().getSerializationForm();
 		}
-		return getXMLType() != null ? getXMLType().getName() : "XMLIndividual";
+		return getXMLType() != null ? "XMLIndividualType(type=" + getXMLType().getName() + ")" : "XMLIndividual";
 	}
 
 	@Override
@@ -228,7 +228,7 @@ public class XMLIndividualType extends PropertyChangedSupportDefaultImplementati
 			return getSpecificTypeInfo().getSerializationForm();
 		}
 		// return getClass().getName() + "(" + getSerializationRepresentation() + ")";
-		return getClass().getName() + "(" + getXMLType() + ")";
+		return getClass().getName() + "(type=" + getXMLType().getName() + ")";
 	}
 
 	@Override

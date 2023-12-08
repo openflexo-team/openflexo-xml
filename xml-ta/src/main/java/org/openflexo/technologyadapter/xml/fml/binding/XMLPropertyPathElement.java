@@ -57,18 +57,17 @@ public class XMLPropertyPathElement extends SimplePathElementImpl {
 	private static final Logger logger = Logger.getLogger(XMLPropertyPathElement.class.getPackage().getName());
 
 	public XMLPropertyPathElement(BindingPathElement parent, XMLProperty property, Bindable bindable) {
-		super(parent, property.getName(), property.getType(), bindable);
+		super(parent, property.getName(), property.getAccessedType(), bindable);
 		this.property = property;
 	}
 
-	public XMLProperty getDataProperty() {
+	public XMLProperty getXMLProperty() {
 		return property;
 	}
 
 	@Override
 	public Type getType() {
-
-		return property.getType();
+		return property.getAccessedType();
 
 	}
 
@@ -79,7 +78,7 @@ public class XMLPropertyPathElement extends SimplePathElementImpl {
 
 	@Override
 	public String getTooltipText(Type resultingType) {
-		return "DataAttribute " + property.getDisplayableDescription();
+		return property.getDisplayableDescription();
 	}
 
 	@Override

@@ -49,6 +49,8 @@ import org.openflexo.connie.binding.IBindingPathElement;
 import org.openflexo.connie.binding.SimplePathElement;
 import org.openflexo.foundation.fml.TechnologySpecificType;
 import org.openflexo.foundation.technologyadapter.TechnologyAdapterBindingFactory;
+import org.openflexo.technologyadapter.xml.XMLIndividualType;
+import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLDataProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLObject;
 import org.openflexo.technologyadapter.xml.metamodel.XMLObjectPropertyImpl;
@@ -87,6 +89,10 @@ public final class XMLBindingFactory extends TechnologyAdapterBindingFactory {
 
 	@Override
 	public boolean handleType(TechnologySpecificType<?> technologySpecificType) {
+		if (technologySpecificType instanceof XMLIndividualType
+				&& ((XMLIndividualType) technologySpecificType).getXMLType() instanceof XMLComplexType) {
+			return true;
+		}
 		if (technologySpecificType instanceof XMLObject) {
 			return true;
 		}
@@ -94,17 +100,26 @@ public final class XMLBindingFactory extends TechnologyAdapterBindingFactory {
 	}
 
 	@Override
-	public List<? extends SimplePathElement<?>> getAccessibleSimplePathElements(IBindingPathElement parent, Bindable bindable) {
+	public List<? extends SimplePathElement<?>> getAccessibleSimplePathElements(IBindingPathElement element, Bindable bindable) {
 
 		List<SimplePathElement<?>> returned = new ArrayList<>();
 
-		if (parent instanceof XMLIndividual) {
-			for (XMLProperty attr : ((XMLIndividual) parent).getType().getProperties()) {
-				returned.add(getSimplePathElement(attr, parent, bindable));
+		if (element.getActualType() instanceof XMLIndividualType
+				&& ((XMLIndividualType) element.getActualType()).getXMLType() instanceof XMLComplexType) {
+			XMLIndividualType elementType = (XMLIndividualType) element.getActualType();
+			XMLComplexType type = (XMLComplexType) elementType.getXMLType();
+			for (XMLProperty xmlProperty : type.getProperties()) {
+				returned.add(getSimplePathElement(xmlProperty, element, bindable));
+			}
+			return returned;
+		}
+		else if (element instanceof XMLIndividual) {
+			for (XMLProperty attr : ((XMLIndividual) element).getType().getProperties()) {
+				returned.add(getSimplePathElement(attr, element, bindable));
 			}
 		}
 
-		returned.addAll(super.getAccessibleSimplePathElements(parent, bindable));
+		returned.addAll(super.getAccessibleSimplePathElements(element, bindable));
 
 		return returned;
 	}

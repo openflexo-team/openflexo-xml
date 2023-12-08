@@ -39,7 +39,6 @@
 package org.openflexo.technologyadapter.xml.fml.binding;
 
 import java.lang.reflect.Type;
-import java.util.List;
 
 import org.openflexo.connie.Bindable;
 import org.openflexo.connie.BindingEvaluationContext;
@@ -48,7 +47,6 @@ import org.openflexo.connie.binding.SimplePathElementImpl;
 import org.openflexo.connie.exception.InvocationTargetTransformException;
 import org.openflexo.connie.exception.NullReferenceException;
 import org.openflexo.connie.exception.TypeMismatchException;
-import org.openflexo.connie.type.ParameterizedTypeImpl;
 import org.openflexo.technologyadapter.xml.metamodel.XMLObjectPropertyImpl;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
 import org.openflexo.technologyadapter.xml.model.XMLIndividual;
@@ -62,29 +60,8 @@ public class XMLObjectPropertyPathElement extends SimplePathElementImpl {
 	private final XMLObjectPropertyImpl property;
 
 	public XMLObjectPropertyPathElement(IBindingPathElement parent, XMLObjectPropertyImpl property, Bindable bindable) {
-		super(parent, property.getName(), property.getType(), bindable);
+		super(parent, property.getName(), property.getAccessedType(), bindable);
 		this.property = property;
-	}
-
-	@Override
-	public Type getType() {
-		if (property != null) {
-			if (property.getUpperBound() == null || (property.getUpperBound() >= 0 && property.getUpperBound() <= 1)) {
-				// Single cardinality
-				if (property.getType() != null) {
-					return property.getType();
-				}
-				return Object.class;
-			}
-			else {
-				if (property.getType() != null) {
-					return new ParameterizedTypeImpl(List.class, XMLIndividual.class);
-				}
-				return new ParameterizedTypeImpl(List.class, Object.class);
-			}
-		}
-		return null;
-
 	}
 
 	@Override

@@ -89,6 +89,13 @@ public interface XMLProperty extends XMLObject, Comparable<XMLProperty>, InnerRe
 	public void setType(XMLType aType);
 
 	/**
+	 * Return type beeing reflected by access of this property
+	 * 
+	 * @return
+	 */
+	public Type getAccessedType();
+
+	/**
 	 * Returns true if this property was created from an XML element and false if from an XMLAttribute
 	 * 
 	 * @return
