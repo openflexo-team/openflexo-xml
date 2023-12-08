@@ -108,7 +108,7 @@ public class TestXMLModel extends OpenflexoTestCase {
 
 		model.setMetaModel(metamodel);
 
-		XMLSimpleType ts = (XMLSimpleType) metamodel.createNewType(XMLMetaModel.STR_SIMPLETYPE_URI, "BASIC_STRING", true);
+		XMLSimpleType ts = (XMLSimpleType) metamodel.createNewType(XMLMetaModel.STRING_URI, "BASIC_STRING", true);
 
 		XMLComplexType t = (XMLComplexType) metamodel.createNewType("http://www.openflexo.org/aTestModel#Fleumeu", "Fleumeu", false);
 		t.createProperty("TOTO", ts);

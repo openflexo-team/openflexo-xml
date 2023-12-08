@@ -62,8 +62,18 @@ public interface XMLMetaModel<MM extends XMLMetaModel<MM>> extends XMLObject, Fl
 	public static String READ_ONLY = "readOnly";
 
 	// static simple Types URI
-
-	public static String STR_SIMPLETYPE_URI = "xs:string";
+	public static String ANY_TYPE_URI = "xs:anyType";
+	public static String STRING_URI = "xs:string";
+	public static String BOOLEAN_URI = "xs:boolean";
+	public static String BYTE_URI = "xs:byte";
+	public static String DATE_URI = "xs:date";
+	public static String DECIMAL_URI = "xs:decimal";
+	public static String DOUBLE_URI = "xs:double";
+	public static String FLOAT_URI = "xs:float";
+	public static String INT_URI = "xs:int";
+	public static String INTEGER_URI = "xs:integer";
+	public static String LONG_URI = "xs:long";
+	public static String SHORT_URI = "xs:short";
 
 	@Getter(value = TYPES, cardinality = Cardinality.LIST)
 	@CloningStrategy(StrategyType.IGNORE)

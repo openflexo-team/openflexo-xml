@@ -199,7 +199,7 @@ public abstract class XMLIndividualImpl extends FlexoObjectImpl implements XMLIn
 			XMLMetaModel mm = getContainerModel().getMetaModel();
 			if (!mm.isReadOnly()) {
 				// TODO Manage complex types and actual types for objects.
-				prop = this.getType().createProperty(name, mm.getTypeFromURI(XMLMetaModel.STR_SIMPLETYPE_URI));
+				prop = this.getType().createProperty(name, mm.getTypeFromURI(XMLMetaModel.STRING_URI));
 			}
 			else {
 				logger.warning("CANNOT give a value  for a non existant attribute :" + name);

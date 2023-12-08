@@ -38,6 +38,8 @@
 
 package org.openflexo.technologyadapter.xml.metamodel;
 
+import java.lang.reflect.Type;
+import java.util.Date;
 import java.util.logging.Logger;
 
 public abstract class XMLSimpleTypeImpl extends XMLTypeImpl implements XMLSimpleType {
@@ -52,6 +54,45 @@ public abstract class XMLSimpleTypeImpl extends XMLTypeImpl implements XMLSimple
 	@Override
 	public String getDisplayableDescription() {
 		return "Simple XML Type named : " + this.getName();
+	}
+
+	@Override
+	public Type getJavaType() {
+		if (getURI().equals(XMLMetaModel.STRING_URI)) {
+			return String.class;
+		}
+		if (getURI().equals(XMLMetaModel.BOOLEAN_URI)) {
+			return Boolean.class;
+		}
+		if (getURI().equals(XMLMetaModel.BYTE_URI)) {
+			return Byte.class;
+		}
+		if (getURI().equals(XMLMetaModel.DATE_URI)) {
+			return Date.class;
+		}
+		if (getURI().equals(XMLMetaModel.DECIMAL_URI)) {
+			return Number.class;
+		}
+		if (getURI().equals(XMLMetaModel.DOUBLE_URI)) {
+			return Double.class;
+		}
+		if (getURI().equals(XMLMetaModel.FLOAT_URI)) {
+			return Float.class;
+		}
+		if (getURI().equals(XMLMetaModel.INT_URI)) {
+			return Integer.class;
+		}
+		if (getURI().equals(XMLMetaModel.INTEGER_URI)) {
+			return Integer.class;
+		}
+		if (getURI().equals(XMLMetaModel.LONG_URI)) {
+			return Long.class;
+		}
+		if (getURI().equals(XMLMetaModel.SHORT_URI)) {
+			return Short.class;
+		}
+		logger.warning("Unexpected " + getURI());
+		return Object.class;
 	}
 
 }

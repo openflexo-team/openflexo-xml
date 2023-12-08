@@ -49,17 +49,10 @@ import org.openflexo.pamela.annotations.Setter;
 @ImplementationClass(XMLSimpleTypeImpl.class)
 public interface XMLSimpleType extends XMLType {
 
-	final String BASICTYPE = "basicType";
 	/*
 	 * Property that indicates that this particular simpleType is extracted from an Element or an Attribute
 	 */
 	final String MAPSTOELEMENT = "mapsToElement";
-
-	@Getter(value = BASICTYPE, ignoreType = true)
-	public Type getBasicType();
-
-	@Setter(value = BASICTYPE)
-	public void setBasicType(Type aType);
 
 	@Getter(value = MAPSTOELEMENT, defaultValue = "false")
 	public boolean mapsToElement();
@@ -67,4 +60,5 @@ public interface XMLSimpleType extends XMLType {
 	@Setter(value = MAPSTOELEMENT)
 	public void setMapsToElement(boolean val);
 
+	public Type getJavaType();
 }

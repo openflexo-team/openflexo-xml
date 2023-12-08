@@ -90,11 +90,10 @@ public abstract class XMLMetaModelImpl<MM extends XMLMetaModel<MM>> extends Flex
 
 		XMLType t = types.get(uri);
 
-		if (t == null && uri.equals(XMLMetaModel.STR_SIMPLETYPE_URI)) {
-			XMLSimpleType stringSimple = (XMLSimpleType) createNewType(XMLMetaModel.STR_SIMPLETYPE_URI, "STRING_BASIC_TYPE", true);
-			stringSimple.setBasicType(String.class);
-			return stringSimple;
+		if (t == null) {
+			return createNewType(uri, uri, true);
 		}
+
 		return t;
 
 	}

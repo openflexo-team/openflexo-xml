@@ -135,13 +135,13 @@ public abstract class XMLDataPropertyImpl extends XMLPropertyImpl implements XML
 	public Type getAccessedType() {
 		if (getUpperBound() == null || (getUpperBound() >= 0 && getUpperBound() <= 1)) {
 			// Single cardinality
-			if (getType() != null) {
-				return getType();
+			if (getType() instanceof XMLSimpleType) {
+				return ((XMLSimpleType) getType()).getJavaType();
 			}
 			return Object.class;
 		}
-		if (getType() != null) {
-			return new ParameterizedTypeImpl(List.class, getType());
+		if (getType() instanceof XMLSimpleType) {
+			return new ParameterizedTypeImpl(List.class, ((XMLSimpleType) getType()).getJavaType());
 		}
 		return new ParameterizedTypeImpl(List.class, Object.class);
 	}

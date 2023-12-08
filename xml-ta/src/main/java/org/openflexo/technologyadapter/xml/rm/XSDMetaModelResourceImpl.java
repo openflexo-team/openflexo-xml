@@ -60,6 +60,7 @@ import com.sun.xml.xsom.XSAttributeDecl;
 import com.sun.xml.xsom.XSComplexType;
 import com.sun.xml.xsom.XSElementDecl;
 import com.sun.xml.xsom.XSParticle;
+import com.sun.xml.xsom.XSRestrictionSimpleType;
 import com.sun.xml.xsom.XSSchemaSet;
 import com.sun.xml.xsom.XSType;
 
@@ -184,8 +185,7 @@ public abstract class XSDMetaModelResourceImpl extends FlexoResourceImpl<XSDMeta
 					XMLType owner = resourceData.getTypeFromURI(ownerUri);
 					if (owner != null && owner instanceof XMLComplexType) {
 						// TODO: better manage types
-						((XMLComplexType) owner).createProperty(element.getName(),
-								resourceData.getTypeFromURI(XMLMetaModel.STR_SIMPLETYPE_URI));
+						((XMLComplexType) owner).createProperty(element.getName(), resourceData.getTypeFromURI(XMLMetaModel.STRING_URI));
 					}
 					else {
 						logger.warning("unable to find an owner type for attribute: " + uri);
@@ -207,9 +207,16 @@ public abstract class XSDMetaModelResourceImpl extends FlexoResourceImpl<XSDMeta
 			if (ownerUri != null) {
 				XMLType owner = resourceData.getTypeFromURI(ownerUri);
 				if (owner != null && owner instanceof XMLComplexType) {
+					XMLType type;
+					if (attribute.getType() instanceof XSRestrictionSimpleType) {
+						XSRestrictionSimpleType rType = (XSRestrictionSimpleType) attribute.getType();
+						type = resourceData.getTypeFromURI("xs:" + rType.getName());
+					}
+					else {
+						type = resourceData.getTypeFromURI(XMLMetaModel.ANY_TYPE_URI);
+					}
 					// TODO: better manage types
-					((XMLComplexType) owner).createProperty(attribute.getName(),
-							resourceData.getTypeFromURI(XMLMetaModel.STR_SIMPLETYPE_URI));
+					((XMLComplexType) owner).createProperty(attribute.getName(), type);
 				}
 				else {
 					logger.warning("unable to find an owner type for attribute: " + uri);
