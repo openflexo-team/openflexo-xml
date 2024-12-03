@@ -1,6 +1,7 @@
 /**
  * 
- * Copyright (c) 2014, Openflexo
+ * Copyright (c) 2013-2014, Openflexo
+ * Copyright (c) 2012-2012, AgileBirds
  * 
  * This file is part of Xmlconnector, a component of the software infrastructure 
  * developed at Openflexo.
@@ -36,38 +37,36 @@
  * 
  */
 
-package org.openflexo.technologyadapter.xml.model;
+package org.openflexo.technologyadapter.xml.rm;
 
+import java.io.IOException;
+
+import org.openflexo.foundation.resource.PamelaResource;
+import org.openflexo.foundation.technologyadapter.FlexoModelResource;
 import org.openflexo.pamela.annotations.Getter;
-import org.openflexo.pamela.annotations.Initializer;
+import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
-import org.openflexo.pamela.annotations.Parameter;
-import org.openflexo.pamela.annotations.Setter;
-import org.openflexo.technologyadapter.xml.metamodel.XMLObject;
-import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
+import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
+import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
+import org.openflexo.technologyadapter.xml.model.typed.XMLModelFactory;
 
 /**
- * Implementation of a Property value in XSD/XML technology
+ * A resource allowing access to an XML document conform to an XSD grammar (its metamodel)
  * 
- * @author sylvain, xtof
+ * @author sylvain
  */
 @ModelEntity
-public abstract interface XMLPropertyValue  extends XMLObject {
+@ImplementationClass(TypedXMLResourceImpl.class)
+public interface TypedXMLResource extends XMLResource<XMLModel>,
+		FlexoModelResource<XMLModel, XSDMetaModel, XMLTechnologyAdapter, XMLTechnologyAdapter>, PamelaResource<XMLModel, XMLModelFactory> {
 
-	final String PROPERTY = "property";
+	public static final String TARGET_NAMESPACE = "targetNamespace";
 
-	@Initializer
-	public void XMLPropertyValue(@Parameter(PROPERTY) XMLProperty prop);
-	
-	@Getter(PROPERTY)
-	public XMLProperty getProperty();
-	
-	@Setter(PROPERTY)
-	public void setProperty(XMLProperty prop);
-	
-	public String getStringValue();
+	@Getter(value = TARGET_NAMESPACE)
+	public String getTargetNamespace() throws IOException;
 
-	@Override
-	public boolean equals(Object obj);
+	// initializes the Metamodel property of XMLModel, given the reference provided by metamodelResource property
+	public void attachMetamodel();
 
 }

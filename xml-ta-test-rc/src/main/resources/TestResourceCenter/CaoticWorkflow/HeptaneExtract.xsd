@@ -1,0 +1,182 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="SOURCEFILE">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="NAME"/>
+          <xs:attribute type="xs:string" name="TYPE"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="TARGET">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="NAME"/>
+          <xs:attribute type="xs:string" name="ENDIANNESS"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="PREPROCESSOR">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="NAME"/>
+          <xs:attribute type="xs:string" name="OPT"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="COMPILER">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="NAME"/>
+          <xs:attribute type="xs:string" name="OPT"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ASSEMBLER">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="NAME"/>
+          <xs:attribute type="xs:string" name="OPT"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="LINKER">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="NAME"/>
+          <xs:attribute type="xs:string" name="OPT"/>
+          <xs:attribute type="xs:string" name="SCRIPT"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OBJDUMP">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="NAME"/>
+          <xs:attribute type="xs:string" name="OPT"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="READELF">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="NAME"/>
+          <xs:attribute type="xs:string" name="OPT"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="INPUTDIR">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="NAME"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="TMPDIR">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="NAME"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RESULTDIR">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="NAME"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="PROGRAM">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="SOURCEFILE"/>
+      </xs:sequence>
+      <xs:attribute type="xs:string" name="NAME"/>
+      <xs:attribute type="xs:string" name="ENTRYPOINT"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="STATISTICS">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="VALUE"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CONFIGURATION">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="TARGET"/>
+        <xs:element ref="PREPROCESSOR">
+          <xs:annotation>
+            <xs:documentation> Compiler toolchain  ******************  Preprocessor </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="COMPILER">
+          <xs:annotation>
+            <xs:documentation> Compiler (options -c -S are automatically put to generate assembly code)  Option -ggdb should be used if html output of critical path is asked for in subsequent WCET estimation </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="ASSEMBLER">
+          <xs:annotation>
+            <xs:documentation> Assembler </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="LINKER">
+          <xs:annotation>
+            <xs:documentation> Linker (option -T script is automatically set when SCRIPT is specified) </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="OBJDUMP">
+          <xs:annotation>
+            <xs:documentation> Objdump </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="READELF">
+          <xs:annotation>
+            <xs:documentation> Readelf (called with option -S) </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="INPUTDIR">
+          <xs:annotation>
+            <xs:documentation> Directories of inputs, temporaries and outputs (default values . /tmp and .)  **************************************************************************** </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="TMPDIR"/>
+        <xs:element ref="RESULTDIR"/>
+        <xs:element ref="PROGRAM">
+          <xs:annotation>
+            <xs:documentation> Program parameters  ******************  NAME: program name, used as a file name prefix when generating outputs in RESULTDIR  SOURCEFILE NAME: source file name (merged with INPUTDIR to load file)  SOURCEFILE TYPE: C/ASM/BINARY  ANNOTATIONFILE: input file defining the loop bounds, required for BINARY or ASM files only. Example: ANNOTATIONFILE="annot.xml" ). Several C files are accepted, but not for BINARY/ASM types. </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="STATISTICS">
+          <xs:annotation>
+            <xs:documentation> OTHER OPTIONS </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

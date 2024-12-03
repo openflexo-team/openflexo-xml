@@ -45,8 +45,14 @@ import org.openflexo.pamela.exceptions.ModelDefinitionException;
 import org.openflexo.pamela.factory.PamelaModelFactory;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
-import org.openflexo.technologyadapter.xml.model.XMLModel;
+import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
 
+/**
+ * Repository storing {@link XSDMetaModelResource} giving access to {@link XSDMetaModelResource}
+ * 
+ * @author sylvain
+ * 
+ */
 @ModelEntity
 public interface XSDMetaModelRepository<I>
 		extends MetaModelRepository<XSDMetaModelResource, XMLModel, XSDMetaModel, XMLTechnologyAdapter, I> {
@@ -60,7 +66,7 @@ public interface XSDMetaModelRepository<I>
 			newRepository.setTechnologyAdapter(technologyAdapter);
 			newRepository.setResourceCenter(resourceCenter);
 			newRepository.setBaseArtefact(resourceCenter.getBaseArtefact());
-			newRepository.getRootFolder().setRepositoryContext(resourceCenter.getLocales().localizedForKey("[Metamodels]"));
+			newRepository.getRootFolder().setRepositoryContext(resourceCenter.getLocales().localizedForKey("[XSDMetamodels]"));
 			return newRepository;
 		} catch (ModelDefinitionException e) {
 			e.printStackTrace();

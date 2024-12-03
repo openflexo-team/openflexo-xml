@@ -58,9 +58,11 @@ import org.openflexo.technologyadapter.xml.XMLIndividualType.XMLIndividualTypeFa
 import org.openflexo.technologyadapter.xml.fml.binding.XMLBindingFactory;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
-import org.openflexo.technologyadapter.xml.model.XMLModel;
-import org.openflexo.technologyadapter.xml.model.XMLModelFactory;
-import org.openflexo.technologyadapter.xml.rm.XMLFileResourceFactory;
+import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
+import org.openflexo.technologyadapter.xml.model.typed.XMLObjectGraphFactory;
+import org.openflexo.technologyadapter.xml.rm.FreeXMLDocumentRepository;
+import org.openflexo.technologyadapter.xml.rm.FreeXMLResourceFactory;
+import org.openflexo.technologyadapter.xml.rm.TypedXMLResourceFactory;
 import org.openflexo.technologyadapter.xml.rm.XMLModelRepository;
 import org.openflexo.technologyadapter.xml.rm.XSDMetaModelRepository;
 import org.openflexo.technologyadapter.xml.rm.XSDMetaModelResourceFactory;
@@ -73,14 +75,14 @@ import org.openflexo.technologyadapter.xml.rm.XSDMetaModelResourceFactory;
 
 @DeclareModelSlots({ FreeXMLModelSlot.class, XMLModelSlot.class, XMLMetaModelSlot.class })
 @DeclareTechnologySpecificTypes({ XMLIndividualType.class })
-@DeclareResourceFactories({ XSDMetaModelResourceFactory.class, XMLFileResourceFactory.class })
+@DeclareResourceFactories({ XSDMetaModelResourceFactory.class, TypedXMLResourceFactory.class, FreeXMLResourceFactory.class })
 public class XMLTechnologyAdapter extends TechnologyAdapter<XMLTechnologyAdapter> {
 
 	protected static final Logger logger = Logger.getLogger(XMLTechnologyAdapter.class.getPackage().getName());
 
 	private static final String TAName = "XML technology adapter";
 
-	private XMLModelFactory xmlModelFactory = null;
+	private XMLObjectGraphFactory xmlModelFactory = null;
 
 	private static final XMLBindingFactory BINDING_FACTORY = new XMLBindingFactory();
 
@@ -88,7 +90,7 @@ public class XMLTechnologyAdapter extends TechnologyAdapter<XMLTechnologyAdapter
 
 	public XMLTechnologyAdapter() {
 		super();
-		xmlModelFactory = new XMLModelFactory();
+		xmlModelFactory = new XMLObjectGraphFactory();
 		privateMetamodels = new HashMap<>();
 	}
 
@@ -140,7 +142,16 @@ public class XMLTechnologyAdapter extends TechnologyAdapter<XMLTechnologyAdapter
 		return returned;
 	}
 
-	public XMLModelFactory getXMLModelFactory() {
+	public <I> FreeXMLDocumentRepository<I> getFreeXMLDocumentRepository(FlexoResourceCenter<I> resourceCenter) {
+		FreeXMLDocumentRepository<I> returned = resourceCenter.retrieveRepository(FreeXMLDocumentRepository.class, this);
+		if (returned == null) {
+			returned = FreeXMLDocumentRepository.instanciateNewRepository(this, resourceCenter);
+			resourceCenter.registerRepository(returned, FreeXMLDocumentRepository.class, this);
+		}
+		return returned;
+	}
+
+	public XMLObjectGraphFactory getXMLModelFactory() {
 		return xmlModelFactory;
 	}
 
@@ -154,8 +165,8 @@ public class XMLTechnologyAdapter extends TechnologyAdapter<XMLTechnologyAdapter
 		return "XML";
 	}
 
-	public XMLFileResourceFactory getXMLFileResourceFactory() {
-		return getResourceFactory(XMLFileResourceFactory.class);
+	public TypedXMLResourceFactory getXMLFileResourceFactory() {
+		return getResourceFactory(TypedXMLResourceFactory.class);
 	}
 
 	public XSDMetaModelResourceFactory getXSDMetaModelResourceFactory() {

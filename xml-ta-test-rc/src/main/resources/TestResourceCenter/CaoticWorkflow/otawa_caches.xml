@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<cache-config>
+	<dcache>
+		<block_bits>5</block_bits>
+		<way_bits>2</way_bits>
+		<row_bits>9</row_bits>
+		<miss_penalty>25</miss_penalty>
+	</dcache>
+	<icache>
+		<block_bits>5</block_bits>
+		<way_bits>2</way_bits>
+		<row_bits>9</row_bits>
+		<miss_penalty>25</miss_penalty>
+	</icache>
+</cache-config>

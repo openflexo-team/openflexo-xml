@@ -2,7 +2,7 @@
  * 
  * Copyright (c) 2014, Openflexo
  * 
- * This file is part of Xmlconnector, a component of the software infrastructure 
+ * This file is part of Flexodiagram, a component of the software infrastructure 
  * developed at Openflexo.
  * 
  * 
@@ -36,24 +36,35 @@
  * 
  */
 
-package org.openflexo.technologyadapter.xml.rm;
+package org.openflexo.technologyadapter.xml.model.free;
 
 import java.util.logging.Logger;
 
-import org.openflexo.foundation.resource.FlexoResourceImpl;
-import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument;
+import org.openflexo.pamela.PamelaMetaModelLibrary;
+import org.openflexo.pamela.exceptions.ModelDefinitionException;
+import org.openflexo.pamela.factory.EditingContext;
+import org.openflexo.pamela.factory.PamelaModelFactory;
+import org.openflexo.technologyadapter.xml.model.AbstractXMLDocumentFactory;
+import org.openflexo.technologyadapter.xml.rm.FreeXMLResource;
 
 /**
- * Represents an XML resource<br>
- * May be a free XML document or a typed XML document
+ * A {@link PamelaModelFactory} used to manage {@link FreeXMLDocument}
  * 
- * @param <RD>
- *            type of resource data
+ * One instance of this class should be used for each {@link FreeXMLResource}
  * 
  * @author sylvain
+ * 
  */
-public abstract class XMLResourceImpl<RD extends AbstractXMLDocument<RD>> extends FlexoResourceImpl<RD> implements XMLResource<RD> {
+public class FreeXMLDocumentFactory extends AbstractXMLDocumentFactory<FreeXMLResource, FreeXMLDocument> {
 
-	protected static final Logger logger = Logger.getLogger(XMLResourceImpl.class.getPackage().getName());
+	@SuppressWarnings("unused")
+	private static final Logger logger = Logger.getLogger(FreeXMLDocumentFactory.class.getPackage().getName());
 
+	public FreeXMLDocumentFactory(FreeXMLResource resource, EditingContext editingContext) throws ModelDefinitionException {
+		super(PamelaMetaModelLibrary.retrieveMetaModel(FreeXMLDocument.class), resource, editingContext);
+	}
+
+	public FreeXMLDocument makeFreeXMLDocument() {
+		return newInstance(FreeXMLDocument.class);
+	}
 }

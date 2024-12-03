@@ -36,9 +36,8 @@
  * 
  */
 
-package org.openflexo.technologyadapter.xml.model;
+package org.openflexo.technologyadapter.xml.model.typed;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,57 +48,61 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.openflexo.foundation.FlexoObject.FlexoObjectImpl;
 import org.openflexo.foundation.resource.FlexoResource;
-import org.openflexo.pamela.PamelaMetaModelLibrary;
-import org.openflexo.pamela.exceptions.ModelDefinitionException;
-import org.openflexo.pamela.factory.PamelaModelFactory;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
+import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
-import org.openflexo.technologyadapter.xml.rm.XMLFileResource;
+import org.openflexo.technologyadapter.xml.model.AbstractXMLDocumentImpl;
+import org.openflexo.technologyadapter.xml.rm.TypedXMLResource;
 import org.openflexo.xml.XMLCst;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * @author xtof
+ * Default implementaion for {@link XMLModel}
  * 
+ * @author sylvain,xtof
  */
 
-public abstract class XMLModelImpl extends FlexoObjectImpl implements XMLModel {
-
-	// Constants
-
-	private static final String Version = "0";
+public abstract class XMLModelImpl extends AbstractXMLDocumentImpl<XMLModel> implements XMLModel {
 
 	// Attributes
 
 	protected static final Logger logger = Logger.getLogger(XMLModelImpl.class.getPackage().getName());
 	private FlexoResource<?> xmlResource;
-	private final boolean isReadOnly = true;
 
 	private final Map<String, XMLIndividual> individuals;
 
 	private final List<String> namespace = new ArrayList<>();
 
-	private static PamelaModelFactory MF;
-
+	/*private static PamelaModelFactory MF;
+	
 	static {
 		try {
-			MF = new PamelaModelFactory(PamelaMetaModelLibrary.retrieveMetaModel(XMLModel.class, XMLIndividual.class, XMLPropertyValue.class,
-					XMLDataPropertyValue.class, XMLObjectPropertyValue.class));
+			MF = new PamelaModelFactory(PamelaMetaModelLibrary.retrieveMetaModel(XMLModel.class, XMLIndividual.class,
+					XMLPropertyValue.class, XMLDataPropertyValue.class, XMLObjectPropertyValue.class));
 		} catch (ModelDefinitionException e) {
 			e.printStackTrace();
 		}
 	}
-
+	
 	public static PamelaModelFactory getModelFactory() {
 		return MF;
-	}
+	}*/
 
 	public XMLModelImpl() {
 		super();
 		individuals = new HashMap<>();
+	}
+
+	// Can be safely cast to TypedXMLResource
+	@Override
+	public TypedXMLResource getResource() {
+		return (TypedXMLResource) super.getResource();
+	}
+
+	public XMLModelFactory getModelFactory() {
+		return getResource().getFactory();
 	}
 
 	@Override
@@ -129,15 +132,15 @@ public abstract class XMLModelImpl extends FlexoObjectImpl implements XMLModel {
 
 	}
 
-	@Override
-	public XMLFileResource getResource() {
-		return (XMLFileResource) xmlResource;
+	/*@Override
+	public TypedXMLResource getResource() {
+		return (TypedXMLResource) xmlResource;
 	}
-
+	
 	@Override
 	public void setResource(FlexoResource<XMLModel> resource) {
 		this.xmlResource = resource;
-	}
+	}*/
 
 	@Override
 	public String getURI() {
@@ -167,9 +170,8 @@ public abstract class XMLModelImpl extends FlexoObjectImpl implements XMLModel {
 	}
 
 	@Override
-	public XMLIndividual addNewIndividual(Type aType) {
-		XMLIndividual anIndividual = getModelFactory().newInstance(XMLIndividual.class, this, aType);
-		// XMLIndividual anIndividual = new XMLIndividual(this, (XMLType) aType);
+	public XMLIndividual addNewIndividual(XMLComplexType aType) {
+		XMLIndividual anIndividual = getModelFactory().makeXMLIndividual(this, aType);
 		this.addIndividual(anIndividual);
 		return anIndividual;
 	}
@@ -196,7 +198,7 @@ public abstract class XMLModelImpl extends FlexoObjectImpl implements XMLModel {
 
 	@Override
 	public XMLTechnologyAdapter getTechnologyAdapter() {
-		XMLFileResource rsc = this.getResource();
+		TypedXMLResource rsc = this.getResource();
 		if (rsc != null)
 			return rsc.getTechnologyAdapter();
 		return null;

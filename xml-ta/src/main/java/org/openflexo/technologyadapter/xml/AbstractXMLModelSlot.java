@@ -36,7 +36,6 @@
  * 
  */
 
-
 package org.openflexo.technologyadapter.xml;
 
 import java.util.List;
@@ -45,14 +44,14 @@ import org.openflexo.foundation.technologyadapter.ModelSlot;
 import org.openflexo.pamela.annotations.Adder;
 import org.openflexo.pamela.annotations.Embedded;
 import org.openflexo.pamela.annotations.Getter;
+import org.openflexo.pamela.annotations.Getter.Cardinality;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.PropertyIdentifier;
 import org.openflexo.pamela.annotations.Remover;
 import org.openflexo.pamela.annotations.Setter;
 import org.openflexo.pamela.annotations.XMLElement;
-import org.openflexo.pamela.annotations.Getter.Cardinality;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
-import org.openflexo.technologyadapter.xml.model.XMLModel;
+import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument;
 
 /**
  * 
@@ -63,7 +62,7 @@ import org.openflexo.technologyadapter.xml.model.XMLModel;
  */
 
 @ModelEntity(isAbstract = true)
-public interface AbstractXMLModelSlot<T extends AbstractXMLURIProcessor> extends ModelSlot<XMLModel> {
+public interface AbstractXMLModelSlot<RD extends AbstractXMLDocument<RD>, T extends AbstractXMLURIProcessor> extends ModelSlot<RD> {
 
 	@PropertyIdentifier(type = List.class)
 	public static final String URI_PROCESSORS_LIST_KEY = "uriProcessorsList";

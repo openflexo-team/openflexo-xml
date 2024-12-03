@@ -36,24 +36,28 @@
  * 
  */
 
-package org.openflexo.technologyadapter.xml.rm;
+package org.openflexo.technologyadapter.xml.model.typed;
 
-import java.util.logging.Logger;
-
-import org.openflexo.foundation.resource.FlexoResourceImpl;
-import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument;
+import org.openflexo.pamela.annotations.Getter;
+import org.openflexo.pamela.annotations.ImplementationClass;
+import org.openflexo.pamela.annotations.ModelEntity;
+import org.openflexo.pamela.annotations.Setter;
 
 /**
- * Represents an XML resource<br>
- * May be a free XML document or a typed XML document
+ * Implementation of an Data Property values in XSD/XML technology.<br>
  * 
- * @param <RD>
- *            type of resource data
- * 
- * @author sylvain
+ * @author sylvain, xtof
  */
-public abstract class XMLResourceImpl<RD extends AbstractXMLDocument<RD>> extends FlexoResourceImpl<RD> implements XMLResource<RD> {
+@ModelEntity
+@ImplementationClass(XMLDataPropertyValueImpl.class)
+public interface XMLDataPropertyValue extends XMLPropertyValue  {
 
-	protected static final Logger logger = Logger.getLogger(XMLResourceImpl.class.getPackage().getName());
+	final String VALUE = "value";
 
+	@Getter(value = VALUE, ignoreType = true)
+	public Object getValue();
+	
+	@Setter(VALUE)
+	public void setValue(Object value);
+	
 }

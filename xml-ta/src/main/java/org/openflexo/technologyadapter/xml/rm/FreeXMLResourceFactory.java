@@ -24,68 +24,73 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 import org.openflexo.foundation.resource.FlexoResourceCenter;
-import org.openflexo.foundation.resource.TechnologySpecificFlexoResourceFactory;
 import org.openflexo.foundation.technologyadapter.TechnologyContextManager;
 import org.openflexo.pamela.exceptions.ModelDefinitionException;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
-import org.openflexo.technologyadapter.xml.model.XMLModel;
-import org.openflexo.technologyadapter.xml.model.XMLModelImpl;
-import org.openflexo.toolbox.StringUtils;
-import org.openflexo.xml.XMLRootElementInfo;
+import org.openflexo.technologyadapter.xml.model.free.FreeXMLDocument;
+import org.openflexo.technologyadapter.xml.model.free.FreeXMLDocumentFactory;
 
 /**
- * Implementation of ResourceFactory for {@link XMLFileResource}
+ * Implementation of ResourceFactory for {@link TypedXMLResource}
  * 
  * @author sylvain
  *
  */
-public class XMLFileResourceFactory extends TechnologySpecificFlexoResourceFactory<XMLFileResource, XMLModel, XMLTechnologyAdapter> {
+public class FreeXMLResourceFactory extends AbstractXMLResourceFactory<FreeXMLResource, FreeXMLDocument, FreeXMLDocumentFactory> {
 
-	private static final Logger logger = Logger.getLogger(XMLFileResourceFactory.class.getPackage().getName());
+	private static final Logger logger = Logger.getLogger(FreeXMLResourceFactory.class.getPackage().getName());
 
-	public static final String XML_EXTENSION = ".xml";
-
-	public XMLFileResourceFactory() throws ModelDefinitionException {
-		super(XMLFileResource.class);
+	public FreeXMLResourceFactory() throws ModelDefinitionException {
+		super(FreeXMLResource.class);
 	}
 
 	@Override
-	public XMLModel makeEmptyResourceData(XMLFileResource resource) {
-		return XMLModelImpl.getModelFactory().newInstance(XMLModel.class);
+	public FreeXMLDocumentFactory makeModelFactory(FreeXMLResource resource,
+			TechnologyContextManager<XMLTechnologyAdapter> technologyContextManager) throws ModelDefinitionException {
+		return new FreeXMLDocumentFactory(resource, technologyContextManager.getServiceManager().getEditingContext());
+	}
+
+	@Override
+	public FreeXMLDocument makeEmptyResourceData(FreeXMLResource resource) {
+		return resource.getFactory().makeFreeXMLDocument();
 	}
 
 	@Override
 	public <I> boolean isValidArtefact(I serializationArtefact, FlexoResourceCenter<I> resourceCenter) {
-		return resourceCenter.retrieveName(serializationArtefact).endsWith(XML_EXTENSION);
+		if (resourceCenter.retrieveName(serializationArtefact).endsWith(XML_EXTENSION)) {
+			System.out.println("Tiens, ce fichier XML la est-il FREE ? " + serializationArtefact);
+			return getSchemaURI(serializationArtefact, resourceCenter) == null;
+		}
+		return false;
 	}
 
 	@Override
-	public <I> XMLFileResource registerResource(XMLFileResource resource, FlexoResourceCenter<I> resourceCenter) {
+	public <I> FreeXMLResource registerResource(FreeXMLResource resource, FlexoResourceCenter<I> resourceCenter) {
 		super.registerResource(resource, resourceCenter);
 
-		// Register the resource in the XMLModelRepository of supplied resource center
+		// Register the resource in the FreeXMLDocumentRepository of supplied resource center
 		registerResourceInResourceRepository(resource,
-				getTechnologyAdapter(resourceCenter.getServiceManager()).getXMLModelRepository(resourceCenter));
+				getTechnologyAdapter(resourceCenter.getServiceManager()).getFreeXMLDocumentRepository(resourceCenter));
 
 		return resource;
 	}
 
 	@Override
-	protected <I> XMLFileResource initResourceForRetrieving(I serializationArtefact, FlexoResourceCenter<I> resourceCenter)
+	protected <I> FreeXMLResource initResourceForRetrieving(I serializationArtefact, FlexoResourceCenter<I> resourceCenter)
 			throws ModelDefinitionException, IOException {
-		XMLFileResource returned = super.initResourceForRetrieving(serializationArtefact, resourceCenter);
+		FreeXMLResource returned = super.initResourceForRetrieving(serializationArtefact, resourceCenter);
 
-		TechnologyContextManager<XMLTechnologyAdapter> technologyContextManager = getTechnologyContextManager(
-				resourceCenter.getServiceManager());
+		// TechnologyContextManager<XMLTechnologyAdapter> technologyContextManager = getTechnologyContextManager(
+		// resourceCenter.getServiceManager());
 
-		XMLRootElementInfo xmlRootElementInfo = resourceCenter.getXMLRootElementInfo(serializationArtefact);
+		/*XMLRootElementInfo xmlRootElementInfo = resourceCenter.getXMLRootElementInfo(serializationArtefact);
 		if (xmlRootElementInfo != null) {
 			String mmURI = xmlRootElementInfo.getURI();
 			if (StringUtils.isNotEmpty(mmURI)) {
 				XSDMetaModelResource mmRes = (XSDMetaModelResource) technologyContextManager.getResourceWithURI(mmURI);
 				returned.setMetaModelResource(mmRes);
 			}
-		}
+		}*/
 		return returned;
 	}
 

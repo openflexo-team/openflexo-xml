@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+		targetNamespace="http://mem4csd.telecom-paris.fr/OtawaMemory" 
+		xmlns="http://mem4csd.telecom-paris.fr/OtawaMemory"
+		elementFormDefault="qualified">
+  <xs:element name="offset" type="xs:string"/>
+  <xs:element name="name" type="xs:string"/>
+  <xs:element name="address">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="offset"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="size" type="xs:string"/>
+  <xs:element name="type" type="xs:string"/>
+  <xs:element name="latency" type="xs:byte"/>
+  <xs:element name="writable" type="xs:string"/>
+  <xs:element name="cachable" type="xs:string"/>
+  <xs:element name="bank">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="name"/>
+        <xs:element ref="address"/>
+        <xs:element ref="size"/>
+        <xs:element ref="type"/>
+        <xs:element ref="latency"/>
+        <xs:element ref="writable"/>
+        <xs:element ref="cachable"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="banks">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="bank"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="memory">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="banks"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

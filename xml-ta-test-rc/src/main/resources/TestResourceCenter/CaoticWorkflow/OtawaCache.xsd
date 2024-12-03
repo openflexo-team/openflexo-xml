@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+		targetNamespace="http://mem4csd.telecom-paris.fr/OtawaCache" 
+		xmlns="http://mem4csd.telecom-paris.fr/OtawaCache"
+		elementFormDefault="qualified">
+		
+  <xs:element name="block_bits" type="xs:byte"/>
+  <xs:element name="way_bits" type="xs:byte"/>
+  <xs:element name="row_bits" type="xs:byte"/>
+  <xs:element name="miss_penalty" type="xs:byte"/>
+  <xs:element name="dcache">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="block_bits"/>
+        <xs:element ref="way_bits"/>
+        <xs:element ref="row_bits"/>
+        <xs:element ref="miss_penalty"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="icache">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="block_bits"/>
+        <xs:element ref="way_bits"/>
+        <xs:element ref="row_bits"/>
+        <xs:element ref="miss_penalty"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="cache-config">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="dcache"/>
+        <xs:element ref="icache"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

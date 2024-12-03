@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright (c) 2014, Openflexo
+ * Copyright (c) 2014-2015, Openflexo
  * 
  * This file is part of Xmlconnector, a component of the software infrastructure 
  * developed at Openflexo.
@@ -36,24 +36,32 @@
  * 
  */
 
-package org.openflexo.technologyadapter.xml.rm;
+package org.openflexo.technologyadapter.xml.model;
 
-import java.util.logging.Logger;
-
-import org.openflexo.foundation.resource.FlexoResourceImpl;
-import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument;
+import org.openflexo.foundation.FlexoObject.FlexoObjectImpl;
+import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
+import org.openflexo.technologyadapter.xml.rm.XMLResource;
 
 /**
- * Represents an XML resource<br>
- * May be a free XML document or a typed XML document
- * 
- * @param <RD>
- *            type of resource data
+ * Default implementation for {@link AbstractXMLDocument}
  * 
  * @author sylvain
  */
-public abstract class XMLResourceImpl<RD extends AbstractXMLDocument<RD>> extends FlexoResourceImpl<RD> implements XMLResource<RD> {
+public abstract class AbstractXMLDocumentImpl<RD extends AbstractXMLDocument<RD>> extends FlexoObjectImpl
+		implements AbstractXMLDocument<RD> {
 
-	protected static final Logger logger = Logger.getLogger(XMLResourceImpl.class.getPackage().getName());
+	// Can be safely cast to XMLResource<RD>
+	@Override
+	public XMLResource<RD> getResource() {
+		return (XMLResource<RD>) performSuperGetter(FLEXO_RESOURCE);
+	}
+
+	@Override
+	public XMLTechnologyAdapter getTechnologyAdapter() {
+		XMLResource<RD> rsc = getResource();
+		if (rsc != null)
+			return rsc.getTechnologyAdapter();
+		return null;
+	}
 
 }

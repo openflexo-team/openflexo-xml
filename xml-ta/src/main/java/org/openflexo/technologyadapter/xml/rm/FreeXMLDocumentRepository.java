@@ -1,9 +1,9 @@
 /**
  * 
  * Copyright (c) 2013-2014, Openflexo
- * Copyright (c) 2012-2012, AgileBirds
+ * Copyright (c) 2011-2012, AgileBirds
  * 
- * This file is part of Xmlconnector, a component of the software infrastructure 
+ * This file is part of Excelconnector, a component of the software infrastructure 
  * developed at Openflexo.
  * 
  * 
@@ -39,24 +39,39 @@
 
 package org.openflexo.technologyadapter.xml.rm;
 
-import org.openflexo.pamela.annotations.Getter;
-import org.openflexo.pamela.annotations.ImplementationClass;
+import org.openflexo.foundation.resource.FlexoResourceCenter;
+import org.openflexo.foundation.technologyadapter.TechnologyAdapterResourceRepository;
 import org.openflexo.pamela.annotations.ModelEntity;
-import org.openflexo.pamela.annotations.Setter;
-import org.openflexo.technologyadapter.xml.XMLTechnologyContextManager;
+import org.openflexo.pamela.exceptions.ModelDefinitionException;
+import org.openflexo.pamela.factory.PamelaModelFactory;
+import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
+import org.openflexo.technologyadapter.xml.model.free.FreeXMLDocument;
 
+/**
+ * Repository storing {@link FreeXMLResource} giving access to {@link FreeXMLDocument}
+ * 
+ * @author sylvain
+ * 
+ */
 @ModelEntity
-@ImplementationClass(XMLFileResourceImpl.class)
-public interface XMLFileResource extends XMLResource {
+public interface FreeXMLDocumentRepository<I>
+		extends TechnologyAdapterResourceRepository<FreeXMLResource, XMLTechnologyAdapter, FreeXMLDocument, I> {
 
-	public static final String TECHNOLOGY_CONTEXT_MANAGER = "XMLTechnologyContextManager";
-	public static final String XML_FILE_EXTENSION = ".xml";
-	@Override
-	@Getter(value = TECHNOLOGY_CONTEXT_MANAGER, ignoreType = true)
-	public XMLTechnologyContextManager getTechnologyContextManager();
-
-	@Override
-	@Setter(TECHNOLOGY_CONTEXT_MANAGER)
-	public void setTechnologyContextManager(XMLTechnologyContextManager technologyContextManager);
+	public static <I> FreeXMLDocumentRepository<I> instanciateNewRepository(XMLTechnologyAdapter technologyAdapter,
+			FlexoResourceCenter<I> resourceCenter) {
+		PamelaModelFactory factory;
+		try {
+			factory = new PamelaModelFactory(FreeXMLDocumentRepository.class);
+			FreeXMLDocumentRepository<I> newRepository = factory.newInstance(FreeXMLDocumentRepository.class);
+			newRepository.setTechnologyAdapter(technologyAdapter);
+			newRepository.setResourceCenter(resourceCenter);
+			newRepository.setBaseArtefact(resourceCenter.getBaseArtefact());
+			newRepository.getRootFolder().setRepositoryContext(null);
+			return newRepository;
+		} catch (ModelDefinitionException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 }

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:Library xmlns:p="http://www.example.org/Library" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/Library ../XSD/library.xsd ">
+<p:Library 
+	xmlns:p="http://www.example.org/Library" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.example.org/Library ../XSD/library.xsd ">
   <p:name><![CDATA[My Library]]></p:name>
   <p:books>
    <p:title>toto</p:title>

@@ -1,6 +1,7 @@
 /**
  * 
- * Copyright (c) 2014, Openflexo
+ * Copyright (c) 2013-2014, Openflexo
+ * Copyright (c) 2012-2012, AgileBirds
  * 
  * This file is part of Xmlconnector, a component of the software infrastructure 
  * developed at Openflexo.
@@ -38,22 +39,19 @@
 
 package org.openflexo.technologyadapter.xml.rm;
 
-import java.util.logging.Logger;
-
-import org.openflexo.foundation.resource.FlexoResourceImpl;
-import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument;
+import org.openflexo.foundation.resource.PamelaResource;
+import org.openflexo.pamela.annotations.ImplementationClass;
+import org.openflexo.pamela.annotations.ModelEntity;
+import org.openflexo.technologyadapter.xml.model.free.FreeXMLDocument;
+import org.openflexo.technologyadapter.xml.model.free.FreeXMLDocumentFactory;
 
 /**
- * Represents an XML resource<br>
- * May be a free XML document or a typed XML document
- * 
- * @param <RD>
- *            type of resource data
+ * A resource allowing access to a plain XML document without any conformance nor typing
  * 
  * @author sylvain
  */
-public abstract class XMLResourceImpl<RD extends AbstractXMLDocument<RD>> extends FlexoResourceImpl<RD> implements XMLResource<RD> {
-
-	protected static final Logger logger = Logger.getLogger(XMLResourceImpl.class.getPackage().getName());
+@ModelEntity
+@ImplementationClass(FreeXMLResourceImpl.class)
+public interface FreeXMLResource extends XMLResource<FreeXMLDocument>, PamelaResource<FreeXMLDocument, FreeXMLDocumentFactory> {
 
 }

@@ -1,0 +1,303 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="TARGET">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="NAME"/>
+          <xs:attribute type="xs:string" name="ENDIANNESS"/>
+          <xs:attribute type="xs:string" name="DATAPATH"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CACHE">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:byte" name="nbsets" use="optional"/>
+          <xs:attribute type="xs:byte" name="nbways" use="optional"/>
+          <xs:attribute type="xs:byte" name="cachelinesize" use="optional"/>
+          <xs:attribute type="xs:string" name="replacement_policy" use="optional"/>
+          <xs:attribute type="xs:string" name="type" use="optional"/>
+          <xs:attribute type="xs:byte" name="level" use="optional"/>
+          <xs:attribute type="xs:byte" name="latency" use="optional"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="MEMORY">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:byte" name="load_latency"/>
+          <xs:attribute type="xs:byte" name="store_latency"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ENTRYPOINT">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="keepresults"/>
+          <xs:attribute type="xs:string" name="input_file"/>
+          <xs:attribute type="xs:string" name="output_file"/>
+          <xs:attribute type="xs:string" name="entrypointname"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ICACHE">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="keepresults" use="optional"/>
+          <xs:attribute type="xs:string" name="input_file" use="optional"/>
+          <xs:attribute type="xs:string" name="output_file" use="optional"/>
+          <xs:attribute type="xs:byte" name="level" use="optional"/>
+          <xs:attribute type="xs:string" name="must" use="optional"/>
+          <xs:attribute type="xs:string" name="persistence" use="optional"/>
+          <xs:attribute type="xs:string" name="may" use="optional"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DATAADDRESS">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="keepresults"/>
+          <xs:attribute type="xs:string" name="input_file"/>
+          <xs:attribute type="xs:string" name="output_file"/>
+          <xs:attribute type="xs:string" name="sp"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DCACHE">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="keepresults" use="optional"/>
+          <xs:attribute type="xs:string" name="input_file" use="optional"/>
+          <xs:attribute type="xs:string" name="output_file" use="optional"/>
+          <xs:attribute type="xs:byte" name="level" use="optional"/>
+          <xs:attribute type="xs:string" name="must" use="optional"/>
+          <xs:attribute type="xs:string" name="persistence" use="optional"/>
+          <xs:attribute type="xs:string" name="may" use="optional"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="PIPELINE">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="keepresults"/>
+          <xs:attribute type="xs:string" name="input_file"/>
+          <xs:attribute type="xs:string" name="output_file"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="IPET">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="keepresults"/>
+          <xs:attribute type="xs:string" name="input_file"/>
+          <xs:attribute type="xs:string" name="output_file"/>
+          <xs:attribute type="xs:string" name="solver"/>
+          <xs:attribute type="xs:string" name="pipeline"/>
+          <xs:attribute type="xs:string" name="attach_WCET_info"/>
+          <xs:attribute type="xs:string" name="generate_node_freq"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="SESEANALYSIS">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="keepresults"/>
+          <xs:attribute type="xs:string" name="input_file"/>
+          <xs:attribute type="xs:string" name="output_file"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CACHESTATISTICS">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="keepresults"/>
+          <xs:attribute type="xs:string" name="input_file"/>
+          <xs:attribute type="xs:string" name="output_file"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="SIMPLEPRINT">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="keepresults"/>
+          <xs:attribute type="xs:string" name="input_file"/>
+          <xs:attribute type="xs:string" name="output_file"/>
+          <xs:attribute type="xs:string" name="printcallgraph"/>
+          <xs:attribute type="xs:string" name="printloopnest"/>
+          <xs:attribute type="xs:string" name="printcfg"/>
+          <xs:attribute type="xs:string" name="printWCETinfo"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DOTPRINT">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="keepresults"/>
+          <xs:attribute type="xs:string" name="input_file"/>
+          <xs:attribute type="xs:string" name="output_file"/>
+          <xs:attribute type="xs:string" name="detailed_BB"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CODELINE">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="keepresults"/>
+          <xs:attribute type="xs:string" name="input_file"/>
+          <xs:attribute type="xs:string" name="output_file"/>
+          <xs:attribute type="xs:string" name="binaryfile"/>
+          <xs:attribute type="xs:string" name="addr2lineCommand"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="HTMLPRINT">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="keepresults"/>
+          <xs:attribute type="xs:string" name="input_file"/>
+          <xs:attribute type="xs:string" name="output_file"/>
+          <xs:attribute type="xs:string" name="colorize"/>
+          <xs:attribute type="xs:string" name="html_file"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="INPUTOUTPUTDIR">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="name"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ARCHITECTURE">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="TARGET">
+          <xs:annotation>
+            <xs:documentation> Target type </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="CACHE" maxOccurs="unbounded" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation> Cache  NB: cache look-up is always considered when calculating the WCET,  111 for a all-miss for a 2-level cache hierarchy  Set type="picache" for a perfect instruction cache, and type="pdcache" for a perfect data cache.
+     In this cases, nbsets, nbways, cachelinesize and replacement policy are irrelevant.  </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="MEMORY"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ANALYSIS">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="ENTRYPOINT">
+          <xs:annotation>
+            <xs:documentation> Build the cfg of the input_file, compute the contexts and set the entry point to be analyzed </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="ICACHE" maxOccurs="unbounded" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation> Instruction cache analysis: each of the 3 analysis steps (must/may/persistence) can be turned on/off individually </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="DATAADDRESS">
+          <xs:annotation>
+            <xs:documentation> To use data cache analysis, you have to first call analysis DATAADDRESS to attach addresses  to load/store instructions. This requires that the CFG is extracted with OUTPUTOBJDUMP and OUTPUTREADELF set to true  Data cache analysis has to be called for each cache level individually </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="DCACHE" maxOccurs="unbounded" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation> Data cache analysis: each of the 3 analysis steps (must/may/persistence) can be turned on/off individually </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="PIPELINE">
+          <xs:annotation>
+            <xs:documentation> Pipeline analysis </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="IPET">
+          <xs:annotation>
+            <xs:documentation> Final WCET computation.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="SESEANALYSIS">
+          <xs:annotation>
+            <xs:documentation> Analysis of SESE regions </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="CACHESTATISTICS">
+          <xs:annotation>
+            <xs:documentation> Gives cache statistics  Requires that all cache levels of the architecture have been analyzed  Also requires that the final WCET computation step has been applied, and that frequencies are kept </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="SIMPLEPRINT">
+          <xs:annotation>
+            <xs:documentation> To be inserted to generate a text file describing the program's CFG </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="DOTPRINT">
+          <xs:annotation>
+            <xs:documentation> To be inserted to generate a jpeg file containing the program's CFG </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="CODELINE">
+          <xs:annotation>
+            <xs:documentation> To be inserted to generate an Html file containing the frequency of code lines along the worst-case execution path  Codeline information is inserted by applying analysis CODELINE, whereas HTMLPRINT generates the html  CODELINE requires that the program is compiled with -ggdb option </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="HTMLPRINT"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CONFIGURATION">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="INPUTOUTPUTDIR">
+          <xs:annotation>
+            <xs:documentation> *******************************************************  Places to be modified to adap the template to your need  Mandatory:     Inputputdir: directory in which all files will be read/written     input file name for the first analysis (here icache analysis): name of thexml file containing the program to be analyzed     If data address analysis is applied, name of the benchmark     If codeline analysis is applied, name of the program binary file     If htmlprint is applied, absolute name of the html file   Optional:     Architecture description     List of analyses to be applied and corresponding parameters  *******************************************************  Where to find the program to analyze and to put analysis results </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="ARCHITECTURE">
+          <xs:annotation>
+            <xs:documentation> Architecture description </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="ANALYSIS">
+          <xs:annotation>
+            <xs:documentation> List of analysis steps, to be applied sequentially  output file allows to keep the results of on analysis in a file for debug purposes </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

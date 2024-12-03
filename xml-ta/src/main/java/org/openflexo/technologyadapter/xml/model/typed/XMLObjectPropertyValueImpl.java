@@ -36,28 +36,37 @@
  * 
  */
 
-package org.openflexo.technologyadapter.xml.model;
+package org.openflexo.technologyadapter.xml.model.typed;
 
-import org.openflexo.pamela.annotations.Getter;
-import org.openflexo.pamela.annotations.ImplementationClass;
-import org.openflexo.pamela.annotations.ModelEntity;
-import org.openflexo.pamela.annotations.Setter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Implementation of an Data Property values in XSD/XML technology.<br>
+ * Implementation of an Object Property values in XSD/XML technology.<br>
+ * Value is an instance of {@link XSOntIndividual}
  * 
- * @author sylvain, xtof
+ * @author sylvain
  */
-@ModelEntity
-@ImplementationClass(XMLDataPropertyValueImpl.class)
-public interface XMLDataPropertyValue extends XMLPropertyValue  {
+public abstract class XMLObjectPropertyValueImpl  implements XMLObjectPropertyValue {
 
-	final String VALUE = "value";
+	private List<XMLIndividual> values = null;
 
-	@Getter(value = VALUE, ignoreType = true)
-	public Object getValue();
+	XMLObjectPropertyValueImpl(){
+		values = new ArrayList<>();
+	}
 	
-	@Setter(VALUE)
-	public void setValue(Object value);
-	
+	@Override
+	public List<XMLIndividual> getValues() {
+		return values;
+	}
+
+	@Override
+	public void addToValues(XMLIndividual value) {
+		values.add(value);
+	}
+
+	@Override
+	public void removeFromValues(XMLIndividual value) {
+		values.remove(value);
+	}
 }

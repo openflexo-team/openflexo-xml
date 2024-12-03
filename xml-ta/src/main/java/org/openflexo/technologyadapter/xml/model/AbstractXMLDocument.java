@@ -38,32 +38,20 @@
 
 package org.openflexo.technologyadapter.xml.model;
 
+import org.openflexo.foundation.resource.ResourceData;
+import org.openflexo.pamela.annotations.ImplementationClass;
+import org.openflexo.pamela.annotations.ModelEntity;
+import org.openflexo.technologyadapter.xml.metamodel.XMLObject;
+import org.openflexo.technologyadapter.xml.model.typed.XMLModelImpl;
 
 /**
- * Implementation of an Data Property values in XSD/XML technology.<br>
+ * Abstract representation of a XML document<br>
+ * May be a free XML document or a typed XML document
  * 
- * @author sylvain, xtof
+ * @author sylvain
  */
-public abstract class XMLDataPropertyValueImpl  implements XMLDataPropertyValue {
-
-
-	@Override
-	public boolean equals(Object obj) {
-		// One Single Value per DataProperty in XML
-		return getValue().equals(obj);
-
-	}
-
-	@Override
-	public String toString() {
-
-		return getValue().toString();
-	}
-
-	@Override
-	public String getStringValue(){
-		// TODO manage this better.
-		return getValue().toString();
-	}
+@ModelEntity
+@ImplementationClass(XMLModelImpl.class)
+public interface AbstractXMLDocument<RD extends AbstractXMLDocument<RD>> extends XMLObject, ResourceData<RD> {
 
 }

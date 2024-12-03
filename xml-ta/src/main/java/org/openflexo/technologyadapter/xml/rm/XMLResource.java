@@ -38,9 +38,6 @@
 
 package org.openflexo.technologyadapter.xml.rm;
 
-import java.io.IOException;
-
-import org.openflexo.foundation.technologyadapter.FlexoModelResource;
 import org.openflexo.foundation.technologyadapter.TechnologyAdapterResource;
 import org.openflexo.pamela.annotations.Getter;
 import org.openflexo.pamela.annotations.ImplementationClass;
@@ -48,16 +45,18 @@ import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.Setter;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
 import org.openflexo.technologyadapter.xml.XMLTechnologyContextManager;
-import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
-import org.openflexo.technologyadapter.xml.model.XMLModel;
+import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument;
 
+/**
+ * An XML resource, typically represented as an .xml file<br>
+ * Can be a either a free XML file, or an XML conform to a grammar or metamodel (such as a .xsd file)
+ */
 @ModelEntity
 @ImplementationClass(XMLResourceImpl.class)
-public interface XMLResource extends TechnologyAdapterResource<XMLModel, XMLTechnologyAdapter>,
-		FlexoModelResource<XMLModel, XSDMetaModel, XMLTechnologyAdapter, XMLTechnologyAdapter> {
+public interface XMLResource<RD extends AbstractXMLDocument<RD>> extends TechnologyAdapterResource<RD, XMLTechnologyAdapter> {
 
 	public static final String TECHNOLOGY_CONTEXT_MANAGER = "XMLTechnologyContextManager";
-	public static final String TARGET_NAMESPACE = "targetNamespace";
+	public static final String XML_FILE_EXTENSION = ".xml";
 
 	@Override
 	@Getter(value = TECHNOLOGY_CONTEXT_MANAGER, ignoreType = true)
@@ -65,11 +64,5 @@ public interface XMLResource extends TechnologyAdapterResource<XMLModel, XMLTech
 
 	@Setter(TECHNOLOGY_CONTEXT_MANAGER)
 	public void setTechnologyContextManager(XMLTechnologyContextManager technologyContextManager);
-
-	@Getter(value = TARGET_NAMESPACE, ignoreType = true)
-	public String getTargetNamespace() throws IOException;
-
-	// initializes the Metamodel property of XMLModel, given the reference provided by metamodelResource property
-	public void attachMetamodel();
 
 }

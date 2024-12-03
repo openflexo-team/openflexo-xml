@@ -36,7 +36,7 @@
  * 
  */
 
-package org.openflexo.technologyadapter.xml.model;
+package org.openflexo.technologyadapter.xml.model.typed;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,7 +52,8 @@ import org.openflexo.xml.XMLCst;
 import org.openflexo.xml.XMLReaderSAXHandler;
 import org.xml.sax.SAXException;
 
-public class XMLModelFactory extends SaxBasedObjectGraphFactory {
+@Deprecated
+public class XMLObjectGraphFactory extends SaxBasedObjectGraphFactory {
 
 	private XMLModel model = null;
 
@@ -60,7 +61,7 @@ public class XMLModelFactory extends SaxBasedObjectGraphFactory {
 	public Object getInstanceOf(Type aType, String name) {
 
 		if (aType instanceof XMLComplexType) {
-			XMLIndividual _inst = model.addNewIndividual(aType);
+			XMLIndividual _inst = model.addNewIndividual((XMLComplexType) aType);
 			return _inst;
 		}
 

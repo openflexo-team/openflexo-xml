@@ -36,24 +36,19 @@
  * 
  */
 
-package org.openflexo.technologyadapter.xml.rm;
+package org.openflexo.technologyadapter.xml.model.free;
 
-import java.util.logging.Logger;
-
-import org.openflexo.foundation.resource.FlexoResourceImpl;
+import org.openflexo.pamela.annotations.ImplementationClass;
+import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument;
 
 /**
- * Represents an XML resource<br>
- * May be a free XML document or a typed XML document
- * 
- * @param <RD>
- *            type of resource data
+ * Represents a plain XML document without any conformance nor typing
  * 
  * @author sylvain
  */
-public abstract class XMLResourceImpl<RD extends AbstractXMLDocument<RD>> extends FlexoResourceImpl<RD> implements XMLResource<RD> {
-
-	protected static final Logger logger = Logger.getLogger(XMLResourceImpl.class.getPackage().getName());
+@ModelEntity
+@ImplementationClass(FreeXMLDocumentImpl.class)
+public interface FreeXMLDocument extends AbstractXMLDocument<FreeXMLDocument> {
 
 }

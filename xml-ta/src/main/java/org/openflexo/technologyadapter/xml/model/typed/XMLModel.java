@@ -36,9 +36,8 @@
  * 
  */
 
-package org.openflexo.technologyadapter.xml.model;
+package org.openflexo.technologyadapter.xml.model.typed;
 
-import java.lang.reflect.Type;
 import java.util.List;
 
 import org.openflexo.foundation.resource.FlexoResource;
@@ -57,21 +56,20 @@ import org.openflexo.pamela.annotations.Parameter;
 import org.openflexo.pamela.annotations.PastingPoint;
 import org.openflexo.pamela.annotations.Remover;
 import org.openflexo.pamela.annotations.Setter;
+import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModel;
-import org.openflexo.technologyadapter.xml.metamodel.XMLObject;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
+import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument;
 
 /**
- * @author xtof
+ * Represents an XML document conform to an XSD grammar (its metamodel)
  * 
- *         This interface defines a PAMELA model to represent an XML Document that is conformant to an {@link XMLMetaModel} that might be: -
- *         given by an XSD - dynamically built (on purpose)
- * 
+ * @author sylvain,xtof
  */
 @ModelEntity
 @ImplementationClass(XMLModelImpl.class)
-public interface XMLModel extends XMLObject, FlexoModel<XMLModel, XSDMetaModel> {
+public interface XMLModel extends AbstractXMLDocument<XMLModel>, FlexoModel<XMLModel, XSDMetaModel> {
 
 	/**
 	 * Reference to the {@link XMLMetaModel} that this document is conformant to
@@ -106,6 +104,8 @@ public interface XMLModel extends XMLObject, FlexoModel<XMLModel, XSDMetaModel> 
 	@Initializer
 	public XMLModel init(@Parameter(MM) XSDMetaModel mm);
 
+	public XMLModelFactory getModelFactory();
+
 	@Override
 	@Getter(MM)
 	XSDMetaModel getMetaModel();
@@ -133,7 +133,7 @@ public interface XMLModel extends XMLObject, FlexoModel<XMLModel, XSDMetaModel> 
 	public List<? extends XMLIndividual> getIndividuals();
 
 	// TODO ask Syl pourkoi on ne peut pas avoir +eurs adders...
-	public XMLIndividual addNewIndividual(Type aType);
+	public XMLIndividual addNewIndividual(XMLComplexType aType);
 
 	@Adder(IND)
 	@PastingPoint

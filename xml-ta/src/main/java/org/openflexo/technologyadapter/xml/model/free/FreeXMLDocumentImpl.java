@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright (c) 2014, Openflexo
+ * Copyright (c) 2014-2015, Openflexo
  * 
  * This file is part of Xmlconnector, a component of the software infrastructure 
  * developed at Openflexo.
@@ -36,24 +36,23 @@
  * 
  */
 
-package org.openflexo.technologyadapter.xml.rm;
+package org.openflexo.technologyadapter.xml.model.free;
 
-import java.util.logging.Logger;
-
-import org.openflexo.foundation.resource.FlexoResourceImpl;
-import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument;
+import org.openflexo.technologyadapter.xml.model.AbstractXMLDocumentImpl;
+import org.openflexo.technologyadapter.xml.rm.FreeXMLResource;
 
 /**
- * Represents an XML resource<br>
- * May be a free XML document or a typed XML document
- * 
- * @param <RD>
- *            type of resource data
+ * Default implementation for {@link FreeXMLDocument}
  * 
  * @author sylvain
  */
-public abstract class XMLResourceImpl<RD extends AbstractXMLDocument<RD>> extends FlexoResourceImpl<RD> implements XMLResource<RD> {
 
-	protected static final Logger logger = Logger.getLogger(XMLResourceImpl.class.getPackage().getName());
+public abstract class FreeXMLDocumentImpl extends AbstractXMLDocumentImpl<FreeXMLDocument> implements FreeXMLDocument {
+
+	// Can be safely cast to FreeXMLResource
+	@Override
+	public FreeXMLResource getResource() {
+		return (FreeXMLResource) super.getResource();
+	}
 
 }

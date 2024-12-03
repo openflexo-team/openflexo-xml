@@ -85,6 +85,12 @@ public abstract class XSDMetaModelResourceImpl extends FlexoResourceImpl<XSDMeta
 	private boolean isLoading = false;
 	private boolean isReadOnly = true;
 
+	private Exception creationException;
+
+	public XSDMetaModelResourceImpl() {
+		creationException = new Exception();
+	}
+
 	@Override
 	public XSDMetaModel getMetaModelData() {
 		try {

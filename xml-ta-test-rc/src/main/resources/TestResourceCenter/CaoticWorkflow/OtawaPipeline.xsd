@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+		targetNamespace="http://mem4csd.telecom-paris.fr/OtawaPipeline" 
+		xmlns="http://mem4csd.telecom-paris.fr/OtawaPipeline"
+		elementFormDefault="qualified">
+  <xs:element name="name" type="xs:string"/>
+  <xs:element name="width" type="xs:byte"/>
+  <xs:element name="type" type="xs:string"/>
+  <xs:element name="latency" type="xs:byte"/>
+  <xs:element name="fu">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:element ref="name" minOccurs="0"/>
+        <xs:element ref="width" minOccurs="0"/>
+        <xs:element ref="latency" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute type="xs:string" name="id" use="optional"/>
+      <xs:attribute type="xs:string" name="ref" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="inst">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="type"/>
+        <xs:element ref="fu"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ordered" type="xs:string"/>
+  <xs:element name="fus">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="fu"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="dispatch">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="inst"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="stage">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="name"/>
+        <xs:element ref="width"/>
+        <xs:element ref="type"/>
+        <xs:element ref="ordered" minOccurs="0"/>
+        <xs:element ref="fus" minOccurs="0"/>
+        <xs:element ref="dispatch" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute type="xs:string" name="id" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="arch" type="xs:string"/>
+  <xs:element name="model" type="xs:string"/>
+  <xs:element name="stages">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="stage" maxOccurs="unbounded" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="processor">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="arch"/>
+        <xs:element ref="model"/>
+        <xs:element ref="stages"/>
+      </xs:sequence>
+      <xs:attribute type="xs:string" name="class"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

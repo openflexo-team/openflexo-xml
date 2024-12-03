@@ -49,8 +49,8 @@ import org.openflexo.connie.exception.NullReferenceException;
 import org.openflexo.connie.exception.TypeMismatchException;
 import org.openflexo.technologyadapter.xml.metamodel.XMLDataProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
-import org.openflexo.technologyadapter.xml.model.XMLDataPropertyValue;
-import org.openflexo.technologyadapter.xml.model.XMLIndividual;
+import org.openflexo.technologyadapter.xml.model.typed.XMLDataPropertyValue;
+import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
 
 public class XMLDataPropertyPathElement extends SimplePathElementImpl {
 

@@ -36,29 +36,18 @@
  * 
  */
 
-package org.openflexo.technologyadapter.xml.model;
+package org.openflexo.technologyadapter.xml.rm;
 
-import java.util.List;
+import java.util.logging.Logger;
 
-import org.openflexo.pamela.annotations.ImplementationClass;
-import org.openflexo.pamela.annotations.ModelEntity;
+import org.openflexo.technologyadapter.xml.model.free.FreeXMLDocument;
 
 /**
- * Implementation of an Object Property values in XSD/XML technology.<br>
- * Value is an instance of {@link XSOntIndividual}
+ * @author xtof
  * 
- * @author sylvain
  */
-@ModelEntity
-@ImplementationClass(XMLObjectPropertyValueImpl.class)
-public interface XMLObjectPropertyValue extends XMLPropertyValue {
-	
-	
-	
-	public List<XMLIndividual> getValues();
+public abstract class FreeXMLResourceImpl extends XMLResourceImpl<FreeXMLDocument> implements FreeXMLResource {
 
-	public void addToValues(XMLIndividual value);
+	protected static final Logger logger = Logger.getLogger(FreeXMLResourceImpl.class.getPackage().getName());
 
-	public void removeFromValues(XMLIndividual value);
-	
 }

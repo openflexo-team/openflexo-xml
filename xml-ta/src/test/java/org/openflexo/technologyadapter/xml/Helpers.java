@@ -45,9 +45,9 @@ import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLSimpleType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
-import org.openflexo.technologyadapter.xml.model.XMLIndividual;
-import org.openflexo.technologyadapter.xml.model.XMLObjectPropertyValue;
-import org.openflexo.technologyadapter.xml.model.XMLPropertyValue;
+import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
+import org.openflexo.technologyadapter.xml.model.typed.XMLObjectPropertyValue;
+import org.openflexo.technologyadapter.xml.model.typed.XMLPropertyValue;
 
 public class Helpers {
 

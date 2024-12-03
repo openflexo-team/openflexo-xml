@@ -36,7 +36,7 @@
  * 
  */
 
-package org.openflexo.technologyadapter.xml.model;
+package org.openflexo.technologyadapter.xml.model.typed;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -211,8 +211,7 @@ public abstract class XMLIndividualImpl extends FlexoObjectImpl implements XMLIn
 			if (vals == null) {
 
 				if (prop instanceof XMLDataProperty) {
-					vals = XMLModelImpl.getModelFactory().newInstance(XMLDataPropertyValue.class, prop);
-					((XMLDataPropertyValue) vals).setValue(value);
+					vals = getContainerModel().getModelFactory().makeXMLDataPropertyValue((XMLDataProperty) prop, value);
 					propertiesValues.put(prop, vals);
 				}
 				else {
@@ -234,14 +233,11 @@ public abstract class XMLIndividualImpl extends FlexoObjectImpl implements XMLIn
 		if (val == null) {
 
 			if (prop instanceof XMLDataProperty) {
-				val = XMLModelImpl.getModelFactory().newInstance(XMLDataPropertyValue.class, prop);
-				((XMLDataPropertyValue) val).setValue(value);
+				val = getContainerModel().getModelFactory().makeXMLDataPropertyValue((XMLDataProperty) prop, value);
 				propertiesValues.put(prop, val);
 			}
 			else if (prop instanceof XMLObjectProperty) {
-
-				val = XMLModelImpl.getModelFactory().newInstance(XMLObjectPropertyValue.class, prop);
-				((XMLObjectPropertyValue) val).addToValues((XMLIndividual) value);
+				val = getContainerModel().getModelFactory().makeXMLObjectPropertyValue((XMLObjectProperty) prop, (XMLIndividual) value);
 				propertiesValues.put(prop, val);
 			}
 		}

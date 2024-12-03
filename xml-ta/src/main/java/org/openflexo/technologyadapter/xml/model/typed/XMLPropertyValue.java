@@ -36,24 +36,38 @@
  * 
  */
 
-package org.openflexo.technologyadapter.xml.rm;
+package org.openflexo.technologyadapter.xml.model.typed;
 
-import java.util.logging.Logger;
-
-import org.openflexo.foundation.resource.FlexoResourceImpl;
-import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument;
+import org.openflexo.pamela.annotations.Getter;
+import org.openflexo.pamela.annotations.Initializer;
+import org.openflexo.pamela.annotations.ModelEntity;
+import org.openflexo.pamela.annotations.Parameter;
+import org.openflexo.pamela.annotations.Setter;
+import org.openflexo.technologyadapter.xml.metamodel.XMLObject;
+import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
 
 /**
- * Represents an XML resource<br>
- * May be a free XML document or a typed XML document
+ * Implementation of a Property value in XSD/XML technology
  * 
- * @param <RD>
- *            type of resource data
- * 
- * @author sylvain
+ * @author sylvain, xtof
  */
-public abstract class XMLResourceImpl<RD extends AbstractXMLDocument<RD>> extends FlexoResourceImpl<RD> implements XMLResource<RD> {
+@ModelEntity(isAbstract = true)
+public abstract interface XMLPropertyValue extends XMLObject {
 
-	protected static final Logger logger = Logger.getLogger(XMLResourceImpl.class.getPackage().getName());
+	final String PROPERTY = "property";
+
+	@Initializer
+	public void XMLPropertyValue(@Parameter(PROPERTY) XMLProperty prop);
+
+	@Getter(PROPERTY)
+	public XMLProperty getProperty();
+
+	@Setter(PROPERTY)
+	public void setProperty(XMLProperty prop);
+
+	public String getStringValue();
+
+	@Override
+	public boolean equals(Object obj);
 
 }

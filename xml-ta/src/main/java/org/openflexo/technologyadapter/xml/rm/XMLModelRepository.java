@@ -46,11 +46,17 @@ import org.openflexo.pamela.exceptions.ModelDefinitionException;
 import org.openflexo.pamela.factory.PamelaModelFactory;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
-import org.openflexo.technologyadapter.xml.model.XMLModel;
+import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
 
+/**
+ * Repository storing {@link TypedXMLResource} giving access to {@link XMLModel}
+ * 
+ * @author sylvain
+ * 
+ */
 @ModelEntity
 public interface XMLModelRepository<I>
-		extends ModelRepository<XMLFileResource, XMLModel, XSDMetaModel, XMLTechnologyAdapter, XMLTechnologyAdapter, I> {
+		extends ModelRepository<TypedXMLResource, XMLModel, XSDMetaModel, XMLTechnologyAdapter, XMLTechnologyAdapter, I> {
 
 	public static <I> XMLModelRepository<I> instanciateNewRepository(XMLTechnologyAdapter technologyAdapter,
 			FlexoResourceCenter<I> resourceCenter) {
@@ -61,7 +67,7 @@ public interface XMLModelRepository<I>
 			newRepository.setTechnologyAdapter(technologyAdapter);
 			newRepository.setResourceCenter(resourceCenter);
 			newRepository.setBaseArtefact(resourceCenter.getBaseArtefact());
-			newRepository.getRootFolder().setRepositoryContext(resourceCenter.getLocales().localizedForKey("[Models]"));
+			newRepository.getRootFolder().setRepositoryContext(resourceCenter.getLocales().localizedForKey("[XMLModels]"));
 			return newRepository;
 		} catch (ModelDefinitionException e) {
 			e.printStackTrace();

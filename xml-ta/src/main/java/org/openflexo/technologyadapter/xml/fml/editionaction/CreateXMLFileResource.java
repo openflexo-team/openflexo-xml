@@ -54,13 +54,12 @@ import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.XMLElement;
 import org.openflexo.pamela.exceptions.ModelDefinitionException;
-import org.openflexo.technologyadapter.xml.AbstractXMLModelSlot;
-import org.openflexo.technologyadapter.xml.FreeXMLURIProcessor;
+import org.openflexo.technologyadapter.xml.FreeXMLModelSlot;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
-import org.openflexo.technologyadapter.xml.model.XMLModel;
-import org.openflexo.technologyadapter.xml.rm.XMLFileResource;
-import org.openflexo.technologyadapter.xml.rm.XMLFileResourceFactory;
-import org.openflexo.technologyadapter.xml.rm.XMLResource;
+import org.openflexo.technologyadapter.xml.model.free.FreeXMLDocument;
+import org.openflexo.technologyadapter.xml.rm.FreeXMLResource;
+import org.openflexo.technologyadapter.xml.rm.FreeXMLResourceFactory;
+import org.openflexo.technologyadapter.xml.rm.TypedXMLResource;
 
 /**
  * {@link EditionAction} used to create an empty XML resource
@@ -72,20 +71,18 @@ import org.openflexo.technologyadapter.xml.rm.XMLResource;
 @ImplementationClass(CreateXMLFileResource.CreateXMLResourceImpl.class)
 @XMLElement
 @FML("CreateXMLFileResource")
-public interface CreateXMLFileResource
-		extends AbstractCreateResource<AbstractXMLModelSlot<FreeXMLURIProcessor>, XMLModel, XMLTechnologyAdapter> {
+public interface CreateXMLFileResource extends AbstractCreateResource<FreeXMLModelSlot, FreeXMLDocument, XMLTechnologyAdapter> {
 
 	public static abstract class CreateXMLResourceImpl
-			extends AbstractCreateResourceImpl<AbstractXMLModelSlot<FreeXMLURIProcessor>, XMLModel, XMLTechnologyAdapter>
-			implements CreateXMLFileResource {
+			extends AbstractCreateResourceImpl<FreeXMLModelSlot, FreeXMLDocument, XMLTechnologyAdapter> implements CreateXMLFileResource {
 
 		@Override
 		public Type getAssignableType() {
-			return XMLModel.class;
+			return FreeXMLDocument.class;
 		}
 
 		@Override
-		public XMLModel execute(RunTimeEvaluationContext evaluationContext) throws FMLExecutionException {
+		public FreeXMLDocument execute(RunTimeEvaluationContext evaluationContext) throws FMLExecutionException {
 
 			String resourceName = getResourceName(evaluationContext);
 			String resourceURI = getResourceURI(evaluationContext);
@@ -93,15 +90,15 @@ public interface CreateXMLFileResource
 
 			XMLTechnologyAdapter xmlTA = getServiceManager().getTechnologyAdapterService().getTechnologyAdapter(XMLTechnologyAdapter.class);
 
-			XMLResource newResource;
+			FreeXMLResource newResource;
 			try {
-				newResource = createResource(xmlTA, XMLFileResourceFactory.class, evaluationContext, XMLFileResource.XML_FILE_EXTENSION,
+				newResource = createResource(xmlTA, FreeXMLResourceFactory.class, evaluationContext, TypedXMLResource.XML_FILE_EXTENSION,
 						true);
 
 				newResource.save();
 				newResource.setIsModified();
 
-				XMLModel xmlModel = newResource.getResourceData();
+				FreeXMLDocument xmlModel = newResource.getResourceData();
 
 				return xmlModel;
 			} catch (ModelDefinitionException | FileNotFoundException | ResourceLoadingCancelledException e) {

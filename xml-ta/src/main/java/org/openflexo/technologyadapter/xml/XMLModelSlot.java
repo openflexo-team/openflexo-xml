@@ -80,10 +80,10 @@ import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModel;
 import org.openflexo.technologyadapter.xml.metamodel.XMLObject;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
-import org.openflexo.technologyadapter.xml.model.XMLIndividual;
-import org.openflexo.technologyadapter.xml.model.XMLModel;
-import org.openflexo.technologyadapter.xml.rm.XMLFileResource;
-import org.openflexo.technologyadapter.xml.rm.XMLFileResourceFactory;
+import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
+import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
+import org.openflexo.technologyadapter.xml.rm.TypedXMLResource;
+import org.openflexo.technologyadapter.xml.rm.TypedXMLResourceFactory;
 import org.openflexo.technologyadapter.xml.rm.XMLModelRepository;
 import org.openflexo.technologyadapter.xml.rm.XSDMetaModelResource;
 
@@ -102,7 +102,7 @@ import org.openflexo.technologyadapter.xml.rm.XSDMetaModelResource;
 @ImplementationClass(XMLModelSlot.XMLModelSlotImpl.class)
 @Imports({ @Import(XMLURIProcessor.class), })
 @FML("XMLModelSlot")
-public interface XMLModelSlot extends TypeAwareModelSlot<XMLModel, XSDMetaModel>, AbstractXMLModelSlot<XMLURIProcessor> {
+public interface XMLModelSlot extends TypeAwareModelSlot<XMLModel, XSDMetaModel>, AbstractXMLModelSlot<XMLModel, XMLURIProcessor> {
 
 	@PropertyIdentifier(type = XMLMetaModel.class)
 	public static final String META_MODEL_KEY = "metaModel";
@@ -303,16 +303,16 @@ public interface XMLModelSlot extends TypeAwareModelSlot<XMLModel, XSDMetaModel>
 		}
 
 		@Override
-		public XMLFileResource createProjectSpecificEmptyModel(FlexoResourceCenter<?> rc, String filename, String relativePath,
+		public TypedXMLResource createProjectSpecificEmptyModel(FlexoResourceCenter<?> rc, String filename, String relativePath,
 				String modelUri, FlexoMetaModelResource<XMLModel, XSDMetaModel, ?> metaModelResource) {
 
 			XMLTechnologyAdapter xmlTA = getServiceManager().getTechnologyAdapterService().getTechnologyAdapter(XMLTechnologyAdapter.class);
-			XMLFileResourceFactory factory = getModelSlotTechnologyAdapter().getXMLFileResourceFactory();
+			TypedXMLResourceFactory factory = getModelSlotTechnologyAdapter().getXMLFileResourceFactory();
 
 			Object serializationArtefact = xmlTA.retrieveResourceSerializationArtefact(rc, filename, relativePath,
-					XMLFileResourceFactory.XML_EXTENSION);
+					TypedXMLResourceFactory.XML_EXTENSION);
 
-			XMLFileResource newXMLFileResource;
+			TypedXMLResource newXMLFileResource;
 			try {
 				newXMLFileResource = factory.makeResource(serializationArtefact, (FlexoResourceCenter) rc, filename, modelUri, true);
 				newXMLFileResource.setMetaModelResource((FlexoMetaModelResource) metaModelResource);
@@ -326,7 +326,7 @@ public interface XMLModelSlot extends TypeAwareModelSlot<XMLModel, XSDMetaModel>
 		}
 
 		@Override
-		public XMLFileResource createSharedEmptyModel(FlexoResourceCenter<?> resourceCenter, String relativePath, String filename,
+		public TypedXMLResource createSharedEmptyModel(FlexoResourceCenter<?> resourceCenter, String relativePath, String filename,
 				String modelUri, FlexoMetaModelResource<XMLModel, XSDMetaModel, ?> metaModelResource) {
 
 			// Unused XMLFileResource returned = null;
@@ -352,19 +352,19 @@ public interface XMLModelSlot extends TypeAwareModelSlot<XMLModel, XSDMetaModel>
 
 		}
 
-		private XMLFileResource createEmptyXMLFileResource(File xmlFile, XMLModelRepository<File> modelRepository,
+		private TypedXMLResource createEmptyXMLFileResource(File xmlFile, XMLModelRepository<File> modelRepository,
 				XSDMetaModelResource metaModelResource) throws SaveResourceException, ModelDefinitionException {
 
 			XMLTechnologyAdapter ta = getModelSlotTechnologyAdapter();
-			XMLFileResourceFactory xmlFileResourceFactory = ta.getXMLFileResourceFactory();
+			TypedXMLResourceFactory xmlFileResourceFactory = ta.getXMLFileResourceFactory();
 
-			XMLFileResource returned = xmlFileResourceFactory.makeResource(xmlFile, modelRepository.getResourceCenter(), true);
+			TypedXMLResource returned = xmlFileResourceFactory.makeResource(xmlFile, modelRepository.getResourceCenter(), true);
 
 			// XMLFileResource returned = XMLFileResourceImpl.makeXMLFileResource(xmlFile,
 			// (XMLTechnologyContextManager) this.getModelSlotTechnologyAdapter().getTechnologyContextManager(),
 			// modelRepository.getResourceCenter());
 
-			RepositoryFolder<XMLFileResource, File> folder;
+			RepositoryFolder<TypedXMLResource, File> folder;
 			try {
 				folder = modelRepository.getParentRepositoryFolder(xmlFile, true);
 				if (folder != null) {

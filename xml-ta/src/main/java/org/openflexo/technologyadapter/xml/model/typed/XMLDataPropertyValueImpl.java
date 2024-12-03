@@ -36,37 +36,34 @@
  * 
  */
 
-package org.openflexo.technologyadapter.xml.model;
+package org.openflexo.technologyadapter.xml.model.typed;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Implementation of an Object Property values in XSD/XML technology.<br>
- * Value is an instance of {@link XSOntIndividual}
+ * Implementation of an Data Property values in XSD/XML technology.<br>
  * 
- * @author sylvain
+ * @author sylvain, xtof
  */
-public abstract class XMLObjectPropertyValueImpl  implements XMLObjectPropertyValue {
+public abstract class XMLDataPropertyValueImpl  implements XMLDataPropertyValue {
 
-	private List<XMLIndividual> values = null;
 
-	XMLObjectPropertyValueImpl(){
-		values = new ArrayList<>();
-	}
-	
 	@Override
-	public List<XMLIndividual> getValues() {
-		return values;
+	public boolean equals(Object obj) {
+		// One Single Value per DataProperty in XML
+		return getValue().equals(obj);
+
 	}
 
 	@Override
-	public void addToValues(XMLIndividual value) {
-		values.add(value);
+	public String toString() {
+
+		return getValue().toString();
 	}
 
 	@Override
-	public void removeFromValues(XMLIndividual value) {
-		values.remove(value);
+	public String getStringValue(){
+		// TODO manage this better.
+		return getValue().toString();
 	}
+
 }

@@ -53,7 +53,6 @@ import javax.xml.stream.XMLStreamException;
 import org.openflexo.foundation.FlexoException;
 import org.openflexo.foundation.resource.FileIODelegate;
 import org.openflexo.foundation.resource.FileWritingLock;
-import org.openflexo.foundation.resource.FlexoResourceImpl;
 import org.openflexo.foundation.resource.ResourceLoadingCancelledException;
 import org.openflexo.foundation.resource.SaveResourceException;
 import org.openflexo.foundation.resource.SaveResourcePermissionDeniedException;
@@ -62,9 +61,8 @@ import org.openflexo.foundation.technologyadapter.FlexoMetaModelResource;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
 import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModelImpl;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
-import org.openflexo.technologyadapter.xml.model.XMLModel;
-import org.openflexo.technologyadapter.xml.model.XMLModelFactory;
-import org.openflexo.technologyadapter.xml.model.XMLModelImpl;
+import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
+import org.openflexo.technologyadapter.xml.model.typed.XMLObjectGraphFactory;
 import org.openflexo.toolbox.FileUtils;
 import org.openflexo.xml.XMLRootElementInfo;
 import org.openflexo.xml.XMLRootElementReader;
@@ -73,9 +71,9 @@ import org.openflexo.xml.XMLRootElementReader;
  * @author xtof
  * 
  */
-public abstract class XMLFileResourceImpl extends FlexoResourceImpl<XMLModel> implements XMLFileResource {
+public abstract class TypedXMLResourceImpl extends XMLResourceImpl<XMLModel> implements TypedXMLResource {
 
-	protected static final Logger logger = Logger.getLogger(XMLFileResourceImpl.class.getPackage().getName());
+	protected static final Logger logger = Logger.getLogger(TypedXMLResourceImpl.class.getPackage().getName());
 	protected static XMLRootElementReader REreader = new XMLRootElementReader();
 
 	// Properties
@@ -134,7 +132,7 @@ public abstract class XMLFileResourceImpl extends FlexoResourceImpl<XMLModel> im
 		}
 
 		if (resourceData == null) {
-			resourceData = XMLModelImpl.getModelFactory().newInstance(XMLModel.class);
+			resourceData = getFactory().makeXMLModel();
 			resourceData.setResource(this);
 
 			attachMetamodel();
@@ -147,7 +145,7 @@ public abstract class XMLFileResourceImpl extends FlexoResourceImpl<XMLModel> im
 
 				FlexoMetaModelResource<XMLModel, XSDMetaModel, XMLTechnologyAdapter> mmRes = getMetaModelResource();
 
-				XMLModelFactory factory = getTechnologyAdapter().getXMLModelFactory();
+				XMLObjectGraphFactory factory = getTechnologyAdapter().getXMLModelFactory();
 
 				factory.setContext(resourceData);
 
@@ -208,6 +206,31 @@ public abstract class XMLFileResourceImpl extends FlexoResourceImpl<XMLModel> im
 		// return resourceData;
 	}
 
+	/*@Override
+	public XMLModel getModelData() {
+	
+		if (resourceData == null) {
+			resourceData = XMLModelImpl.getModelFactory().newInstance(XMLModel.class);
+			// , getTechnologyAdapter());
+			// new XMLModel(this.getTechnologyAdapter());
+			resourceData.setResource(this);
+		}
+	
+		if (!isLoaded()) {
+			try {
+				resourceData = loadResourceData();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (ResourceLoadingCancelledException e) {
+				e.printStackTrace();
+			} catch (FlexoException e) {
+				e.printStackTrace();
+			}
+		}
+	
+		return resourceData;
+	}*/
+
 	@Override
 	public void attachMetamodel() {
 
@@ -229,6 +252,18 @@ public abstract class XMLFileResourceImpl extends FlexoResourceImpl<XMLModel> im
 			logger.warning("Setting a null Metamodel for Model " + this.getURI());
 		}
 	}
+
+	/*
+	@Override
+	public void attachMetamodel() {
+		FlexoMetaModelResource<XMLModel, XSDMetaModel, XMLTechnologyAdapter> mmRes = this.getMetaModelResource();
+		if (mmRes != null) {
+			resourceData.setMetaModel(mmRes.getMetaModelData());
+		}
+		if (resourceData.getMetaModel() == null) {
+			logger.warning("Setting a null Metamodel for Model " + this.getURI());
+		}
+	}*/
 
 	@Override
 	public Class<XMLModel> getResourceDataClass() {
@@ -381,7 +416,7 @@ public abstract class XMLFileResourceImpl extends FlexoResourceImpl<XMLModel> im
 	private void write(OutputStream out) throws IOException, XMLStreamException, ResourceLoadingCancelledException, FlexoException {
 		System.out.println("Writing xml file in : " + getIODelegate().getSerializationArtefact());
 		try (OutputStreamWriter outSW = new OutputStreamWriter(out, "UTF-8")) {
-			XMLWriter<XMLFileResource, XMLModel> writer = new XMLWriter<>(this, outSW);
+			XMLWriter<TypedXMLResource, XMLModel> writer = new XMLWriter<>(this, outSW);
 			writer.writeDocument();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

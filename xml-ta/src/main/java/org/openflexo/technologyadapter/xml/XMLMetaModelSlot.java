@@ -54,7 +54,7 @@ import org.openflexo.technologyadapter.xml.fml.XMLIndividualRole;
 import org.openflexo.technologyadapter.xml.fml.XMLTypeRole;
 import org.openflexo.technologyadapter.xml.fml.editionaction.AddXMLType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModel;
-import org.openflexo.technologyadapter.xml.model.XMLModel;
+import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
 
 /**
  * 

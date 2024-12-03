@@ -61,7 +61,7 @@ import org.openflexo.pamela.annotations.XMLAttribute;
 import org.openflexo.technologyadapter.xml.metamodel.XMLDataProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLObject;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
-import org.openflexo.technologyadapter.xml.model.XMLModel;
+import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
 
 /* Correct processing of XML Objects URIs needs to add an internal class to store
  * for each XMLComplexType wich are the XML Elements (attributes or CDATA, or...) that will be 
@@ -72,6 +72,7 @@ import org.openflexo.technologyadapter.xml.model.XMLModel;
 
 @ModelEntity(isAbstract = true)
 @ImplementationClass(AbstractXMLURIProcessor.AbstractXMLURIProcessorImpl.class)
+@Deprecated
 public interface AbstractXMLURIProcessor extends FlexoConceptObject {
 
 	public enum MappingStyle {
@@ -125,7 +126,7 @@ public interface AbstractXMLURIProcessor extends FlexoConceptObject {
 	public void setMappedXMLType(XMLType mappedType);
 
 	@Setter(MODELSLOT)
-	public void setModelSlot(AbstractXMLModelSlot<?> modelslot);
+	public void setModelSlot(AbstractXMLModelSlot<?, ?> modelslot);
 
 	@Getter(MODELSLOT)
 	public AbstractXMLModelSlot getModelSlot();
