@@ -53,8 +53,8 @@ import org.openflexo.gina.model.widget.FIBCustom.FIBCustomComponent.CustomCompon
 import org.openflexo.gina.swing.view.widget.JFIBBrowserWidget;
 import org.openflexo.icon.UtilsIconLibrary;
 import org.openflexo.rm.Resource;
+import org.openflexo.technologyadapter.xml.XMLObject;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
-import org.openflexo.technologyadapter.xml.metamodel.XMLObject;
 import org.openflexo.toolbox.StringUtils;
 import org.openflexo.view.ModuleView;
 import org.openflexo.view.SelectionSynchronizedFIBView;

@@ -47,16 +47,18 @@ import org.openflexo.pamela.annotations.Initializer;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.Parameter;
 import org.openflexo.pamela.annotations.Setter;
+import org.openflexo.technologyadapter.xml.XMLObject;
+import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
 
 /**
  * 
  * Represents an XML Attribute in an XMLModel
  * 
- * @author xtof
+ * @author sylvain,xtof
  * 
  */
 @ModelEntity
-@ImplementationClass(XMLPropertyImpl.class)
+@ImplementationClass(XMLProperty.XMLPropertyImpl.class)
 public interface XMLProperty extends XMLObject<XSDMetaModel>, Comparable<XMLProperty>, InnerResourceData<XSDMetaModel> {
 
 	/**
@@ -129,4 +131,42 @@ public interface XMLProperty extends XMLObject<XSDMetaModel>, Comparable<XMLProp
 
 	@Setter(UPPER_BOUND)
 	public void setUpperBound(Integer b);
+
+	/**
+	 * Default implementation for {@link XMLProperty}
+	 */
+	public static abstract class XMLPropertyImpl extends FlexoObjectImpl implements XMLProperty {
+
+		@Override
+		public int compareTo(XMLProperty arg0) {
+			return this.getName().compareTo(arg0.getName());
+		}
+
+		@Override
+		public XMLTechnologyAdapter getTechnologyAdapter() {
+			return this.getContainer().getTechnologyAdapter();
+		}
+
+		@Override
+		public String getDisplayableDescription() {
+			if (this instanceof XMLDataProperty) {
+				return "XML Simple property named : " + this.getName();
+			}
+			else if (this instanceof XMLObjectProperty) {
+				return "XML Object Property named : " + this.getName();
+			}
+			else
+				return "(Unknown)";
+		}
+
+		@Override
+		public XSDMetaModel getResourceData() {
+			if (getContainer() != null) {
+				return getContainer().getMetamodel();
+			}
+			return null;
+		}
+
+	}
+
 }

@@ -47,9 +47,11 @@ import org.openflexo.pamela.annotations.Initializer;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.Parameter;
 import org.openflexo.pamela.annotations.Setter;
+import org.openflexo.technologyadapter.xml.XMLObject;
+import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
 
 @ModelEntity(isAbstract = true)
-@ImplementationClass(XMLTypeImpl.class)
+@ImplementationClass(XMLType.XMLTypeImpl.class)
 public interface XMLType extends XMLObject<XSDMetaModel>, Type, InnerResourceData<XSDMetaModel> {
 
 	public final String MM = "metamodel";
@@ -85,5 +87,32 @@ public interface XMLType extends XMLObject<XSDMetaModel>, Type, InnerResourceDat
 
 	@Setter(ABSTRACT)
 	public void setIsAbstract(boolean t);
+
+	public static abstract class XMLTypeImpl extends FlexoObjectImpl implements XMLType {
+
+		@Override
+		public XMLTechnologyAdapter getTechnologyAdapter() {
+			return this.getMetamodel().getTechnologyAdapter();
+		}
+
+		@Override
+		public String getFullyQualifiedName() {
+			if (getURI() != null && !getURI().isEmpty())
+				return getURI();
+			else
+				return getName();
+		}
+
+		@Override
+		public String getDisplayableDescription() {
+			return "(Unexpected type)";
+		}
+
+		@Override
+		public XSDMetaModel getResourceData() {
+			return getMetamodel();
+		}
+
+	}
 
 }

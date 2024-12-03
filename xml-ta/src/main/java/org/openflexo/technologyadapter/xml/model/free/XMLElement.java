@@ -39,7 +39,7 @@
 package org.openflexo.technologyadapter.xml.model.free;
 
 import org.openflexo.pamela.annotations.ModelEntity;
-import org.openflexo.technologyadapter.xml.metamodel.XMLObject;
+import org.openflexo.technologyadapter.xml.XMLObject;
 import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument.AbstractXMLDocumentImpl;
 import org.openflexo.technologyadapter.xml.rm.FreeXMLResource;
 

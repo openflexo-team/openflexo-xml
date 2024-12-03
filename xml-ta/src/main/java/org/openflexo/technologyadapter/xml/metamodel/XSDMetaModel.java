@@ -38,7 +38,10 @@
 
 package org.openflexo.technologyadapter.xml.metamodel;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.openflexo.foundation.technologyadapter.FlexoMetaModel;
 import org.openflexo.pamela.annotations.Adder;
@@ -56,7 +59,7 @@ import org.openflexo.pamela.annotations.Setter;
 import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument;
 
 @ModelEntity
-@ImplementationClass(XSDMetaModelImpl.class)
+@ImplementationClass(XSDMetaModel.XSDMetaModelImpl.class)
 public interface XSDMetaModel extends AbstractXMLDocument<XSDMetaModel>, FlexoMetaModel<XSDMetaModel> {
 
 	// extends AbstractXMLDocument<XMLModel>, FlexoModel<XMLModel, XSDMetaModel> {
@@ -126,5 +129,192 @@ public interface XSDMetaModel extends AbstractXMLDocument<XSDMetaModel>, FlexoMe
 
 	@Setter(READ_ONLY)
 	public void setReadOnly(boolean value);
+
+	public static abstract class XSDMetaModelImpl extends AbstractXMLDocumentImpl<XSDMetaModel> implements XSDMetaModel {
+
+		private static final java.util.logging.Logger logger = org.openflexo.logging.FlexoLogger
+				.getLogger(XSDMetaModelImpl.class.getPackage().getName());
+
+		protected Map<String, XMLType> types = null;
+
+		public XSDMetaModelImpl() {
+			types = new HashMap<>();
+		}
+
+		// private XSDMetaModelResource xsdResource;
+
+		// private static PamelaModelFactory MF;
+
+		/*static {
+			try {
+				MF = new PamelaModelFactory(XSDMetaModel.class);
+			} catch (ModelDefinitionException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		public static PamelaModelFactory getModelFactory() {
+			return MF;
+		}*/
+
+		/*@Override
+		public FlexoResource<XSDMetaModel> getResource() {
+			return xsdResource;
+		}
+		
+		@Override
+		public void setResource(FlexoResource<XSDMetaModel> resource) {
+			this.xsdResource = (XSDMetaModelResource) resource;
+		}*/
+
+		@Override
+		public boolean isReadOnly() {
+			return true;
+		}
+
+		@Override
+		public void setIsReadOnly(boolean b) {
+		}
+
+		/*@Override
+		public XMLTechnologyAdapter getTechnologyAdapter() {
+			if (this.xsdResource != null)
+				return xsdResource.getTechnologyAdapter();
+			return null;
+		}*/
+
+		@Override
+		public String getName() {
+			return this.getURI();
+		}
+
+		/*@Override
+		public Class<?> getImplementedInterface() {
+			return XSDMetaModel.class;
+		}*/
+
+		// private static PamelaModelFactory MF;
+
+		/*public XMLMetaModelImpl() {
+			super();
+			types = new HashMap<>();
+		}*/
+
+		/*static {
+			try {
+				MF = new PamelaModelFactory(PamelaMetaModelLibrary.retrieveMetaModel(XMLModel.class, XMLType.class, XMLComplexType.class,
+						XMLSimpleType.class, XMLProperty.class, XMLDataProperty.class, XMLObjectProperty.class));
+			} catch (ModelDefinitionException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		public static PamelaModelFactory getModelFactory() {
+			return MF;
+		}*/
+
+		@Override
+		public XMLType getTypeFromURI(String uri) {
+			return getTypeFromURI(uri, true);
+		}
+
+		@Override
+		public XMLType getTypeFromURI(String uri, boolean createsWhenNonExistant) {
+
+			XMLType t = types.get(uri);
+
+			if (t == null && createsWhenNonExistant) {
+				return createNewType(uri, uri, true);
+			}
+
+			/*if (t == null) {
+				System.out.println("Tous les types que je connais");
+				for (XMLType xmlType : types.values()) {
+					System.out.println(" > " + xmlType + " of " + xmlType.getClass() + " uri=" + xmlType.getURI());
+				}
+			}*/
+
+			return t;
+
+		}
+
+		@Override
+		public void addType(XMLType aType) {
+			types.put(aType.getURI(), aType);
+		}
+
+		@Override
+		public void removeType(XMLType aType) {
+			types.remove(aType);
+		}
+
+		@Override
+		public List<? extends XMLType> getTypes() {
+			// TODO: perf issue
+			return new ArrayList<>(types.values());
+		}
+
+		@Override
+		public XMLType createNewType(String uri, String localName, boolean simpleType) {
+
+			XMLType aType = null;
+			if (simpleType) {
+				aType = getModelFactory().newInstance(XMLSimpleType.class, this);
+			}
+			else {
+				aType = getModelFactory().newInstance(XMLComplexType.class, this);
+			}
+			aType.setIsAbstract(false);
+			aType.setURI(uri);
+			aType.setName(localName);
+
+			addType(aType);
+
+			return aType;
+		}
+
+		/**
+		 * 
+		 * creates a new empty MetaModel
+		 * 
+		 * @return
+		 */
+		/*public static XSDMetaModel createEmptyMetaModel(String uri) {
+		
+			XSDMetaModel metamodel = MF.newInstance(XSDMetaModel.class);
+			metamodel.setReadOnly(false);
+		
+			metamodel.setURI(uri);
+		
+			return metamodel;
+		
+		}*/
+
+		@Override
+		public String getDisplayableDescription() {
+			return null;
+		}
+
+		/*@Override
+		public XMLTechnologyAdapter getTechnologyAdapter() {
+			return null;
+		}*/
+
+		@Override
+		public Object getObject(String objectURI) {
+			return null;
+		}
+
+		/*@Override
+		public FlexoResource<MM> getResource() {
+			return null;
+		}
+		
+		@Override
+		public void setResource(FlexoResource<MM> resource) {
+		
+		}*/
+
+	}
 
 }
