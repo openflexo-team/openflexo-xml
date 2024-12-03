@@ -38,12 +38,17 @@
 
 package org.openflexo.technologyadapter.xml.rm;
 
+import java.util.logging.Logger;
+
 import org.openflexo.foundation.resource.PamelaResource;
+import org.openflexo.foundation.resource.PamelaResourceImpl;
+import org.openflexo.foundation.resource.ResourceData;
 import org.openflexo.foundation.technologyadapter.TechnologyAdapterResource;
 import org.openflexo.pamela.annotations.Getter;
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.Setter;
+import org.openflexo.pamela.factory.PamelaModelFactory;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
 import org.openflexo.technologyadapter.xml.XMLTechnologyContextManager;
 import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument;
@@ -52,9 +57,14 @@ import org.openflexo.technologyadapter.xml.model.AbstractXMLDocumentFactory;
 /**
  * An XML resource, typically represented as an .xml file<br>
  * Can be a either a free XML file, or an XML conform to a grammar or metamodel (such as a .xsd file)
+ * 
+ * @param <RD>
+ *            type of {@link ResourceData}
+ * @param <F>
+ *            type of {@link PamelaModelFactory}
  */
 @ModelEntity
-@ImplementationClass(XMLResourceImpl.class)
+@ImplementationClass(XMLResource.XMLResourceImpl.class)
 public interface XMLResource<RD extends AbstractXMLDocument<RD>, F extends AbstractXMLDocumentFactory<?, RD, F>>
 		extends TechnologyAdapterResource<RD, XMLTechnologyAdapter>, PamelaResource<RD, F> {
 
@@ -67,5 +77,16 @@ public interface XMLResource<RD extends AbstractXMLDocument<RD>, F extends Abstr
 
 	@Setter(TECHNOLOGY_CONTEXT_MANAGER)
 	public void setTechnologyContextManager(XMLTechnologyContextManager technologyContextManager);
+
+	/**
+	 * Default implementation for {@link XMLResource}
+	 * 
+	 */
+	public static abstract class XMLResourceImpl<RD extends AbstractXMLDocument<RD>, F extends AbstractXMLDocumentFactory<?, RD, F>>
+			extends PamelaResourceImpl<RD, F> implements XMLResource<RD, F> {
+
+		protected static final Logger logger = Logger.getLogger(XMLResourceImpl.class.getPackage().getName());
+
+	}
 
 }

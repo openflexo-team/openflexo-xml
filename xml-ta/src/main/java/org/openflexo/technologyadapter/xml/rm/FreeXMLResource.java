@@ -39,9 +39,13 @@
 
 package org.openflexo.technologyadapter.xml.rm;
 
+import java.io.IOException;
+import java.util.logging.Logger;
+
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.technologyadapter.xml.model.free.FreeXMLDocument;
+import org.openflexo.technologyadapter.xml.model.free.FreeXMLDocumentBuilder;
 import org.openflexo.technologyadapter.xml.model.free.FreeXMLDocumentFactory;
 
 /**
@@ -50,7 +54,35 @@ import org.openflexo.technologyadapter.xml.model.free.FreeXMLDocumentFactory;
  * @author sylvain
  */
 @ModelEntity
-@ImplementationClass(FreeXMLResourceImpl.class)
+@ImplementationClass(FreeXMLResource.FreeXMLResourceImpl.class)
 public interface FreeXMLResource extends XMLResource<FreeXMLDocument, FreeXMLDocumentFactory> {
+
+	/**
+	 * Default implementation for FreeXMLResource
+	 */
+	public static abstract class FreeXMLResourceImpl extends XMLResourceImpl<FreeXMLDocument, FreeXMLDocumentFactory>
+			implements FreeXMLResource {
+
+		protected static final Logger logger = Logger.getLogger(FreeXMLResourceImpl.class.getPackage().getName());
+
+		@Override
+		protected FreeXMLDocument performLoad() throws IOException, Exception {
+
+			resourceData = getFactory().makeFreeXMLDocument();
+			resourceData.setResource(this);
+
+			notifyResourceWillLoad();
+
+			FreeXMLDocumentBuilder builder = new FreeXMLDocumentBuilder();
+			builder.setContext(resourceData);
+			builder.deserialize(getInputStream());
+			builder.resetContext();
+
+			notifyResourceLoaded();
+
+			return resourceData;
+		}
+
+	}
 
 }
