@@ -145,6 +145,8 @@ public class TestXML extends OpenflexoProjectAtRunTimeTestCase {
 	@TestOrder(3)
 	public void test1LoadFileAndDump() throws FileNotFoundException, ResourceLoadingCancelledException, FlexoException {
 
+		System.exit(-1);
+
 		log("test1LoadFileAndDump()");
 
 		assertNotNull(modelRepository);
