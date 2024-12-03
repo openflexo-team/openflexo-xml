@@ -49,15 +49,43 @@ import org.openflexo.pamela.annotations.Setter;
  * @author sylvain, xtof
  */
 @ModelEntity
-@ImplementationClass(XMLDataPropertyValueImpl.class)
-public interface XMLDataPropertyValue extends XMLPropertyValue  {
+@ImplementationClass(XMLDataPropertyValue.XMLDataPropertyValueImpl.class)
+public interface XMLDataPropertyValue extends XMLPropertyValue {
 
 	final String VALUE = "value";
 
 	@Getter(value = VALUE, ignoreType = true)
 	public Object getValue();
-	
+
 	@Setter(VALUE)
 	public void setValue(Object value);
-	
+
+	/**
+	 * Implementation of an Data Property values in XSD/XML technology.<br>
+	 * 
+	 * @author sylvain, xtof
+	 */
+	public static abstract class XMLDataPropertyValueImpl implements XMLDataPropertyValue {
+
+		@Override
+		public boolean equals(Object obj) {
+			// One Single Value per DataProperty in XML
+			return getValue().equals(obj);
+
+		}
+
+		@Override
+		public String toString() {
+
+			return getValue().toString();
+		}
+
+		@Override
+		public String getStringValue() {
+			// TODO manage this better.
+			return getValue().toString();
+		}
+
+	}
+
 }

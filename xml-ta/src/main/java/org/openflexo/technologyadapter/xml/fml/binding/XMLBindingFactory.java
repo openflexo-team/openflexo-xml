@@ -50,10 +50,10 @@ import org.openflexo.connie.binding.SimplePathElement;
 import org.openflexo.foundation.fml.TechnologySpecificType;
 import org.openflexo.foundation.technologyadapter.TechnologyAdapterBindingFactory;
 import org.openflexo.technologyadapter.xml.XMLIndividualType;
+import org.openflexo.technologyadapter.xml.XMLObject;
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLDataProperty;
-import org.openflexo.technologyadapter.xml.metamodel.XMLObject;
-import org.openflexo.technologyadapter.xml.metamodel.XMLObjectPropertyImpl;
+import org.openflexo.technologyadapter.xml.metamodel.XMLObjectProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
 import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
 
@@ -78,8 +78,8 @@ public final class XMLBindingFactory extends TechnologyAdapterBindingFactory {
 
 			return new XMLDataPropertyPathElement(parent, attr, bindable);
 		}
-		else if (object instanceof XMLObjectPropertyImpl) {
-			XMLObjectPropertyImpl attr = (XMLObjectPropertyImpl) object;
+		else if (object instanceof XMLObjectProperty) {
+			XMLObjectProperty attr = (XMLObjectProperty) object;
 			return new XMLObjectPropertyPathElement(parent, attr, bindable);
 
 		}

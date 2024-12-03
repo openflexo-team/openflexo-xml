@@ -61,13 +61,16 @@ public abstract class FreeXMLResourceImpl extends XMLResourceImpl<FreeXMLDocumen
 		resourceData = getFactory().makeFreeXMLDocument();
 		resourceData.setResource(this);
 
+		notifyResourceWillLoad();
+
 		FreeXMLDocumentBuilder builder = new FreeXMLDocumentBuilder();
 		builder.setContext(resourceData);
 		builder.deserialize(getInputStream());
 		builder.resetContext();
 
-		System.exit(-1);
-		return null;
+		notifyResourceLoaded();
+
+		return resourceData;
 
 		/*converter = new BasicExcelModelConverter(this);
 		

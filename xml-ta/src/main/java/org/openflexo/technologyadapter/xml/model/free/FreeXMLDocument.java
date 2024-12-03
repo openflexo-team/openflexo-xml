@@ -38,8 +38,11 @@
 
 package org.openflexo.technologyadapter.xml.model.free;
 
+import org.openflexo.pamela.annotations.Getter;
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
+import org.openflexo.pamela.annotations.PropertyIdentifier;
+import org.openflexo.pamela.annotations.Setter;
 import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument;
 import org.openflexo.technologyadapter.xml.model.free.FreeXMLDocument.FreeXMLDocumentImpl;
 import org.openflexo.technologyadapter.xml.rm.FreeXMLResource;
@@ -53,6 +56,23 @@ import org.openflexo.technologyadapter.xml.rm.FreeXMLResource;
 @ImplementationClass(FreeXMLDocumentImpl.class)
 public interface FreeXMLDocument extends AbstractXMLDocument<FreeXMLDocument> {
 
+	@PropertyIdentifier(type = XMLElement.class)
+	public static final String ROOT_ELEMENT_KEY = "rootElement";
+
+	@Getter(value = ROOT_ELEMENT_KEY)
+	public XMLElement getRootElement();
+
+	@Setter(ROOT_ELEMENT_KEY)
+	public void setRootElement(XMLElement rootElement);
+
+	@Override
+	public FreeXMLResource getResource();
+
+	@Override
+	public FreeXMLDocumentFactory getModelFactory();
+
+	public String getXMLRepresentation();
+
 	/**
 	 * Default implementation for {@link FreeXMLDocument}
 	 * 
@@ -65,6 +85,20 @@ public interface FreeXMLDocument extends AbstractXMLDocument<FreeXMLDocument> {
 		@Override
 		public FreeXMLResource getResource() {
 			return (FreeXMLResource) super.getResource();
+		}
+
+		// Can be safely cast to FreeXMLDocumentFactory
+		@Override
+		public FreeXMLDocumentFactory getModelFactory() {
+			return (FreeXMLDocumentFactory) super.getModelFactory();
+		}
+
+		@Override
+		public String getXMLRepresentation() {
+			if (getRootElement() != null) {
+				return getRootElement().getXMLRepresentation();
+			}
+			return null;
 		}
 
 	}

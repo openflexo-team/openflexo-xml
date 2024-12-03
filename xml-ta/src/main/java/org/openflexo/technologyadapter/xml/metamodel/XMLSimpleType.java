@@ -39,6 +39,8 @@
 package org.openflexo.technologyadapter.xml.metamodel;
 
 import java.lang.reflect.Type;
+import java.util.Date;
+import java.util.logging.Logger;
 
 import org.openflexo.pamela.annotations.Getter;
 import org.openflexo.pamela.annotations.ImplementationClass;
@@ -46,7 +48,7 @@ import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.Setter;
 
 @ModelEntity
-@ImplementationClass(XMLSimpleTypeImpl.class)
+@ImplementationClass(XMLSimpleType.XMLSimpleTypeImpl.class)
 public interface XMLSimpleType extends XMLType {
 
 	/*
@@ -61,4 +63,55 @@ public interface XMLSimpleType extends XMLType {
 	public void setMapsToElement(boolean val);
 
 	public Type getJavaType();
+
+	public static abstract class XMLSimpleTypeImpl extends XMLTypeImpl implements XMLSimpleType {
+
+		private static final Logger logger = Logger.getLogger(XMLSimpleTypeImpl.class.getPackage().getName());
+
+		@Override
+		public String getDisplayableDescription() {
+			return "Simple XML Type named : " + this.getName();
+		}
+
+		@Override
+		public Type getJavaType() {
+			if (getURI().equals(XSDMetaModel.STRING_URI)) {
+				return String.class;
+			}
+			if (getURI().equals(XSDMetaModel.BOOLEAN_URI)) {
+				return Boolean.class;
+			}
+			if (getURI().equals(XSDMetaModel.BYTE_URI)) {
+				return Byte.class;
+			}
+			if (getURI().equals(XSDMetaModel.DATE_URI)) {
+				return Date.class;
+			}
+			if (getURI().equals(XSDMetaModel.DECIMAL_URI)) {
+				return Number.class;
+			}
+			if (getURI().equals(XSDMetaModel.DOUBLE_URI)) {
+				return Double.class;
+			}
+			if (getURI().equals(XSDMetaModel.FLOAT_URI)) {
+				return Float.class;
+			}
+			if (getURI().equals(XSDMetaModel.INT_URI)) {
+				return Integer.class;
+			}
+			if (getURI().equals(XSDMetaModel.INTEGER_URI)) {
+				return Integer.class;
+			}
+			if (getURI().equals(XSDMetaModel.LONG_URI)) {
+				return Long.class;
+			}
+			if (getURI().equals(XSDMetaModel.SHORT_URI)) {
+				return Short.class;
+			}
+			logger.warning("Unexpected " + getURI());
+			return Object.class;
+		}
+
+	}
+
 }

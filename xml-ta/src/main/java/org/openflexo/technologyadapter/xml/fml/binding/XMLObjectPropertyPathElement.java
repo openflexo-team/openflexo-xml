@@ -47,7 +47,7 @@ import org.openflexo.connie.binding.SimplePathElementImpl;
 import org.openflexo.connie.exception.InvocationTargetTransformException;
 import org.openflexo.connie.exception.NullReferenceException;
 import org.openflexo.connie.exception.TypeMismatchException;
-import org.openflexo.technologyadapter.xml.metamodel.XMLObjectPropertyImpl;
+import org.openflexo.technologyadapter.xml.metamodel.XMLObjectProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
 import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
 
@@ -57,9 +57,9 @@ import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
  */
 public class XMLObjectPropertyPathElement extends SimplePathElementImpl {
 
-	private final XMLObjectPropertyImpl property;
+	private final XMLObjectProperty property;
 
-	public XMLObjectPropertyPathElement(IBindingPathElement parent, XMLObjectPropertyImpl property, Bindable bindable) {
+	public XMLObjectPropertyPathElement(IBindingPathElement parent, XMLObjectProperty property, Bindable bindable) {
 		super(parent, property.getName(), property.getAccessedType(), bindable);
 		this.property = property;
 	}

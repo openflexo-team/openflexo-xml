@@ -41,14 +41,13 @@ package org.openflexo.technologyadapter.xml.model;
 import org.openflexo.foundation.resource.ResourceData;
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
-import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
-import org.openflexo.technologyadapter.xml.metamodel.XMLObject;
+import org.openflexo.technologyadapter.xml.XMLObject;
 import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument.AbstractXMLDocumentImpl;
 import org.openflexo.technologyadapter.xml.rm.XMLResource;
 
 /**
  * Abstract representation of a XML document<br>
- * May be a free XML document or a typed XML document
+ * May be a free XML document, a typed XML document, an XSD document, etc.
  * 
  * @author sylvain
  */
@@ -59,26 +58,36 @@ public interface AbstractXMLDocument<RD extends AbstractXMLDocument<RD>> extends
 	@Override
 	public XMLResource<RD, ?> getResource();
 
+	public void setResource(XMLResource<RD, ?> resource);
+
 	/**
 	 * Default implementation for {@link AbstractXMLDocument}
 	 * 
 	 * @author sylvain
 	 */
-	public static abstract class AbstractXMLDocumentImpl<RD extends AbstractXMLDocument<RD>> extends FlexoObjectImpl
+	public static abstract class AbstractXMLDocumentImpl<RD extends AbstractXMLDocument<RD>> extends XMLObjectImpl<RD>
 			implements AbstractXMLDocument<RD> {
+
+		private XMLResource<RD, ?> resource;
 
 		// Can be safely cast to XMLResource<RD>
 		@Override
 		public XMLResource<RD, ?> getResource() {
-			return (XMLResource<RD, ?>) performSuperGetter(FLEXO_RESOURCE);
+			return resource;
 		}
 
 		@Override
-		public XMLTechnologyAdapter getTechnologyAdapter() {
-			XMLResource<RD, ?> rsc = getResource();
-			if (rsc != null)
-				return rsc.getTechnologyAdapter();
-			return null;
+		public void setResource(XMLResource<RD, ?> resource) {
+			if ((resource == null && this.resource != null) || (resource != null && !resource.equals(this.resource))) {
+				XMLResource<RD, ?> oldValue = this.resource;
+				this.resource = resource;
+				getPropertyChangeSupport().firePropertyChange("resource", oldValue, resource);
+			}
+		}
+
+		@Override
+		public RD getResourceData() {
+			return (RD) this;
 		}
 
 	}

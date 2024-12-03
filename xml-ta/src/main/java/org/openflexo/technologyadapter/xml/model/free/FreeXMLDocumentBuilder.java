@@ -43,6 +43,7 @@ import java.io.InputStream;
 import java.lang.reflect.Type;
 
 import org.openflexo.xml.SaxBasedObjectGraphFactory;
+import org.openflexo.xml.XMLCst;
 import org.xml.sax.SAXException;
 
 /**
@@ -55,12 +56,12 @@ public class FreeXMLDocumentBuilder extends SaxBasedObjectGraphFactory {
 	@Override
 	public Object getInstanceOf(Type aType, String name) {
 
-		System.out.println("Called getInstanceOf() with " + aType + " and " + name);
+		// System.out.println("Called getInstanceOf() with " + aType + " and " + name);
 
-		/*if (aType instanceof XMLComplexType) {
-			XMLIndividual _inst = document.addNewIndividual((XMLComplexType) aType);
-			return _inst;
-		}*/
+		if (aType == XMLElement.class) {
+			// System.out.println("Creating Element " + name);
+			return document.getModelFactory().makeXMLElement(name, document);
+		}
 
 		return null;
 	}
@@ -68,44 +69,15 @@ public class FreeXMLDocumentBuilder extends SaxBasedObjectGraphFactory {
 	@Override
 	public Type getTypeForObject(String typeURI, Object container, String objectName) {
 
-		System.out.println(
-				"Called getTypeForObject() with typeURI=" + typeURI + " and container=" + container + " and objectName=" + objectName);
+		// System.out.println(
+		// "Called getTypeForObject() with typeURI=" + typeURI + " and container=" + container + " and objectName=" + objectName);
 
-		/*XMLMetaModel mm = document.getMetaModel();
-		XMLType tt = null;
-		if (mm != null) {
-			tt = mm.getTypeFromURI(typeURI);
-		}
-		
-		// Try to match as local uri
-		if (container instanceof XMLIndividual) {
-			XMLType parentType = ((XMLIndividual) container).getType();
-			if (tt == null && !typeURI.startsWith(parentType.getFullyQualifiedName())) {
-				tt = mm.getTypeFromURI(parentType.getFullyQualifiedName() + "#" + typeURI);
-			}
-		}
-		
-		// Create the type if it does not exist and that we can!!
-		if (!mm.isReadOnly() && tt == null) {
-			if (container instanceof XMLIndividual) {
-				XMLType parentType = ((XMLIndividual) container).getType();
-				tt = mm.createNewType((parentType.getFullyQualifiedName() + "#" + objectName), objectName, false);
-			}
-			else {
-				tt = mm.createNewType(mm.getURI() + "#" + objectName, objectName, false);
-			}
-		}
-		
-		return tt;*/
-
-		return null;
+		return XMLElement.class;
 	}
 
 	@Override
 	public Object deserialize(String input) throws IOException {
 		if (document != null) {
-
-			System.out.println("Prout ici");
 
 			try {
 				saxParser.parse(input, handler);
@@ -123,8 +95,6 @@ public class FreeXMLDocumentBuilder extends SaxBasedObjectGraphFactory {
 	public Object deserialize(InputStream input) throws IOException {
 		if (document != null) {
 
-			System.out.println("Prout la");
-
 			try {
 				saxParser.parse(input, handler);
 			} catch (SAXException e) {
@@ -141,27 +111,22 @@ public class FreeXMLDocumentBuilder extends SaxBasedObjectGraphFactory {
 	@Override
 	public void addToRootNodes(Object anObject) {
 
-		System.out.println("addToRootNodes with " + anObject);
+		// System.out.println("addToRootNodes with " + anObject);
 
-		// document.setRoot((XMLIndividual) anObject);
+		document.setRootElement((XMLElement) anObject);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void setContextProperty(String propertyName, Object value) {
 
-		System.out.println("setContextProperty with " + propertyName + " and " + value);
-
-		/*if (propertyName.equals(XMLReaderSAXHandler.NAMESPACE_Property)) {
-			document.setNamespace(((List<String>) value).get(0), ((List<String>) value).get(1));
-		}*/
+		// System.out.println("setContextProperty with " + propertyName + " and " + value);
 
 	}
 
 	@Override
 	public void setContext(Object objectGraph) {
 		document = (FreeXMLDocument) objectGraph;
-
 	}
 
 	@Override
@@ -172,73 +137,41 @@ public class FreeXMLDocumentBuilder extends SaxBasedObjectGraphFactory {
 	@Override
 	public boolean objectHasAttributeNamed(Object object, String propertyName) {
 
-		System.out.println("Called objectHasAttributeNamed() with " + object + " and " + propertyName);
+		// System.out.println("Called objectHasAttributeNamed() with " + object + " and " + propertyName);
 
-		/*if (object instanceof XMLIndividual) {
-		
-			XMLProperty prop = ((XMLIndividual) object).getType().getPropertyByName(propertyName);
-		
-			return (prop != null);
-		}
-		return false;*/
 		return false;
 	}
 
 	@Override
 	public void addAttributeValueForObject(Object object, String name, Object value) {
 
-		System.out.println("Called addAttributeValueForObject() with " + object + " and " + name + " and " + value);
+		// System.out.println("Called addAttributeValueForObject() with " + object + " and " + name + " and " + value);
 
-		/*if (object instanceof XMLIndividual) {
-			XMLComplexType t = ((XMLIndividual) object).getType();
-		
-			XMLProperty prop = t.getPropertyByName(name);
-		
-			XMLMetaModel mm = document.getMetaModel();
-		
-			if (prop == null) {
-				if (!mm.isReadOnly() || name.equals(XMLCst.CDATA_ATTR_NAME)) {
-		
-					prop = t.createProperty(name, value.getClass());
-		
-					if (prop != null) {
-						((XMLIndividual) object).addPropertyValue(prop, value);
-					}
-					else {
-						LOGGER.warning("UNABLE to create a new property named " + name);
-					}
-				}
-				else {
-					LOGGER.warning(
-							"TRYING to give a value to a non existant property: " + name + " -- " + name.equals(XMLCst.CDATA_ATTR_NAME));
-				}
+		if (object instanceof XMLElement) {
+			if (name.equals(XMLCst.CDATA_ATTR_NAME)) {
+				((XMLElement) object).setValue(value);
 			}
 			else {
-				((XMLIndividual) object).addPropertyValue(prop, value);
-		
+				((XMLElement) object).setAttributeValue(name, value);
 			}
-		}*/
+		}
 	}
 
 	@Override
 	public void addChildToObject(Object currentObject, Object currentContainer) {
 
-		System.out.println("addChildToObject with " + currentObject + " and " + currentContainer);
-		/*if (currentContainer instanceof XMLIndividual) {
-			((XMLIndividual) currentContainer).addChild((XMLIndividual) currentObject);
-		}*/
+		// System.out.println("addChildToObject with " + currentObject + " and " + currentContainer);
 
+		if (currentObject instanceof XMLElement && currentContainer instanceof XMLElement) {
+			((XMLElement) currentContainer).addToChildElements((XMLElement) currentObject);
+		}
 	}
 
 	@Override
 	public Type getAttributeType(Object currentContainer, String localName) {
 
-		System.out.println("getAttributeType with " + currentContainer + " and " + localName);
+		// System.out.println("getAttributeType with " + currentContainer + " and " + localName);
 
-		/*XMLProperty prop = ((XMLIndividual) currentContainer).getType().getPropertyByName(localName);
-		if (prop != null) {
-			return prop.getType();
-		}*/
 		return null;
 	}
 }

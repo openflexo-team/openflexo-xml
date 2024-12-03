@@ -131,6 +131,8 @@ public class TestXML extends OpenflexoProjectAtRunTimeTestCase {
 		assertNotNull(modelRes.getResourceData());
 		assertTrue(modelRes.isLoaded());
 
+		System.out.println(modelRes.getResourceData().getXMLRepresentation());
+
 		// dumpTypes(modelRes.getModel());
 
 		// assertNotNull(modelRes.getModel().getMetaModel().getTypeFromURI(modelRes.getModel().getURI() + "/Metamodel#Library"));
@@ -142,8 +144,6 @@ public class TestXML extends OpenflexoProjectAtRunTimeTestCase {
 	@Test
 	@TestOrder(3)
 	public void test1LoadFileAndDump() throws FileNotFoundException, ResourceLoadingCancelledException, FlexoException {
-
-		// System.exit(-1);
 
 		log("test1LoadFileAndDump()");
 

@@ -39,21 +39,27 @@
 package org.openflexo.technologyadapter.xml.metamodel;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 
 import org.openflexo.pamela.annotations.Adder;
 import org.openflexo.pamela.annotations.Embedded;
 import org.openflexo.pamela.annotations.Finder;
 import org.openflexo.pamela.annotations.Getter;
+import org.openflexo.pamela.annotations.Getter.Cardinality;
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.Remover;
-import org.openflexo.pamela.annotations.Getter.Cardinality;
+import org.openflexo.xml.XMLCst;
 
 @ModelEntity
-@ImplementationClass(XMLComplexTypeImpl.class)
-public interface XMLComplexType  extends XMLType {
-	
+@ImplementationClass(XMLComplexType.XMLComplexTypeImpl.class)
+public interface XMLComplexType extends XMLType {
+
 	final String PROPERTIES = "properties";
 
 	@Getter(value = PROPERTIES, cardinality = Cardinality.LIST)
@@ -61,18 +67,120 @@ public interface XMLComplexType  extends XMLType {
 	public List<? extends XMLProperty> getProperties();
 
 	@Finder(attribute = XMLProperty.URI, collection = PROPERTIES, isMultiValued = true)
-    public XMLProperty getPropertyByName(String name);
+	public XMLProperty getPropertyByName(String name);
 
-    public XMLProperty createProperty(String name, Type t);
-    
+	public XMLProperty createProperty(String name, Type t);
+
 	public Boolean hasProperty(String name);
-	
+
 	@Adder(PROPERTIES)
 	public void addProperty(XMLProperty anAttribute);
 
 	@Remover(PROPERTIES)
 	public void removeProperty(XMLProperty anAttribute);
-	
-	
-	
+
+	public static abstract class XMLComplexTypeImpl extends XMLTypeImpl implements XMLComplexType {
+
+		private static final Logger logger = Logger.getLogger(XMLComplexTypeImpl.class.getPackage().getName());
+
+		/* Properties */
+		Map<String, XMLProperty> properties;
+
+		public XMLComplexTypeImpl() {
+			super();
+			this.properties = new HashMap<>();
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public List<? extends XMLProperty> getProperties() {
+
+			@SuppressWarnings({ "unchecked", "rawtypes" })
+			ArrayList lst = new ArrayList(properties.values());
+			addSuperPropertiesToPropertyList(lst);
+			Collections.sort(lst);
+			return lst;
+		}
+
+		private void addSuperPropertiesToPropertyList(List<XMLProperty> list) {
+			XMLType t = getSuperType();
+			if (t != null && t instanceof XMLComplexType) {
+				for (XMLProperty p : ((XMLComplexType) t).getProperties()) {
+					list.add(p);
+				}
+				((XMLComplexTypeImpl) t).addSuperPropertiesToPropertyList(list);
+			}
+		}
+
+		@Override
+		public XMLProperty createProperty(String name, Type aType) {
+			XMLProperty prop = null;
+
+			if (!hasProperty(name)) {
+				if (aType != null) {
+					if (aType instanceof XMLComplexType) {
+
+						prop = getModelFactory().newInstance(XMLObjectProperty.class, name, aType, this);
+					}
+					else if (aType instanceof XMLSimpleType) {
+						prop = getModelFactory().newInstance(XMLDataProperty.class, name, aType, this);
+					}
+					else if (aType.equals(String.class)) {
+						prop = getModelFactory().newInstance(XMLDataProperty.class, name, aType, this);
+					}
+					else {
+						logger.warning("UNABLE to create a new property named [" + name + "] as it does not map to any known type: "
+								+ aType.toString());
+					}
+				}
+				else {
+					logger.warning("UNABLE to create a new property named [" + name + "]  with a NULL type ");
+				}
+				if (prop != null)
+					addProperty(prop);
+			}
+			return prop;
+		}
+
+		@Override
+		public void addProperty(XMLProperty prop) {
+			if (prop != null)
+				properties.put(prop.getName(), prop);
+		}
+
+		@Override
+		public Boolean hasProperty(String name) {
+			return properties.containsKey(name);
+		}
+
+		@Override
+		public XMLProperty getPropertyByName(String name) {
+			if (name != null) {
+				XMLProperty prop = properties.get(name);
+				// Looks for the property in super-Type
+				if (this.getSuperType() != null) {
+					prop = ((XMLComplexType) this.getSuperType()).getPropertyByName(name);
+				}
+				// Creates the property for PCDATA
+				if (prop == null && name.equals(XMLCst.CDATA_ATTR_NAME)) {
+					System.out.println("mm=" + getMetamodel());
+					prop = createProperty(name, this.getMetamodel().getTypeFromURI(XSDMetaModel.STRING_URI));
+				}
+				return prop;
+			}
+			return null;
+		}
+
+		@Override
+		public Class<?> getImplementedInterface() {
+			return XMLComplexType.class;
+		}
+
+		@Override
+		public String getDisplayableDescription() {
+			return "Complex XML Type named : " + this.getName();
+		}
+
+	}
+
 }

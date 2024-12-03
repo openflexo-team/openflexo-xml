@@ -38,7 +38,13 @@
 
 package org.openflexo.technologyadapter.xml.model.typed;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 import org.openflexo.pamela.annotations.Adder;
 import org.openflexo.pamela.annotations.CloningStrategy;
@@ -53,10 +59,14 @@ import org.openflexo.pamela.annotations.Parameter;
 import org.openflexo.pamela.annotations.PastingPoint;
 import org.openflexo.pamela.annotations.Remover;
 import org.openflexo.pamela.annotations.Setter;
+import org.openflexo.technologyadapter.xml.XMLObject;
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
-import org.openflexo.technologyadapter.xml.metamodel.XMLObject;
+import org.openflexo.technologyadapter.xml.metamodel.XMLDataProperty;
+import org.openflexo.technologyadapter.xml.metamodel.XMLObjectProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
+import org.openflexo.xml.XMLCst;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -69,7 +79,7 @@ import org.w3c.dom.Element;
  * 
  */
 @ModelEntity
-@ImplementationClass(XMLIndividualImpl.class)
+@ImplementationClass(XMLIndividual.XMLIndividualImpl.class)
 public interface XMLIndividual extends XMLObject<XMLModel> {
 
 	// TODO : manage the calculation of FQN
@@ -155,5 +165,230 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 
 	// TODO : refactor to get rid of any JDOM reference
 	public Element toXML(Document doc);
+
+	/**
+	 * 
+	 * Default implementation for {@link XMLIndividual}
+	 * 
+	 * @author sylvain, xtof
+	 * 
+	 */
+	public static abstract class XMLIndividualImpl extends XMLObjectImpl<XMLModel> implements XMLIndividual {
+
+		private static final java.util.logging.Logger logger = org.openflexo.logging.FlexoLogger
+				.getLogger(XMLIndividualImpl.class.getPackage().getName());
+
+		/* Properties */
+
+		private Map<XMLComplexType, Set<XMLIndividualImpl>> children = null;
+		private Map<XMLProperty, XMLPropertyValue> propertiesValues = null;
+		private final String uuid;
+
+		/**
+		 * Default Constructor
+		 * 
+		 * @param adapter
+		 */
+		public XMLIndividualImpl() {
+			super();
+			uuid = UUID.randomUUID().toString();
+			propertiesValues = new HashMap<>();
+			children = new HashMap<>();
+		}
+
+		@Override
+		public String getUUID() {
+			return uuid;
+		}
+
+		@Override
+		public String getContentDATA() {
+			XMLProperty attr = this.getType().getPropertyByName(XMLCst.CDATA_ATTR_NAME);
+			if (attr != null) {
+				return this.getPropertyStringValue(attr);
+			}
+			return "";
+		}
+
+		@Override
+		public void setContentDATA(String value) {
+			XMLProperty attr = this.getType().getPropertyByName(XMLCst.CDATA_ATTR_NAME);
+			if (attr != null) {
+				addPropertyValue(XMLCst.CDATA_ATTR_NAME, value);
+			}
+		}
+
+		@Override
+		public String getName() {
+			return getType().getName();
+		}
+
+		@Override
+		public void removeChild(XMLIndividual indiv) {
+			children.get(indiv.getType()).remove(indiv);
+		}
+
+		@Override
+		public void addChild(XMLIndividual anIndividual) {
+			XMLComplexType aType = anIndividual.getType();
+			Set<XMLIndividualImpl> typedSet = children.get(aType);
+
+			if (typedSet == null) {
+				typedSet = new HashSet<>();
+				children.put(aType, typedSet);
+			}
+			typedSet.add((XMLIndividualImpl) anIndividual);
+			((XMLIndividualImpl) anIndividual).setParent(this);
+		}
+
+		@Override
+		public List<XMLIndividual> getChildren() {
+
+			List<XMLIndividual> returned = new ArrayList<>();
+
+			for (Set<XMLIndividualImpl> s : children.values()) {
+				returned.addAll(s);
+			}
+			return returned;
+		}
+
+		@Override
+		public String getPropertyStringValue(XMLProperty prop) {
+			XMLPropertyValue pv = propertiesValues.get(prop);
+			if (pv != null) {
+				return propertiesValues.get(prop).getStringValue();
+			}
+			return "";
+		}
+
+		@Override
+		public List<? extends XMLPropertyValue> getPropertiesValues() {
+			return new ArrayList<XMLPropertyValue>(propertiesValues.values());
+		}
+
+		@Override
+		public XMLPropertyValue getPropertyValue(String attributeName) {
+
+			XMLProperty attr = getType().getPropertyByName(attributeName);
+
+			if (attr != null) {
+				return propertiesValues.get(attr);
+			}
+			return null;
+		}
+
+		@Override
+		public XMLPropertyValue getPropertyValue(XMLProperty prop) {
+
+			if (prop != null) {
+				return propertiesValues.get(prop);
+			}
+			return null;
+
+		}
+
+		@Override
+		public void addPropertyValue(/*XMLProperty attr,*/ XMLPropertyValue value) {
+			// TODO
+		}
+
+		@Override
+		public void deletePropertyValues(XMLPropertyValue value) {
+			// TODO
+		}
+
+		@Override
+		public void addPropertyValue(String name, Object value) {
+
+			XMLProperty prop = getType().getPropertyByName(name);
+
+			if (prop == null) {
+				XSDMetaModel mm = getContainerModel().getMetaModel();
+				if (!mm.isReadOnly()) {
+					// TODO Manage complex types and actual types for objects.
+					prop = this.getType().createProperty(name, mm.getTypeFromURI(XSDMetaModel.STRING_URI));
+				}
+				else {
+					logger.warning("CANNOT give a value  for a non existant attribute :" + name);
+				}
+			}
+			if (prop != null) {
+				XMLPropertyValue vals = propertiesValues.get(prop);
+
+				if (vals == null) {
+
+					if (prop instanceof XMLDataProperty) {
+						vals = getContainerModel().getModelFactory().makeXMLDataPropertyValue((XMLDataProperty) prop, value);
+						propertiesValues.put(prop, vals);
+					}
+					else {
+						// TODO..... complex attributes, collections
+					}
+				}
+
+				else {
+					// TODO..... manage this case also
+				}
+			}
+
+		}
+
+		@Override
+		public void addPropertyValue(XMLProperty prop, Object value) {
+			XMLPropertyValue val = propertiesValues.get(prop);
+
+			if (val == null) {
+
+				if (prop instanceof XMLDataProperty) {
+					val = getContainerModel().getModelFactory().makeXMLDataPropertyValue((XMLDataProperty) prop, value);
+					propertiesValues.put(prop, val);
+				}
+				else if (prop instanceof XMLObjectProperty) {
+					val = getContainerModel().getModelFactory().makeXMLObjectPropertyValue((XMLObjectProperty) prop, (XMLIndividual) value);
+					propertiesValues.put(prop, val);
+				}
+			}
+
+			if (val != null) {
+				if (prop instanceof XMLDataProperty) {
+					((XMLDataPropertyValue) val).setValue(value);
+				}
+				else if (prop instanceof XMLObjectProperty) {
+					((XMLObjectPropertyValue) val).addToValues((XMLIndividual) value);
+				}
+			}
+
+		}
+
+		/* (non-Javadoc)
+		 * @see org.openflexo.technologyadapter.xml.model.IXMLIndividual#toXML(org.w3c.dom.Document)
+		 */
+		@Override
+		public Element toXML(Document doc) {
+			String nsURI = getType().getURI();
+			Element element = null;
+			if (nsURI != null) {
+				element = doc.createElementNS(nsURI, getType().getFullyQualifiedName());
+			}
+			else {
+				element = doc.createElement(getType().getName());
+			}
+
+			for (XMLIndividual i : getChildren()) {
+				element.appendChild(i.toXML(doc));
+			}
+
+			// TODO dump attributes !!!
+
+			return element;
+		}
+
+		@Override
+		public String getDisplayableDescription() {
+			return "XML Individual of type: " + getName();
+
+		}
+
+	}
 
 }

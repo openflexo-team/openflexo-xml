@@ -40,7 +40,7 @@ package org.openflexo.technologyadapter.xml.gui;
 
 import org.openflexo.rm.Resource;
 import org.openflexo.rm.ResourceLocator;
-import org.openflexo.technologyadapter.xml.metamodel.XMLObject;
+import org.openflexo.technologyadapter.xml.XMLObject;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
 import org.openflexo.view.controller.FlexoController;

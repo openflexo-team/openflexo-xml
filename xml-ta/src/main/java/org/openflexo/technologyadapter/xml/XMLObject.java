@@ -36,7 +36,7 @@
  * 
  */
 
-package org.openflexo.technologyadapter.xml.metamodel;
+package org.openflexo.technologyadapter.xml;
 
 import java.util.logging.Logger;
 
@@ -46,12 +46,18 @@ import org.openflexo.pamela.annotations.Getter;
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.Setter;
-import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
-import org.openflexo.technologyadapter.xml.metamodel.XMLObject.XMLObjectImpl;
+import org.openflexo.technologyadapter.xml.XMLObject.XMLObjectImpl;
 import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument;
 import org.openflexo.technologyadapter.xml.model.AbstractXMLDocumentFactory;
+import org.openflexo.technologyadapter.xml.rm.XMLResource;
 
 /**
+ * 
+ * Abstract base class for all objects beeing part of a XML resource content
+ * 
+ * An {@link XMLObject} is contained in an {@link AbstractXMLDocument}, and is a {@link TechnologyObject} of XML technology adapter<br>
+ * As such, a {@link XMLObject} "lives" in a {@link XMLResource}
+ * 
  * @author sylvain
  * 
  */
@@ -72,12 +78,14 @@ public interface XMLObject<RD extends AbstractXMLDocument<RD>> extends Technolog
 	@Setter(URI)
 	public void setURI(String uri);
 
+	public XMLResource<RD, ?> getResource();
+
 	public String getDisplayableDescription();
 
 	@Deprecated
 	public String getSerializationIdentifier();
 
-	public AbstractXMLDocumentFactory<?, ?, ?> getFactory();
+	public AbstractXMLDocumentFactory<?, ?, ?> getModelFactory();
 
 	/**
 	 * Default base implementation for {@link ExcelObject}
@@ -91,7 +99,7 @@ public interface XMLObject<RD extends AbstractXMLDocument<RD>> extends Technolog
 		private static final Logger logger = Logger.getLogger(XMLObjectImpl.class.getPackage().getName());
 
 		@Override
-		public XMLTechnologyAdapter getTechnologyAdapter() {
+		public final XMLTechnologyAdapter getTechnologyAdapter() {
 			if (getResourceData() != null && getResourceData().getResource() != null) {
 				return getResourceData().getResource().getTechnologyAdapter();
 			}
@@ -99,8 +107,13 @@ public interface XMLObject<RD extends AbstractXMLDocument<RD>> extends Technolog
 		}
 
 		@Override
-		public AbstractXMLDocumentFactory<?, ?, ?> getFactory() {
-			return getResourceData().getResource().getFactory();
+		public XMLResource<RD, ?> getResource() {
+			return getResourceData().getResource();
+		}
+
+		@Override
+		public AbstractXMLDocumentFactory<?, ?, ?> getModelFactory() {
+			return getResource().getFactory();
 		}
 
 		@Override

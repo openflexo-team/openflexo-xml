@@ -67,4 +67,11 @@ public class FreeXMLDocumentFactory extends AbstractXMLDocumentFactory<FreeXMLRe
 	public FreeXMLDocument makeFreeXMLDocument() {
 		return newInstance(FreeXMLDocument.class);
 	}
+
+	public XMLElement makeXMLElement(String elementName, FreeXMLDocument document) {
+		XMLElement returned = newInstance(XMLElement.class);
+		returned.setName(elementName);
+		returned.setDocument(document);
+		return returned;
+	}
 }
