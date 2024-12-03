@@ -42,7 +42,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.logging.Level;
@@ -55,14 +54,11 @@ import org.openflexo.foundation.resource.FileIODelegate;
 import org.openflexo.foundation.resource.FileWritingLock;
 import org.openflexo.foundation.resource.ResourceLoadingCancelledException;
 import org.openflexo.foundation.resource.SaveResourceException;
-import org.openflexo.foundation.resource.SaveResourcePermissionDeniedException;
-import org.openflexo.foundation.resource.StreamIODelegate;
 import org.openflexo.foundation.technologyadapter.FlexoMetaModelResource;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
-import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModelImpl;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
-import org.openflexo.technologyadapter.xml.model.typed.XMLObjectGraphFactory;
+import org.openflexo.technologyadapter.xml.model.typed.XMLModelFactory;
 import org.openflexo.toolbox.FileUtils;
 import org.openflexo.xml.XMLRootElementInfo;
 import org.openflexo.xml.XMLRootElementReader;
@@ -71,7 +67,7 @@ import org.openflexo.xml.XMLRootElementReader;
  * @author xtof
  * 
  */
-public abstract class TypedXMLResourceImpl extends XMLResourceImpl<XMLModel> implements TypedXMLResource {
+public abstract class TypedXMLResourceImpl extends XMLResourceImpl<XMLModel, XMLModelFactory> implements TypedXMLResource {
 
 	protected static final Logger logger = Logger.getLogger(TypedXMLResourceImpl.class.getPackage().getName());
 	protected static XMLRootElementReader REreader = new XMLRootElementReader();
@@ -86,7 +82,8 @@ public abstract class TypedXMLResourceImpl extends XMLResourceImpl<XMLModel> imp
 	 * 
 	 * @throws SaveResourceException
 	 */
-	@Override
+	// TODO : refactor !!!!!!!!!!!!!
+	/*@Override
 	public final void save() throws SaveResourceException {
 		if (!isLoaded()) {
 			return;
@@ -95,8 +92,8 @@ public abstract class TypedXMLResourceImpl extends XMLResourceImpl<XMLModel> imp
 			saveResourceData(true);
 			resourceData.clearIsModified(false);
 		}
-
-	}
+	
+	}*/
 
 	/**
 	 * Retrieves the target Namespace from the file when not loaded or from MetamModel when it is loaded and exists
@@ -124,49 +121,50 @@ public abstract class TypedXMLResourceImpl extends XMLResourceImpl<XMLModel> imp
 		throw new IOException("File Not Found ");
 	}
 
-	@Override
-	public XMLModel loadResourceData() throws ResourceLoadingCancelledException, FileNotFoundException, FlexoException {
-
+	// @Override
+	// TODO : refactor !!!!!!!!!!!!!
+	/*public XMLModel loadResourceData() throws ResourceLoadingCancelledException, FileNotFoundException, FlexoException {
+	
 		if (getFlexoIOStreamDelegate() == null) {
 			throw new FlexoException("Cannot load XML document with this IO/delegate: " + getIODelegate());
 		}
-
+	
 		if (resourceData == null) {
 			resourceData = getFactory().makeXMLModel();
 			resourceData.setResource(this);
-
+	
 			attachMetamodel();
-
+	
 		}
-
+	
 		if (!isLoaded()) {
-
+	
 			try {
-
+	
 				FlexoMetaModelResource<XMLModel, XSDMetaModel, XMLTechnologyAdapter> mmRes = getMetaModelResource();
-
-				XMLObjectGraphFactory factory = getTechnologyAdapter().getXMLModelFactory();
-
+	
+				FreeXMLDocumentBuilder factory = getTechnologyAdapter().getXMLModelFactory();
+	
 				factory.setContext(resourceData);
-
+	
 				factory.deserialize(getInputStream());
-
+	
 				factory.resetContext();
-
+	
 				if (mmRes != null) {
 					resourceData.setMetaModel(mmRes.getMetaModelData());
 				}
-
+	
 				isLoaded = true;
-
+	
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-
+	
 		}
-
+	
 		return resourceData;
-	}
+	}*/
 
 	// TODO: Ask Sylvain if this could no be tractable with Pamela => Code
 	// duplication ?!?
@@ -241,11 +239,13 @@ public abstract class TypedXMLResourceImpl extends XMLResourceImpl<XMLModel> imp
 		else {
 			// Create default meta-model, on the fly
 
-			XSDMetaModel mm = XMLMetaModelImpl.getModelFactory().newInstance(XSDMetaModel.class);
+			/*XSDMetaModel mm = XMLMetaModelImpl.getModelFactory().newInstance(XSDMetaModel.class);
 			mm.setURI(getURI() + "/Metamodel");
 			mm.setReadOnly(false);
+			
+			resourceData.setMetaModel(mm);*/
 
-			resourceData.setMetaModel(mm);
+			logger.warning("Not implemented: Create default meta-model, on the fly");
 		}
 
 		if (resourceData.getMetaModel() == null) {
@@ -302,26 +302,30 @@ public abstract class TypedXMLResourceImpl extends XMLResourceImpl<XMLModel> imp
 	 * 
 	 * @return
 	 */
+	// TODO : refactor !!!!!!!!!!!!!
+	/*@Override
 	public StreamIODelegate<?> getFlexoIOStreamDelegate() {
 		if (getIODelegate() instanceof StreamIODelegate) {
 			return (StreamIODelegate<?>) getIODelegate();
 		}
 		return null;
 	}
-
+	
+	@Override
 	public InputStream getInputStream() {
 		if (getFlexoIOStreamDelegate() != null) {
 			return getFlexoIOStreamDelegate().getInputStream();
 		}
 		return null;
 	}
-
+	
+	@Override
 	public OutputStream getOutputStream() {
 		if (getFlexoIOStreamDelegate() != null) {
 			return getFlexoIOStreamDelegate().getOutputStream();
 		}
 		return null;
-	}
+	}*/
 
 	/**
 	 * Save current resource data to current XML resource file.<br>
@@ -329,6 +333,8 @@ public abstract class TypedXMLResourceImpl extends XMLResourceImpl<XMLModel> imp
 	 * 
 	 * @return
 	 */
+	// TODO : refactor !!!!!!!!!!!!!
+	/*@Override
 	protected final void saveResourceData(boolean clearIsModified) throws SaveResourceException, SaveResourcePermissionDeniedException {
 		// System.out.println("PamelaResourceImpl Saving " + getFile());
 		if (!getIODelegate().hasWritePermission()) {
@@ -352,7 +358,7 @@ public abstract class TypedXMLResourceImpl extends XMLResourceImpl<XMLModel> imp
 				e.printStackTrace();
 			}
 		}
-	}
+	}*/
 
 	protected void _saveResourceData(boolean clearIsModified) throws SaveResourceException {
 

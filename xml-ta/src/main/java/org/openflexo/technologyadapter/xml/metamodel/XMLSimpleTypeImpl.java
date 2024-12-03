@@ -58,37 +58,37 @@ public abstract class XMLSimpleTypeImpl extends XMLTypeImpl implements XMLSimple
 
 	@Override
 	public Type getJavaType() {
-		if (getURI().equals(XMLMetaModel.STRING_URI)) {
+		if (getURI().equals(XSDMetaModel.STRING_URI)) {
 			return String.class;
 		}
-		if (getURI().equals(XMLMetaModel.BOOLEAN_URI)) {
+		if (getURI().equals(XSDMetaModel.BOOLEAN_URI)) {
 			return Boolean.class;
 		}
-		if (getURI().equals(XMLMetaModel.BYTE_URI)) {
+		if (getURI().equals(XSDMetaModel.BYTE_URI)) {
 			return Byte.class;
 		}
-		if (getURI().equals(XMLMetaModel.DATE_URI)) {
+		if (getURI().equals(XSDMetaModel.DATE_URI)) {
 			return Date.class;
 		}
-		if (getURI().equals(XMLMetaModel.DECIMAL_URI)) {
+		if (getURI().equals(XSDMetaModel.DECIMAL_URI)) {
 			return Number.class;
 		}
-		if (getURI().equals(XMLMetaModel.DOUBLE_URI)) {
+		if (getURI().equals(XSDMetaModel.DOUBLE_URI)) {
 			return Double.class;
 		}
-		if (getURI().equals(XMLMetaModel.FLOAT_URI)) {
+		if (getURI().equals(XSDMetaModel.FLOAT_URI)) {
 			return Float.class;
 		}
-		if (getURI().equals(XMLMetaModel.INT_URI)) {
+		if (getURI().equals(XSDMetaModel.INT_URI)) {
 			return Integer.class;
 		}
-		if (getURI().equals(XMLMetaModel.INTEGER_URI)) {
+		if (getURI().equals(XSDMetaModel.INTEGER_URI)) {
 			return Integer.class;
 		}
-		if (getURI().equals(XMLMetaModel.LONG_URI)) {
+		if (getURI().equals(XSDMetaModel.LONG_URI)) {
 			return Long.class;
 		}
-		if (getURI().equals(XMLMetaModel.SHORT_URI)) {
+		if (getURI().equals(XSDMetaModel.SHORT_URI)) {
 			return Short.class;
 		}
 		logger.warning("Unexpected " + getURI());

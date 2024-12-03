@@ -57,7 +57,7 @@ import org.openflexo.pamela.annotations.Setter;
  */
 @ModelEntity
 @ImplementationClass(XMLPropertyImpl.class)
-public interface XMLProperty extends XMLObject, Comparable<XMLProperty>, InnerResourceData<XSDMetaModel> {
+public interface XMLProperty extends XMLObject<XSDMetaModel>, Comparable<XMLProperty>, InnerResourceData<XSDMetaModel> {
 
 	/**
 	 * The Type of the given attribute. This might be a simple type

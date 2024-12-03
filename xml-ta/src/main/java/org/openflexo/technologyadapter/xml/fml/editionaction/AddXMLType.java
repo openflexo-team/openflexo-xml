@@ -55,8 +55,8 @@ import org.openflexo.pamela.annotations.XMLAttribute;
 import org.openflexo.pamela.annotations.XMLElement;
 import org.openflexo.technologyadapter.xml.XMLModelSlot;
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
-import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModel;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
 
 @ModelEntity
@@ -90,10 +90,10 @@ public interface AddXMLType extends XMLAction<XMLModelSlot, XMLType> {
 
 	@Getter(value = METAMODEL)
 	@XMLAttribute
-	public DataBinding<XMLMetaModel> getMetamodel();
+	public DataBinding<XSDMetaModel> getMetamodel();
 
 	@Setter(METAMODEL)
-	public void setMetamodel(DataBinding<XMLMetaModel> metamodel);
+	public void setMetamodel(DataBinding<XSDMetaModel> metamodel);
 
 	@Getter(value = SIMPLE_TYPE, defaultValue = "false")
 	@XMLAttribute
@@ -135,7 +135,7 @@ public interface AddXMLType extends XMLAction<XMLModelSlot, XMLType> {
 
 				logger.info("Adding class " + newTypeName + " as " + father);
 				// FIXME : Something wrong here!
-				XMLMetaModel mm = getMetamodel().getBindingValue(evaluationContext);
+				XSDMetaModel mm = getMetamodel().getBindingValue(evaluationContext);
 				if (mm != null) {
 
 					if (father != null) {

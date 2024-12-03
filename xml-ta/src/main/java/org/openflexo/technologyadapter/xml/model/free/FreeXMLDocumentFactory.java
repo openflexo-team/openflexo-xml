@@ -55,7 +55,7 @@ import org.openflexo.technologyadapter.xml.rm.FreeXMLResource;
  * @author sylvain
  * 
  */
-public class FreeXMLDocumentFactory extends AbstractXMLDocumentFactory<FreeXMLResource, FreeXMLDocument> {
+public class FreeXMLDocumentFactory extends AbstractXMLDocumentFactory<FreeXMLResource, FreeXMLDocument, FreeXMLDocumentFactory> {
 
 	@SuppressWarnings("unused")
 	private static final Logger logger = Logger.getLogger(FreeXMLDocumentFactory.class.getPackage().getName());

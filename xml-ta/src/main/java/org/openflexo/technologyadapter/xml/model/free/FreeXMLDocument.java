@@ -41,6 +41,8 @@ package org.openflexo.technologyadapter.xml.model.free;
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument;
+import org.openflexo.technologyadapter.xml.model.free.FreeXMLDocument.FreeXMLDocumentImpl;
+import org.openflexo.technologyadapter.xml.rm.FreeXMLResource;
 
 /**
  * Represents a plain XML document without any conformance nor typing
@@ -50,5 +52,21 @@ import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument;
 @ModelEntity
 @ImplementationClass(FreeXMLDocumentImpl.class)
 public interface FreeXMLDocument extends AbstractXMLDocument<FreeXMLDocument> {
+
+	/**
+	 * Default implementation for {@link FreeXMLDocument}
+	 * 
+	 * @author sylvain
+	 */
+
+	public static abstract class FreeXMLDocumentImpl extends AbstractXMLDocumentImpl<FreeXMLDocument> implements FreeXMLDocument {
+
+		// Can be safely cast to FreeXMLResource
+		@Override
+		public FreeXMLResource getResource() {
+			return (FreeXMLResource) super.getResource();
+		}
+
+	}
 
 }

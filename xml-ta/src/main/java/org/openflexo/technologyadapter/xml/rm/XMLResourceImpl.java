@@ -40,8 +40,9 @@ package org.openflexo.technologyadapter.xml.rm;
 
 import java.util.logging.Logger;
 
-import org.openflexo.foundation.resource.FlexoResourceImpl;
+import org.openflexo.foundation.resource.PamelaResourceImpl;
 import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument;
+import org.openflexo.technologyadapter.xml.model.AbstractXMLDocumentFactory;
 
 /**
  * Represents an XML resource<br>
@@ -52,7 +53,8 @@ import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument;
  * 
  * @author sylvain
  */
-public abstract class XMLResourceImpl<RD extends AbstractXMLDocument<RD>> extends FlexoResourceImpl<RD> implements XMLResource<RD> {
+public abstract class XMLResourceImpl<RD extends AbstractXMLDocument<RD>, F extends AbstractXMLDocumentFactory<?, RD, F>>
+		extends PamelaResourceImpl<RD, F> implements XMLResource<RD, F> {
 
 	protected static final Logger logger = Logger.getLogger(XMLResourceImpl.class.getPackage().getName());
 

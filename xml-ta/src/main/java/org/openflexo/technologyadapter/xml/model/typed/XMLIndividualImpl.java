@@ -46,13 +46,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import org.openflexo.foundation.FlexoObject.FlexoObjectImpl;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLDataProperty;
-import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModel;
+import org.openflexo.technologyadapter.xml.metamodel.XMLObject.XMLObjectImpl;
 import org.openflexo.technologyadapter.xml.metamodel.XMLObjectProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.xml.XMLCst;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -66,7 +66,7 @@ import org.w3c.dom.Element;
  * 
  */
 
-public abstract class XMLIndividualImpl extends FlexoObjectImpl implements XMLIndividual {
+public abstract class XMLIndividualImpl extends XMLObjectImpl<XMLModel> implements XMLIndividual {
 
 	private static final java.util.logging.Logger logger = org.openflexo.logging.FlexoLogger
 			.getLogger(XMLIndividualImpl.class.getPackage().getName());
@@ -196,10 +196,10 @@ public abstract class XMLIndividualImpl extends FlexoObjectImpl implements XMLIn
 		XMLProperty prop = getType().getPropertyByName(name);
 
 		if (prop == null) {
-			XMLMetaModel mm = getContainerModel().getMetaModel();
+			XSDMetaModel mm = getContainerModel().getMetaModel();
 			if (!mm.isReadOnly()) {
 				// TODO Manage complex types and actual types for objects.
-				prop = this.getType().createProperty(name, mm.getTypeFromURI(XMLMetaModel.STRING_URI));
+				prop = this.getType().createProperty(name, mm.getTypeFromURI(XSDMetaModel.STRING_URI));
 			}
 			else {
 				logger.warning("CANNOT give a value  for a non existant attribute :" + name);

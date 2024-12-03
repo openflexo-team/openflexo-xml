@@ -88,13 +88,14 @@ public abstract class XMLComplexTypeImpl extends XMLTypeImpl implements XMLCompl
 		if (!hasProperty(name)) {
 			if (aType != null) {
 				if (aType instanceof XMLComplexType) {
-					prop = XMLMetaModelImpl.getModelFactory().newInstance(XMLObjectProperty.class, name, aType, this);
+
+					prop = getFactory().newInstance(XMLObjectProperty.class, name, aType, this);
 				}
 				else if (aType instanceof XMLSimpleType) {
-					prop = XMLMetaModelImpl.getModelFactory().newInstance(XMLDataProperty.class, name, aType, this);
+					prop = getFactory().newInstance(XMLDataProperty.class, name, aType, this);
 				}
 				else if (aType.equals(String.class)) {
-					prop = XMLMetaModelImpl.getModelFactory().newInstance(XMLDataProperty.class, name, aType, this);
+					prop = getFactory().newInstance(XMLDataProperty.class, name, aType, this);
 				}
 				else {
 					logger.warning("UNABLE to create a new property named [" + name + "] as it does not map to any known type: "
@@ -132,7 +133,7 @@ public abstract class XMLComplexTypeImpl extends XMLTypeImpl implements XMLCompl
 			// Creates the property for PCDATA
 			if (prop == null && name.equals(XMLCst.CDATA_ATTR_NAME)) {
 				System.out.println("mm=" + getMetamodel());
-				prop = createProperty(name, this.getMetamodel().getTypeFromURI(XMLMetaModel.STRING_URI));
+				prop = createProperty(name, this.getMetamodel().getTypeFromURI(XSDMetaModel.STRING_URI));
 			}
 			return prop;
 		}

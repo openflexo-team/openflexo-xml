@@ -44,16 +44,16 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
-import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModel;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.xml.SaxBasedObjectGraphFactory;
 import org.openflexo.xml.XMLCst;
 import org.openflexo.xml.XMLReaderSAXHandler;
 import org.xml.sax.SAXException;
 
 @Deprecated
-public class XMLObjectGraphFactory extends SaxBasedObjectGraphFactory {
+public class XMLModelBuilder extends SaxBasedObjectGraphFactory {
 
 	private XMLModel model = null;
 
@@ -71,7 +71,7 @@ public class XMLObjectGraphFactory extends SaxBasedObjectGraphFactory {
 	@Override
 	public Type getTypeForObject(String typeURI, Object container, String objectName) {
 
-		XMLMetaModel mm = model.getMetaModel();
+		XSDMetaModel mm = model.getMetaModel();
 		XMLType tt = null;
 		if (mm != null) {
 			tt = mm.getTypeFromURI(typeURI);
@@ -176,7 +176,7 @@ public class XMLObjectGraphFactory extends SaxBasedObjectGraphFactory {
 
 			XMLProperty prop = t.getPropertyByName(name);
 
-			XMLMetaModel mm = model.getMetaModel();
+			XSDMetaModel mm = model.getMetaModel();
 
 			if (prop == null) {
 				if (!mm.isReadOnly() || name.equals(XMLCst.CDATA_ATTR_NAME)) {

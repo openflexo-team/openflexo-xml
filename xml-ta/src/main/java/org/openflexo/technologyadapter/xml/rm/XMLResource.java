@@ -38,6 +38,7 @@
 
 package org.openflexo.technologyadapter.xml.rm;
 
+import org.openflexo.foundation.resource.PamelaResource;
 import org.openflexo.foundation.technologyadapter.TechnologyAdapterResource;
 import org.openflexo.pamela.annotations.Getter;
 import org.openflexo.pamela.annotations.ImplementationClass;
@@ -46,6 +47,7 @@ import org.openflexo.pamela.annotations.Setter;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
 import org.openflexo.technologyadapter.xml.XMLTechnologyContextManager;
 import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument;
+import org.openflexo.technologyadapter.xml.model.AbstractXMLDocumentFactory;
 
 /**
  * An XML resource, typically represented as an .xml file<br>
@@ -53,7 +55,8 @@ import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument;
  */
 @ModelEntity
 @ImplementationClass(XMLResourceImpl.class)
-public interface XMLResource<RD extends AbstractXMLDocument<RD>> extends TechnologyAdapterResource<RD, XMLTechnologyAdapter> {
+public interface XMLResource<RD extends AbstractXMLDocument<RD>, F extends AbstractXMLDocumentFactory<?, RD, F>>
+		extends TechnologyAdapterResource<RD, XMLTechnologyAdapter>, PamelaResource<RD, F> {
 
 	public static final String TECHNOLOGY_CONTEXT_MANAGER = "XMLTechnologyContextManager";
 	public static final String XML_FILE_EXTENSION = ".xml";

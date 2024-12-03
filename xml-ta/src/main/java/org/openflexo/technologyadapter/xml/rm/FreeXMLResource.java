@@ -39,7 +39,6 @@
 
 package org.openflexo.technologyadapter.xml.rm;
 
-import org.openflexo.foundation.resource.PamelaResource;
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.technologyadapter.xml.model.free.FreeXMLDocument;
@@ -52,6 +51,6 @@ import org.openflexo.technologyadapter.xml.model.free.FreeXMLDocumentFactory;
  */
 @ModelEntity
 @ImplementationClass(FreeXMLResourceImpl.class)
-public interface FreeXMLResource extends XMLResource<FreeXMLDocument>, PamelaResource<FreeXMLDocument, FreeXMLDocumentFactory> {
+public interface FreeXMLResource extends XMLResource<FreeXMLDocument, FreeXMLDocumentFactory> {
 
 }

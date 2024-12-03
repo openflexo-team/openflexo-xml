@@ -42,10 +42,10 @@ import org.openflexo.gina.model.container.FIBTab;
 import org.openflexo.gina.utils.FIBInspector;
 import org.openflexo.rm.Resource;
 import org.openflexo.rm.ResourceLocator;
-import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModel;
 import org.openflexo.technologyadapter.xml.metamodel.XMLObject;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.view.controller.FlexoController;
 import org.openflexo.view.controller.model.FlexoPerspective;
 
@@ -57,17 +57,17 @@ import org.openflexo.view.controller.model.FlexoPerspective;
  * 
  */
 @SuppressWarnings("serial")
-public class XMLMetaModelView extends AbstractXMLModuleView<XMLMetaModel> {
+public class XMLMetaModelView extends AbstractXMLModuleView<XSDMetaModel> {
 
 	public static final Resource FIB_FILE = ResourceLocator.locateResource("Fib/FIBXMLMetaModelView.fib");
 	public static final Resource XMLType_FIB_FILE = ResourceLocator.locateResource("Fib/FIBPanelXMLType.fib");
 	public static final Resource XMLProperty_FIB_FILE = ResourceLocator.locateResource("Fib/FIBPanelXMLProperty.fib");
 
-	public XMLMetaModelView(XMLMetaModel object, FlexoController controller, FlexoPerspective perspective) {
+	public XMLMetaModelView(XSDMetaModel object, FlexoController controller, FlexoPerspective perspective) {
 		super(controller, object, perspective, FIB_FILE);
 	}
 
-	public XMLMetaModel getMetamodel() {
+	public XSDMetaModel getMetamodel() {
 		return representedObject;
 	}
 

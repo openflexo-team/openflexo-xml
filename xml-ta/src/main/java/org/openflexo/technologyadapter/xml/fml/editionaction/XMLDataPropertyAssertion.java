@@ -58,7 +58,7 @@ import org.openflexo.pamela.validation.ValidationIssue;
 import org.openflexo.pamela.validation.ValidationRule;
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLDataProperty;
-import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModel;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 
 @ModelEntity
 @ImplementationClass(XMLDataPropertyAssertion.XMLDataPropertyAssertionImpl.class)
@@ -128,7 +128,7 @@ public interface XMLDataPropertyAssertion extends AbstractAssertion {
 			String pname = _getDataPropertyName();
 			if (act != null && pname != null) {
 				String typeURI = act.getTypeURI();
-				XMLMetaModel mm = act.getMetamodel();
+				XSDMetaModel mm = act.getMetamodel();
 				if (mm != null) {
 					XMLComplexType t = ((XMLComplexType) mm.getTypeFromURI(typeURI));
 					if (t != null)

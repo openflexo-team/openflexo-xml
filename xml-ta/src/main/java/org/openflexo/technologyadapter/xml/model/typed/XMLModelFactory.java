@@ -58,7 +58,7 @@ import org.openflexo.technologyadapter.xml.rm.TypedXMLResource;
  * @author sylvain
  * 
  */
-public class XMLModelFactory extends AbstractXMLDocumentFactory<TypedXMLResource, XMLModel> {
+public class XMLModelFactory extends AbstractXMLDocumentFactory<TypedXMLResource, XMLModel, XMLModelFactory> {
 
 	@SuppressWarnings("unused")
 	private static final Logger logger = Logger.getLogger(XMLModelFactory.class.getPackage().getName());

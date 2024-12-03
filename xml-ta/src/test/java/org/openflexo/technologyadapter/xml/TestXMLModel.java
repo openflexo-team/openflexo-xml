@@ -45,17 +45,15 @@ import java.util.logging.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openflexo.foundation.test.OpenflexoTestCase;
+import org.openflexo.pamela.exceptions.ModelDefinitionException;
 import org.openflexo.pamela.factory.PamelaModelFactory;
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
-import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModel;
-import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModelImpl;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLSimpleType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
 import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
-import org.openflexo.technologyadapter.xml.model.typed.XMLModelImpl;
 import org.openflexo.test.OrderedRunner;
 import org.openflexo.test.TestOrder;
 
@@ -85,15 +83,13 @@ public class TestXMLModel extends OpenflexoTestCase {
 
 	@Test
 	@TestOrder(1)
-	public void test0createXMLModel() {
+	public void test0createXMLModel() throws ModelDefinitionException {
 
-		PamelaModelFactory MF = null;
-		PamelaModelFactory MMF = null;
-		MF = XMLModelImpl.getModelFactory();
-		MMF = XMLMetaModelImpl.getModelFactory();
-
-		assertNotNull(MMF);
+		PamelaModelFactory MF = new PamelaModelFactory(XMLModel.class);
 		assertNotNull(MF);
+
+		PamelaModelFactory MMF = new PamelaModelFactory(XSDMetaModel.class);
+		assertNotNull(MMF);
 
 		XSDMetaModel metamodel = MMF.newInstance(XSDMetaModel.class);
 		metamodel.setReadOnly(false);
@@ -108,7 +104,7 @@ public class TestXMLModel extends OpenflexoTestCase {
 
 		model.setMetaModel(metamodel);
 
-		XMLSimpleType ts = (XMLSimpleType) metamodel.createNewType(XMLMetaModel.STRING_URI, "BASIC_STRING", true);
+		XMLSimpleType ts = (XMLSimpleType) metamodel.createNewType(XSDMetaModel.STRING_URI, "BASIC_STRING", true);
 
 		XMLComplexType t = (XMLComplexType) metamodel.createNewType("http://www.openflexo.org/aTestModel#Fleumeu", "Fleumeu", false);
 		t.createProperty("TOTO", ts);
@@ -116,13 +112,15 @@ public class TestXMLModel extends OpenflexoTestCase {
 		t = (XMLComplexType) metamodel.createNewType("http://www.openflexo.org/aTestModel#Flouk", "Flouk", false);
 		t.createProperty("TOTO", ts);
 
-		XMLIndividual xmind = model.addNewIndividual(metamodel.getTypeFromURI("http://www.openflexo.org/aTestModel#Fleumeu"));
+		XMLIndividual xmind = model
+				.addNewIndividual((XMLComplexType) metamodel.getTypeFromURI("http://www.openflexo.org/aTestModel#Fleumeu"));
 
 		model.setRoot(xmind);
 
 		xmind.addPropertyValue("TOTO", "Freumeuleu");
 
-		XMLIndividual xmind2 = model.addNewIndividual(metamodel.getTypeFromURI("http://www.openflexo.org/aTestModel#Flouk"));
+		XMLIndividual xmind2 = model
+				.addNewIndividual((XMLComplexType) metamodel.getTypeFromURI("http://www.openflexo.org/aTestModel#Flouk"));
 
 		xmind.addChild(xmind2);
 

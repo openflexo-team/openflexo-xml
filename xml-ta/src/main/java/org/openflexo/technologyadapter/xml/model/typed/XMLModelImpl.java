@@ -52,7 +52,7 @@ import org.openflexo.foundation.resource.FlexoResource;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
-import org.openflexo.technologyadapter.xml.model.AbstractXMLDocumentImpl;
+import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument.AbstractXMLDocumentImpl;
 import org.openflexo.technologyadapter.xml.rm.TypedXMLResource;
 import org.openflexo.xml.XMLCst;
 import org.w3c.dom.Document;
@@ -101,6 +101,7 @@ public abstract class XMLModelImpl extends AbstractXMLDocumentImpl<XMLModel> imp
 		return (TypedXMLResource) super.getResource();
 	}
 
+	@Override
 	public XMLModelFactory getModelFactory() {
 		return getResource().getFactory();
 	}

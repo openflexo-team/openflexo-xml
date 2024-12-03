@@ -41,8 +41,10 @@ package org.openflexo.technologyadapter.xml.model;
 import org.openflexo.foundation.resource.ResourceData;
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
+import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
 import org.openflexo.technologyadapter.xml.metamodel.XMLObject;
-import org.openflexo.technologyadapter.xml.model.typed.XMLModelImpl;
+import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument.AbstractXMLDocumentImpl;
+import org.openflexo.technologyadapter.xml.rm.XMLResource;
 
 /**
  * Abstract representation of a XML document<br>
@@ -51,7 +53,34 @@ import org.openflexo.technologyadapter.xml.model.typed.XMLModelImpl;
  * @author sylvain
  */
 @ModelEntity
-@ImplementationClass(XMLModelImpl.class)
-public interface AbstractXMLDocument<RD extends AbstractXMLDocument<RD>> extends XMLObject, ResourceData<RD> {
+@ImplementationClass(AbstractXMLDocumentImpl.class)
+public interface AbstractXMLDocument<RD extends AbstractXMLDocument<RD>> extends XMLObject<RD>, ResourceData<RD> {
+
+	@Override
+	public XMLResource<RD, ?> getResource();
+
+	/**
+	 * Default implementation for {@link AbstractXMLDocument}
+	 * 
+	 * @author sylvain
+	 */
+	public static abstract class AbstractXMLDocumentImpl<RD extends AbstractXMLDocument<RD>> extends FlexoObjectImpl
+			implements AbstractXMLDocument<RD> {
+
+		// Can be safely cast to XMLResource<RD>
+		@Override
+		public XMLResource<RD, ?> getResource() {
+			return (XMLResource<RD, ?>) performSuperGetter(FLEXO_RESOURCE);
+		}
+
+		@Override
+		public XMLTechnologyAdapter getTechnologyAdapter() {
+			XMLResource<RD, ?> rsc = getResource();
+			if (rsc != null)
+				return rsc.getTechnologyAdapter();
+			return null;
+		}
+
+	}
 
 }

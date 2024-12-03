@@ -42,8 +42,9 @@ import java.util.logging.Logger;
 
 import org.openflexo.foundation.PamelaResourceModelFactory;
 import org.openflexo.foundation.action.FlexoUndoManager;
-import org.openflexo.foundation.resource.PamelaResource;
+import org.openflexo.foundation.resource.FlexoResource;
 import org.openflexo.foundation.resource.PamelaResourceImpl.IgnoreLoadingEdits;
+import org.openflexo.foundation.resource.ResourceData;
 import org.openflexo.pamela.PamelaMetaModel;
 import org.openflexo.pamela.converter.RelativePathResourceConverter;
 import org.openflexo.pamela.exceptions.ModelDefinitionException;
@@ -58,8 +59,14 @@ import org.openflexo.technologyadapter.xml.rm.XMLResource;
  * 
  * @author sylvain
  * 
+ * @param <R>
+ *            type of {@link FlexoResource}
+ * @param <RD>
+ *            type of {@link ResourceData}
+ * @param <F>
+ *            type of {@link PamelaModelFactory}
  */
-public class AbstractXMLDocumentFactory<R extends XMLResource<RD> & PamelaResource<RD, ?>, RD extends AbstractXMLDocument<RD>>
+public class AbstractXMLDocumentFactory<R extends XMLResource<RD, F>, RD extends AbstractXMLDocument<RD>, F extends AbstractXMLDocumentFactory<R, RD, F>>
 		extends PamelaModelFactory implements PamelaResourceModelFactory<R> {
 
 	@SuppressWarnings("unused")

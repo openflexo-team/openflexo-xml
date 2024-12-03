@@ -38,16 +38,63 @@
 
 package org.openflexo.technologyadapter.xml.rm;
 
+import java.io.IOException;
 import java.util.logging.Logger;
 
 import org.openflexo.technologyadapter.xml.model.free.FreeXMLDocument;
+import org.openflexo.technologyadapter.xml.model.free.FreeXMLDocumentBuilder;
+import org.openflexo.technologyadapter.xml.model.free.FreeXMLDocumentFactory;
 
 /**
  * @author xtof
  * 
  */
-public abstract class FreeXMLResourceImpl extends XMLResourceImpl<FreeXMLDocument> implements FreeXMLResource {
+public abstract class FreeXMLResourceImpl extends XMLResourceImpl<FreeXMLDocument, FreeXMLDocumentFactory> implements FreeXMLResource {
 
 	protected static final Logger logger = Logger.getLogger(FreeXMLResourceImpl.class.getPackage().getName());
+
+	@Override
+	protected FreeXMLDocument performLoad() throws IOException, Exception {
+
+		System.out.println("Hop on lit le XML");
+
+		resourceData = getFactory().makeFreeXMLDocument();
+		resourceData.setResource(this);
+
+		FreeXMLDocumentBuilder builder = new FreeXMLDocumentBuilder();
+		builder.setContext(resourceData);
+		builder.deserialize(getInputStream());
+		builder.resetContext();
+
+		System.exit(-1);
+		return null;
+
+		/*converter = new BasicExcelModelConverter(this);
+		
+		if (getFlexoIOStreamDelegate() == null) {
+			throw new IOFlexoException("Cannot load Excel document with this IO/delegate: " + getIODelegate());
+		}
+		
+		notifyResourceWillLoad();
+		
+		ExcelWorkbook returned = null;
+		try {
+			returned = createOrLoadExcelWorkbook(getFlexoIOStreamDelegate());
+			getInputStream().close();
+		} catch (OfficeXmlFileException e) {
+			throw new IOFlexoException(e.getMessage());
+		} catch (IOException e) {
+			throw new IOFlexoException(e);
+		}
+		
+		if (returned == null) {
+			logger.warning("canno't retrieve resource data from serialization artifact " + getIODelegate().toString());
+			return null;
+		}
+		
+		notifyResourceLoaded();
+		
+		return returned;*/
+	}
 
 }

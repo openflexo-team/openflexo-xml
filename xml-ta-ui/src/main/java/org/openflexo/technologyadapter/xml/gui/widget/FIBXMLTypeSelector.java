@@ -43,8 +43,8 @@ import java.util.logging.Logger;
 import org.openflexo.components.widget.FIBFlexoObjectSelector;
 import org.openflexo.rm.Resource;
 import org.openflexo.rm.ResourceLocator;
-import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModel;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 
 /**
  * Widget allowing to select an XMLType<br>
@@ -63,7 +63,7 @@ public class FIBXMLTypeSelector extends FIBFlexoObjectSelector<XMLType> {
 
 	public static final Resource FIB_FILE = ResourceLocator.locateResource("Fib/widgets/FIBXMLTypeSelector.fib");
 
-	private XMLMetaModel context;
+	private XSDMetaModel context;
 
 	public FIBXMLTypeSelector(XMLType editedObject) {
 		super(editedObject);
@@ -100,12 +100,12 @@ public class FIBXMLTypeSelector extends FIBFlexoObjectSelector<XMLType> {
 		return null;
 	}
 
-	public XMLMetaModel getContext() {
+	public XSDMetaModel getContext() {
 		return context;
 	}
 
 	@CustomComponentParameter(name = "context", type = CustomComponentParameter.Type.MANDATORY)
-	public void setContext(XMLMetaModel context) {
+	public void setContext(XSDMetaModel context) {
 		this.context = context;
 	}
 

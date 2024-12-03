@@ -48,12 +48,10 @@ import org.openflexo.foundation.resource.FlexoResourceImpl;
 import org.openflexo.foundation.resource.ResourceLoadingCancelledException;
 import org.openflexo.foundation.resource.StreamIODelegate;
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
-import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModel;
 import org.openflexo.technologyadapter.xml.metamodel.XMLObject;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
-import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModelImpl;
 import org.openflexo.toolbox.JavaUtils;
 
 import com.sun.xml.xsom.XSAttributeDecl;
@@ -191,7 +189,7 @@ public abstract class XSDMetaModelResourceImpl extends FlexoResourceImpl<XSDMeta
 					XMLType owner = resourceData.getTypeFromURI(ownerUri);
 					if (owner != null && owner instanceof XMLComplexType) {
 						// TODO: better manage types
-						((XMLComplexType) owner).createProperty(element.getName(), resourceData.getTypeFromURI(XMLMetaModel.STRING_URI));
+						((XMLComplexType) owner).createProperty(element.getName(), resourceData.getTypeFromURI(XSDMetaModel.STRING_URI));
 					}
 					else {
 						logger.warning("unable to find an owner type for attribute: " + uri);
@@ -219,7 +217,7 @@ public abstract class XSDMetaModelResourceImpl extends FlexoResourceImpl<XSDMeta
 						type = resourceData.getTypeFromURI("xs:" + rType.getName());
 					}
 					else {
-						type = resourceData.getTypeFromURI(XMLMetaModel.ANY_TYPE_URI);
+						type = resourceData.getTypeFromURI(XSDMetaModel.ANY_TYPE_URI);
 					}
 					// TODO: better manage types
 					((XMLComplexType) owner).createProperty(attribute.getName(), type);
@@ -274,7 +272,7 @@ public abstract class XSDMetaModelResourceImpl extends FlexoResourceImpl<XSDMeta
 	public boolean load() {
 
 		if (resourceData == null) {
-			this.resourceData = XSDMetaModelImpl.getModelFactory().newInstance(XSDMetaModel.class);
+			this.resourceData = getFactory().makeXSDMetaModel();
 			resourceData.getResource();
 			resourceData.setResource(this);
 			resourceData.setURI(this.getURI());
@@ -373,7 +371,7 @@ public abstract class XSDMetaModelResourceImpl extends FlexoResourceImpl<XSDMeta
 
 	@Override
 	public XMLObject findObject(String objectIdentifier, String userIdentifier) {
-		XMLMetaModel metaModel;
+		XSDMetaModel metaModel;
 		try {
 			metaModel = getResourceData();
 

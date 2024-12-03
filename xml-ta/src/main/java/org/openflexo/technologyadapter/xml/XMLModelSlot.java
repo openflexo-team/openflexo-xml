@@ -76,7 +76,6 @@ import org.openflexo.technologyadapter.xml.fml.editionaction.AddXMLIndividual;
 import org.openflexo.technologyadapter.xml.fml.editionaction.CreateXMLFileResource;
 import org.openflexo.technologyadapter.xml.fml.editionaction.GetXMLDocumentRoot;
 import org.openflexo.technologyadapter.xml.fml.editionaction.SetXMLDocumentRoot;
-import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModel;
 import org.openflexo.technologyadapter.xml.metamodel.XMLObject;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
@@ -104,7 +103,7 @@ import org.openflexo.technologyadapter.xml.rm.XSDMetaModelResource;
 @FML("XMLModelSlot")
 public interface XMLModelSlot extends TypeAwareModelSlot<XMLModel, XSDMetaModel>, AbstractXMLModelSlot<XMLModel, XMLURIProcessor> {
 
-	@PropertyIdentifier(type = XMLMetaModel.class)
+	@PropertyIdentifier(type = XSDMetaModel.class)
 	public static final String META_MODEL_KEY = "metaModel";
 
 	@Override

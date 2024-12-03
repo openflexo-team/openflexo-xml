@@ -62,8 +62,8 @@ import org.openflexo.technologyadapter.xml.XMLModelSlot;
 import org.openflexo.technologyadapter.xml.fml.XMLActorReference;
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLDataProperty;
-import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModel;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
 import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
 
@@ -111,7 +111,7 @@ public interface AddXMLIndividual extends XMLAction<XMLModelSlot, XMLIndividual>
 
 	public void setXMLType(XMLComplexType myType);
 
-	public XMLMetaModel getMetamodel();
+	public XSDMetaModel getMetamodel();
 
 	public abstract static class AddXMLIndividualImpl
 			extends TechnologySpecificActionDefiningReceiverImpl<XMLModelSlot, XMLModel, XMLIndividual> implements AddXMLIndividual {
@@ -125,7 +125,7 @@ public interface AddXMLIndividual extends XMLAction<XMLModelSlot, XMLIndividual>
 		}
 
 		@Override
-		public XMLMetaModel getMetamodel() {
+		public XSDMetaModel getMetamodel() {
 			if (getInferedModelSlot() != null) {
 				return getInferedModelSlot().getMetaModel();
 			}

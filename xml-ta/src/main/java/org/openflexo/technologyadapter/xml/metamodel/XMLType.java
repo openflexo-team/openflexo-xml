@@ -50,7 +50,7 @@ import org.openflexo.pamela.annotations.Setter;
 
 @ModelEntity(isAbstract = true)
 @ImplementationClass(XMLTypeImpl.class)
-public interface XMLType extends XMLObject, Type, InnerResourceData<XSDMetaModel> {
+public interface XMLType extends XMLObject<XSDMetaModel>, Type, InnerResourceData<XSDMetaModel> {
 
 	public final String MM = "metamodel";
 
@@ -63,7 +63,7 @@ public interface XMLType extends XMLObject, Type, InnerResourceData<XSDMetaModel
 	static final String NAME_ATTR = "name";
 
 	@Initializer
-	public XMLType init(@Parameter(MM) XMLMetaModel mm);
+	public XMLType init(@Parameter(MM) XSDMetaModel mm);
 
 	@Getter(FQN)
 	public String getFullyQualifiedName();

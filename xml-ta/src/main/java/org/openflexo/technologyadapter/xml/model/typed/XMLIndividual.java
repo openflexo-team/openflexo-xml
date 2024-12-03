@@ -70,7 +70,7 @@ import org.w3c.dom.Element;
  */
 @ModelEntity
 @ImplementationClass(XMLIndividualImpl.class)
-public interface XMLIndividual extends XMLObject {
+public interface XMLIndividual extends XMLObject<XMLModel> {
 
 	// TODO : manage the calculation of FQN
 

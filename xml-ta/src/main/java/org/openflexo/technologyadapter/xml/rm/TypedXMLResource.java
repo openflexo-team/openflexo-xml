@@ -41,7 +41,6 @@ package org.openflexo.technologyadapter.xml.rm;
 
 import java.io.IOException;
 
-import org.openflexo.foundation.resource.PamelaResource;
 import org.openflexo.foundation.technologyadapter.FlexoModelResource;
 import org.openflexo.pamela.annotations.Getter;
 import org.openflexo.pamela.annotations.ImplementationClass;
@@ -58,8 +57,8 @@ import org.openflexo.technologyadapter.xml.model.typed.XMLModelFactory;
  */
 @ModelEntity
 @ImplementationClass(TypedXMLResourceImpl.class)
-public interface TypedXMLResource extends XMLResource<XMLModel>,
-		FlexoModelResource<XMLModel, XSDMetaModel, XMLTechnologyAdapter, XMLTechnologyAdapter>, PamelaResource<XMLModel, XMLModelFactory> {
+public interface TypedXMLResource extends XMLResource<XMLModel, XMLModelFactory>,
+		FlexoModelResource<XMLModel, XSDMetaModel, XMLTechnologyAdapter, XMLTechnologyAdapter> {
 
 	public static final String TARGET_NAMESPACE = "targetNamespace";
 

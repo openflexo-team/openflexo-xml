@@ -57,10 +57,10 @@ import org.openflexo.foundation.resource.FileSystemBasedResourceCenter;
 import org.openflexo.foundation.resource.FlexoResourceCenter;
 import org.openflexo.foundation.resource.ResourceLoadingCancelledException;
 import org.openflexo.foundation.test.OpenflexoProjectAtRunTimeTestCase;
+import org.openflexo.pamela.factory.PamelaModelFactory;
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
-import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModelImpl;
 import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
 import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
 import org.openflexo.technologyadapter.xml.rm.FreeXMLDocumentRepository;
@@ -243,7 +243,9 @@ public class TestXML extends OpenflexoProjectAtRunTimeTestCase {
 			aModel.setNamespace("http://montest.com", "tst");
 
 			// creating an empty MetaModel for this file and
-			XSDMetaModel aMetamodel = XSDMetaModelImpl.createEmptyMetaModel("http://montest.com");
+			PamelaModelFactory pamelaModelFactory = new PamelaModelFactory(XSDMetaModel.class);
+			XSDMetaModel aMetamodel = pamelaModelFactory.newInstance(XSDMetaModel.class);
+			aMetamodel.setURI("http://montest.com");
 			Object blobType = aMetamodel.createNewType("http://montest.com#Blob", "Blob", false);
 			aModel.setMetaModel(aMetamodel);
 

@@ -40,29 +40,19 @@ package org.openflexo.technologyadapter.xml.rm;
 
 import org.openflexo.foundation.resource.FileIODelegate;
 import org.openflexo.foundation.technologyadapter.FlexoMetaModelResource;
-import org.openflexo.pamela.annotations.Getter;
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
-import org.openflexo.pamela.annotations.Setter;
 import org.openflexo.pamela.annotations.XMLElement;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
-import org.openflexo.technologyadapter.xml.XMLTechnologyContextManager;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModelFactory;
 import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
 
 @ModelEntity
 @ImplementationClass(XSDMetaModelResourceImpl.class)
 @XMLElement
-public interface XSDMetaModelResource extends FlexoMetaModelResource<XMLModel, XSDMetaModel, XMLTechnologyAdapter> {
-
-	public static final String TECHNOLOGY_CONTEXT_MANAGER = "XMLTechnologyContextManager";
-
-	@Override
-	@Getter(value = TECHNOLOGY_CONTEXT_MANAGER, ignoreType = true)
-	public XMLTechnologyContextManager getTechnologyContextManager();
-
-	@Setter(TECHNOLOGY_CONTEXT_MANAGER)
-	public void setTechnologyContextManager(XMLTechnologyContextManager technologyContextManager);
+public interface XSDMetaModelResource
+		extends XMLResource<XSDMetaModel, XSDMetaModelFactory>, FlexoMetaModelResource<XMLModel, XSDMetaModel, XMLTechnologyAdapter> {
 
 	@Override
 	public XSDMetaModel getMetaModelData();

@@ -45,10 +45,10 @@ import javax.swing.ImageIcon;
 import org.openflexo.icon.ImageIconResource;
 import org.openflexo.rm.ResourceLocator;
 import org.openflexo.technologyadapter.xml.metamodel.XMLDataProperty;
-import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModel;
 import org.openflexo.technologyadapter.xml.metamodel.XMLObject;
 import org.openflexo.technologyadapter.xml.metamodel.XMLObjectProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
 import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
 
@@ -74,7 +74,7 @@ public class XMLIconLibrary {
 			ResourceLocator.locateResource("Icons/XSDObjectProperty.png"));
 
 	public static ImageIcon iconForObject(Class<? extends XMLObject> objectClass) {
-		if (XMLMetaModel.class.isAssignableFrom(objectClass)) {
+		if (XSDMetaModel.class.isAssignableFrom(objectClass)) {
 			return XSD_FILE_ICON;
 		}
 		else if (XMLModel.class.isAssignableFrom(objectClass)) {

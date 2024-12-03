@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright (c) 2014-2015, Openflexo
+ * Copyright (c) 2014, Openflexo
  * 
  * This file is part of Xmlconnector, a component of the software infrastructure 
  * developed at Openflexo.
@@ -36,32 +36,36 @@
  * 
  */
 
-package org.openflexo.technologyadapter.xml.model;
+package org.openflexo.technologyadapter.xml.model.free;
 
-import org.openflexo.foundation.FlexoObject.FlexoObjectImpl;
-import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
-import org.openflexo.technologyadapter.xml.rm.XMLResource;
+import org.openflexo.pamela.annotations.ModelEntity;
+import org.openflexo.technologyadapter.xml.metamodel.XMLObject;
+import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument.AbstractXMLDocumentImpl;
+import org.openflexo.technologyadapter.xml.rm.FreeXMLResource;
 
 /**
- * Default implementation for {@link AbstractXMLDocument}
+ * Represents a plain XML element
  * 
  * @author sylvain
  */
-public abstract class AbstractXMLDocumentImpl<RD extends AbstractXMLDocument<RD>> extends FlexoObjectImpl
-		implements AbstractXMLDocument<RD> {
+@ModelEntity
+// @ImplementationClass(FreeXMLDocumentImpl.class)
+public interface XMLElement extends XMLObject {
 
-	// Can be safely cast to XMLResource<RD>
-	@Override
-	public XMLResource<RD> getResource() {
-		return (XMLResource<RD>) performSuperGetter(FLEXO_RESOURCE);
-	}
+	/**
+	 * Default implementation for {@link XMLElement}
+	 * 
+	 * @author sylvain
+	 */
 
-	@Override
-	public XMLTechnologyAdapter getTechnologyAdapter() {
-		XMLResource<RD> rsc = getResource();
-		if (rsc != null)
-			return rsc.getTechnologyAdapter();
-		return null;
+	public static abstract class XMLElementImpl extends AbstractXMLDocumentImpl<FreeXMLDocument> implements FreeXMLDocument {
+
+		// Can be safely cast to FreeXMLResource
+		@Override
+		public FreeXMLResource getResource() {
+			return (FreeXMLResource) super.getResource();
+		}
+
 	}
 
 }

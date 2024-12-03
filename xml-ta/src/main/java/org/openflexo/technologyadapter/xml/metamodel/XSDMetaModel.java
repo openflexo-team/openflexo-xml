@@ -38,28 +38,93 @@
 
 package org.openflexo.technologyadapter.xml.metamodel;
 
-import org.openflexo.foundation.resource.FlexoResource;
+import java.util.List;
+
+import org.openflexo.foundation.technologyadapter.FlexoMetaModel;
+import org.openflexo.pamela.annotations.Adder;
+import org.openflexo.pamela.annotations.CloningStrategy;
+import org.openflexo.pamela.annotations.CloningStrategy.StrategyType;
+import org.openflexo.pamela.annotations.Embedded;
+import org.openflexo.pamela.annotations.Finder;
 import org.openflexo.pamela.annotations.Getter;
+import org.openflexo.pamela.annotations.Getter.Cardinality;
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
+import org.openflexo.pamela.annotations.PastingPoint;
+import org.openflexo.pamela.annotations.Remover;
 import org.openflexo.pamela.annotations.Setter;
+import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument;
 
 @ModelEntity
 @ImplementationClass(XSDMetaModelImpl.class)
-public interface XSDMetaModel extends XMLMetaModel<XSDMetaModel> {
+public interface XSDMetaModel extends AbstractXMLDocument<XSDMetaModel>, FlexoMetaModel<XSDMetaModel> {
 
-	public static final String RSC = "resource";
+	// extends AbstractXMLDocument<XMLModel>, FlexoModel<XMLModel, XSDMetaModel> {
 
+	/*public static final String RSC = "resource";
+	
 	@Override
 	@Getter(RSC)
 	public FlexoResource<XSDMetaModel> getResource();
-
+	
 	@Override
 	@Setter(RSC)
-	public void setResource(FlexoResource<XSDMetaModel> resource);
+	public void setResource(FlexoResource<XSDMetaModel> resource);*/
 
 	/*
 	 * 
 	public IFlexoOntologyDataProperty getDataProperty(String propertyURI);
 	*/
+
+	public static String TYPES = "types";
+	public static String READ_ONLY = "readOnly";
+
+	// static simple Types URI
+	public static String ANY_TYPE_URI = "xs:anyType";
+	public static String STRING_URI = "xs:string";
+	public static String BOOLEAN_URI = "xs:boolean";
+	public static String BYTE_URI = "xs:byte";
+	public static String DATE_URI = "xs:date";
+	public static String DECIMAL_URI = "xs:decimal";
+	public static String DOUBLE_URI = "xs:double";
+	public static String FLOAT_URI = "xs:float";
+	public static String INT_URI = "xs:int";
+	public static String INTEGER_URI = "xs:integer";
+	public static String LONG_URI = "xs:long";
+	public static String SHORT_URI = "xs:short";
+
+	@Getter(value = TYPES, cardinality = Cardinality.LIST)
+	@CloningStrategy(StrategyType.IGNORE)
+	@Embedded
+	public List<? extends XMLType> getTypes();
+
+	@Finder(attribute = XMLType.URI, collection = TYPES, isMultiValued = true)
+	public XMLType getTypeFromURI(String string);
+
+	public XMLType getTypeFromURI(String string, boolean createsWhenNonExistant);
+
+	/**
+	 * Creates a new type in this MetaModel, simple or complex, depending on the parameters
+	 * 
+	 * @param uri
+	 * @param localName
+	 * @param simpleType
+	 * @return
+	 */
+	public XMLType createNewType(String uri, String localName, boolean simpleType);
+
+	@Adder(TYPES)
+	@PastingPoint
+	public void addType(XMLType aType);
+
+	@Remover(TYPES)
+	public void removeType(XMLType aType);
+
+	@Override
+	@Getter(value = READ_ONLY, defaultValue = "true")
+	public boolean isReadOnly();
+
+	@Setter(READ_ONLY)
+	public void setReadOnly(boolean value);
+
 }

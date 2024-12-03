@@ -1,8 +1,8 @@
 /**
  * 
- * Copyright (c) 2014-2015, Openflexo
+ * Copyright (c) 2014, Openflexo
  * 
- * This file is part of Xmlconnector, a component of the software infrastructure 
+ * This file is part of Flexodiagram, a component of the software infrastructure 
  * developed at Openflexo.
  * 
  * 
@@ -36,23 +36,37 @@
  * 
  */
 
-package org.openflexo.technologyadapter.xml.model.free;
+package org.openflexo.technologyadapter.xml.metamodel;
 
-import org.openflexo.technologyadapter.xml.model.AbstractXMLDocumentImpl;
+import java.util.logging.Logger;
+
+import org.openflexo.pamela.PamelaMetaModelLibrary;
+import org.openflexo.pamela.exceptions.ModelDefinitionException;
+import org.openflexo.pamela.factory.EditingContext;
+import org.openflexo.pamela.factory.PamelaModelFactory;
+import org.openflexo.technologyadapter.xml.model.AbstractXMLDocumentFactory;
+import org.openflexo.technologyadapter.xml.model.free.FreeXMLDocument;
 import org.openflexo.technologyadapter.xml.rm.FreeXMLResource;
+import org.openflexo.technologyadapter.xml.rm.XSDMetaModelResource;
 
 /**
- * Default implementation for {@link FreeXMLDocument}
+ * A {@link PamelaModelFactory} used to manage {@link FreeXMLDocument}
+ * 
+ * One instance of this class should be used for each {@link FreeXMLResource}
  * 
  * @author sylvain
+ * 
  */
+public class XSDMetaModelFactory extends AbstractXMLDocumentFactory<XSDMetaModelResource, XSDMetaModel, XSDMetaModelFactory> {
 
-public abstract class FreeXMLDocumentImpl extends AbstractXMLDocumentImpl<FreeXMLDocument> implements FreeXMLDocument {
+	@SuppressWarnings("unused")
+	private static final Logger logger = Logger.getLogger(XSDMetaModelFactory.class.getPackage().getName());
 
-	// Can be safely cast to FreeXMLResource
-	@Override
-	public FreeXMLResource getResource() {
-		return (FreeXMLResource) super.getResource();
+	public XSDMetaModelFactory(XSDMetaModelResource resource, EditingContext editingContext) throws ModelDefinitionException {
+		super(PamelaMetaModelLibrary.retrieveMetaModel(XSDMetaModel.class), resource, editingContext);
 	}
 
+	public XSDMetaModel makeXSDMetaModel() {
+		return newInstance(XSDMetaModel.class);
+	}
 }

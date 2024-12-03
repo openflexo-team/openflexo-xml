@@ -59,7 +59,6 @@ import org.openflexo.technologyadapter.xml.fml.binding.XMLBindingFactory;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
-import org.openflexo.technologyadapter.xml.model.typed.XMLObjectGraphFactory;
 import org.openflexo.technologyadapter.xml.rm.FreeXMLDocumentRepository;
 import org.openflexo.technologyadapter.xml.rm.FreeXMLResourceFactory;
 import org.openflexo.technologyadapter.xml.rm.TypedXMLResourceFactory;
@@ -82,7 +81,7 @@ public class XMLTechnologyAdapter extends TechnologyAdapter<XMLTechnologyAdapter
 
 	private static final String TAName = "XML technology adapter";
 
-	private XMLObjectGraphFactory xmlModelFactory = null;
+	// private XMLModelBuilder xmlModelFactory = null;
 
 	private static final XMLBindingFactory BINDING_FACTORY = new XMLBindingFactory();
 
@@ -90,7 +89,7 @@ public class XMLTechnologyAdapter extends TechnologyAdapter<XMLTechnologyAdapter
 
 	public XMLTechnologyAdapter() {
 		super();
-		xmlModelFactory = new XMLObjectGraphFactory();
+		// xmlModelFactory = new XMLModelBuilder();
 		privateMetamodels = new HashMap<>();
 	}
 
@@ -151,9 +150,9 @@ public class XMLTechnologyAdapter extends TechnologyAdapter<XMLTechnologyAdapter
 		return returned;
 	}
 
-	public XMLObjectGraphFactory getXMLModelFactory() {
+	/*public XMLModelBuilder getXMLModelFactory() {
 		return xmlModelFactory;
-	}
+	}*/
 
 	@Override
 	public XMLBindingFactory getTechnologyAdapterBindingFactory() {

@@ -59,8 +59,8 @@ import org.openflexo.technologyadapter.xml.fml.editionaction.AddXMLIndividual;
 import org.openflexo.technologyadapter.xml.gui.XMLIconLibrary;
 import org.openflexo.technologyadapter.xml.gui.XMLMetaModelView;
 import org.openflexo.technologyadapter.xml.gui.XMLModelView;
-import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModel;
 import org.openflexo.technologyadapter.xml.metamodel.XMLObject;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
 import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
 import org.openflexo.view.EmptyPanel;
@@ -195,23 +195,23 @@ public class XMLAdapterController extends FlexoOntologyTechnologyAdapterControll
 		if (object instanceof XMLModel) {
 			return true;
 		}
-		else if (object instanceof XMLMetaModel) {
+		else if (object instanceof XSDMetaModel) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	@Override
 	public FlexoObject getRepresentableMasterObject(TechnologyObject<XMLTechnologyAdapter> object) {
 		if (object instanceof XMLModel) {
 			return object;
 		}
-		else if (object instanceof XMLMetaModel) {
+		else if (object instanceof XSDMetaModel) {
 			return object;
 		}
 		return null;
 	}
-	
+
 	@Override
 	public String getWindowTitleforObject(TechnologyObject<XMLTechnologyAdapter> object, FlexoController controller) {
 		if (object instanceof XMLObject) {
@@ -226,8 +226,8 @@ public class XMLAdapterController extends FlexoOntologyTechnologyAdapterControll
 		if (object instanceof XMLModel) {
 			return new XMLModelView((XMLModel) object, controller, perspective);
 		}
-		else if (object instanceof XMLMetaModel) {
-			return new XMLMetaModelView((XMLMetaModel) object, controller, perspective);
+		else if (object instanceof XSDMetaModel) {
+			return new XMLMetaModelView((XSDMetaModel) object, controller, perspective);
 		}
 		return new EmptyPanel<>(controller, perspective, object);
 	}

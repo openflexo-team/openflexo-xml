@@ -38,18 +38,26 @@
 
 package org.openflexo.technologyadapter.xml.metamodel;
 
+import java.util.logging.Logger;
+
+import org.openflexo.foundation.InnerResourceData;
 import org.openflexo.foundation.technologyadapter.TechnologyObject;
 import org.openflexo.pamela.annotations.Getter;
+import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.Setter;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
+import org.openflexo.technologyadapter.xml.metamodel.XMLObject.XMLObjectImpl;
+import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument;
+import org.openflexo.technologyadapter.xml.model.AbstractXMLDocumentFactory;
 
 /**
- * @author xtof
+ * @author sylvain
  * 
  */
 @ModelEntity(isAbstract = true)
-public interface XMLObject extends TechnologyObject<XMLTechnologyAdapter> {
+@ImplementationClass(XMLObjectImpl.class)
+public interface XMLObject<RD extends AbstractXMLDocument<RD>> extends TechnologyObject<XMLTechnologyAdapter>, InnerResourceData<RD> {
 
 	public static final String NAME = "name";
 
@@ -65,5 +73,50 @@ public interface XMLObject extends TechnologyObject<XMLTechnologyAdapter> {
 	public void setURI(String uri);
 
 	public String getDisplayableDescription();
+
+	@Deprecated
+	public String getSerializationIdentifier();
+
+	public AbstractXMLDocumentFactory<?, ?, ?> getFactory();
+
+	/**
+	 * Default base implementation for {@link ExcelObject}
+	 * 
+	 * @author sylvain
+	 *
+	 */
+	public static abstract class XMLObjectImpl<RD extends AbstractXMLDocument<RD>> extends FlexoObjectImpl implements XMLObject<RD> {
+
+		@SuppressWarnings("unused")
+		private static final Logger logger = Logger.getLogger(XMLObjectImpl.class.getPackage().getName());
+
+		@Override
+		public XMLTechnologyAdapter getTechnologyAdapter() {
+			if (getResourceData() != null && getResourceData().getResource() != null) {
+				return getResourceData().getResource().getTechnologyAdapter();
+			}
+			return null;
+		}
+
+		@Override
+		public AbstractXMLDocumentFactory<?, ?, ?> getFactory() {
+			return getResourceData().getResource().getFactory();
+		}
+
+		@Override
+		@Deprecated
+		public final String getSerializationIdentifier() {
+			/*if (getResourceData() != null) {
+				return getResourceData().getResource().getConverter().toSerializationIdentifier(this);
+			}*/
+			return "???";
+		}
+
+		@Override
+		public String toString() {
+			return getImplementedInterface().getSimpleName() + "-" + getSerializationIdentifier();
+		}
+
+	}
 
 }

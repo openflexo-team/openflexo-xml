@@ -40,7 +40,6 @@ package org.openflexo.technologyadapter.xml.model.typed;
 
 import java.util.List;
 
-import org.openflexo.foundation.resource.FlexoResource;
 import org.openflexo.foundation.technologyadapter.FlexoModel;
 import org.openflexo.pamela.annotations.Adder;
 import org.openflexo.pamela.annotations.CloningStrategy;
@@ -57,7 +56,6 @@ import org.openflexo.pamela.annotations.PastingPoint;
 import org.openflexo.pamela.annotations.Remover;
 import org.openflexo.pamela.annotations.Setter;
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
-import org.openflexo.technologyadapter.xml.metamodel.XMLMetaModel;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument;
@@ -80,7 +78,7 @@ public interface XMLModel extends AbstractXMLDocument<XMLModel>, FlexoModel<XMLM
 	 * Link to the {@XMLResource} that manages the concrete serialization of this model
 	 * 
 	 */
-	public static final String RSC = "resource";
+	// public static final String RSC = "resource";
 
 	/**
 	 * Collection of {@link XMLIndividuals}
@@ -113,13 +111,13 @@ public interface XMLModel extends AbstractXMLDocument<XMLModel>, FlexoModel<XMLM
 	@Setter(MM)
 	void setMetaModel(XSDMetaModel mm);
 
-	@Override
+	/*@Override
 	@Getter(RSC)
 	public FlexoResource<XMLModel> getResource();
-
+	
 	@Override
 	@Setter(RSC)
-	public void setResource(FlexoResource<XMLModel> resource);
+	public void setResource(FlexoResource<XMLModel> resource);*/
 
 	@Getter(ROOT)
 	public XMLIndividual getRoot();
