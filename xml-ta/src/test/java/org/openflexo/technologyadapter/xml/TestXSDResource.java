@@ -52,6 +52,7 @@ import org.openflexo.foundation.FlexoException;
 import org.openflexo.foundation.resource.FlexoResourceCenter;
 import org.openflexo.foundation.resource.ResourceLoadingCancelledException;
 import org.openflexo.foundation.test.OpenflexoTestCase;
+import org.openflexo.technologyadapter.xml.rm.TypedXMLResource;
 import org.openflexo.technologyadapter.xml.rm.XMLModelRepository;
 import org.openflexo.technologyadapter.xml.rm.XSDMetaModelRepository;
 import org.openflexo.technologyadapter.xml.rm.XSDMetaModelResource;
@@ -84,13 +85,23 @@ public class TestXSDResource extends OpenflexoTestCase {
 				.getFlexoResourceCenter("http://openflexo.org/xml-test");
 
 		xmlAdapter = serviceManager.getTechnologyAdapterService().getTechnologyAdapter(XMLTechnologyAdapter.class);
+
 		mmRepository = xmlAdapter.getXSDMetaModelRepository(resourceCenter);
-		modelRepository = xmlAdapter.getXMLModelRepository(resourceCenter);
-		baseUrl = resourceCenter.getDefaultBaseURI();
-		assertNotNull(modelRepository);
-		assertTrue(modelRepository.getAllResources().size() > 4);
 		assertNotNull(mmRepository);
 		assertTrue(mmRepository.getAllResources().size() > 2);
+		for (XSDMetaModelResource r : mmRepository.getAllResources()) {
+			System.out.println("XSDMetaModelResource: " + r.getURI() + " : " + r);
+		}
+
+		modelRepository = xmlAdapter.getXMLModelRepository(resourceCenter);
+		assertNotNull(modelRepository);
+		assertTrue(modelRepository.getAllResources().size() > 4);
+		for (TypedXMLResource r : modelRepository.getAllResources()) {
+			System.out.println("TypedXMLResource: " + r.getURI() + " : " + r);
+		}
+
+		baseUrl = resourceCenter.getDefaultBaseURI();
+
 		/*
 		 * Found an XSD with uri: http://www.example.org/Library(library.xsd)
 		 * Found an XSD with uri:

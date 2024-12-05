@@ -70,6 +70,7 @@ public interface FreeXMLResource extends XMLResource<FreeXMLDocument, FreeXMLDoc
 
 			resourceData = getFactory().makeFreeXMLDocument();
 			resourceData.setResource(this);
+			resourceData.setURI(this.getURI());
 
 			notifyResourceWillLoad();
 

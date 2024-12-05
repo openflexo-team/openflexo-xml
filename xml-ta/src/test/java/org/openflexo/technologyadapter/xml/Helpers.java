@@ -60,36 +60,31 @@ public class Helpers {
 
 		System.out.println("\n\n");
 
+		System.out.println("Complex types : ");
 		for (XMLType t : metamodel.getTypes()) {
-			String prefix = new String();
-			if (t.isAbstract())
-				prefix = "*";
-			else
-				prefix = "-";
-			if (t.getSuperType() != null) {
-				System.out
-						.println("Parsed Type: " + prefix + t.getName() + " :: " + t.getSuperType().getName() + " [ " + t.getURI() + " ]");
-			}
-			else {
-				System.out.println("Parsed Type: " + prefix + t.getName() + " [ " + t.getURI() + " ]");
-
-			}
 			if (t instanceof XMLComplexType) {
+				System.out.println(" - " + t.getName() + (t.getSuperType() != null ? " extends " + t.getSuperType().getName() : "") + " ["
+						+ t.getURI() + "]" + (t.isAbstract() ? "[Abstract]" : ""));
 				for (XMLProperty x : ((XMLComplexType) t).getProperties()) {
 					XMLType pt = x.getType();
 					if (pt instanceof XMLSimpleType) {
-						System.out.println("     -data: " + x.getName() + "  :: " + pt.getName() + " [ " + pt.getURI() + " ]");
+						System.out.println("    -- data: " + x.getName() + " :: " + pt.getName() + " [" + pt.getURI() + "]");
 					}
 					else {
-						System.out.println("    --obj: " + x.getName() + "  :: " + pt.getName() + " [ " + pt.getURI() + " ]");
+						String card = "(" + x.getLowerBound() + "-" + (x.getUpperBound() == -1 ? "*" : x.getUpperBound()) + ")";
+						System.out.println("    -- obj:  " + card + " " + x.getName() + " :: " + pt.getName() + " [" + pt.getURI() + "]");
 					}
 				}
 			}
-			else {
-				System.out.println("Its a simple Type...");
-			}
-			System.out.flush();
 		}
+
+		System.out.println("Simple types : ");
+		for (XMLType t : metamodel.getTypes()) {
+			if (t instanceof XMLSimpleType) {
+				System.out.println(" - " + t.getName() + " [" + t.getURI() + "]" + (t.isAbstract() ? "[Abstract]" : ""));
+			}
+		}
+
 	}
 
 	/**

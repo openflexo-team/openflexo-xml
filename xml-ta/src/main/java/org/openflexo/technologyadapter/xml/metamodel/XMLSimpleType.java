@@ -68,6 +68,12 @@ public interface XMLSimpleType extends XMLType {
 
 		private static final Logger logger = Logger.getLogger(XMLSimpleTypeImpl.class.getPackage().getName());
 
+		/*public XMLSimpleTypeImpl() {
+			System.out.println("Hop un XMLSimpleTypeImpl");
+			Thread.dumpStack();
+			System.exit(-1);
+		}*/
+
 		@Override
 		public String getDisplayableDescription() {
 			return "Simple XML Type named : " + this.getName();
@@ -110,6 +116,11 @@ public interface XMLSimpleType extends XMLType {
 			}
 			logger.warning("Unexpected " + getURI());
 			return Object.class;
+		}
+
+		@Override
+		public String toString() {
+			return "[SimpleType: " + getName() + " uri=" + getURI() + "]";
 		}
 
 	}

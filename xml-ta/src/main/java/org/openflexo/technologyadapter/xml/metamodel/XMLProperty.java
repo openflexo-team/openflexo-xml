@@ -43,6 +43,8 @@ import java.lang.reflect.Type;
 import org.openflexo.foundation.InnerResourceData;
 import org.openflexo.pamela.annotations.Getter;
 import org.openflexo.pamela.annotations.ImplementationClass;
+import org.openflexo.pamela.annotations.Import;
+import org.openflexo.pamela.annotations.Imports;
 import org.openflexo.pamela.annotations.Initializer;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.Parameter;
@@ -59,6 +61,7 @@ import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
  */
 @ModelEntity
 @ImplementationClass(XMLProperty.XMLPropertyImpl.class)
+@Imports({ @Import(XMLObjectProperty.class), @Import(XMLDataProperty.class) })
 public interface XMLProperty extends XMLObject<XSDMetaModel>, Comparable<XMLProperty>, InnerResourceData<XSDMetaModel> {
 
 	/**

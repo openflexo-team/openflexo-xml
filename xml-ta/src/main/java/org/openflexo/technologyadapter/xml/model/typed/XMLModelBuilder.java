@@ -89,10 +89,10 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory {
 		if (!mm.isReadOnly() && tt == null) {
 			if (container instanceof XMLIndividual) {
 				XMLType parentType = ((XMLIndividual) container).getType();
-				tt = mm.createNewType((parentType.getFullyQualifiedName() + "#" + objectName), objectName, false);
+				tt = mm.getModelFactory().makeComplexType(parentType.getFullyQualifiedName() + "#" + objectName, objectName, mm);
 			}
 			else {
-				tt = mm.createNewType(mm.getURI() + "#" + objectName, objectName, false);
+				tt = mm.getModelFactory().makeComplexType(mm.getURI() + "#" + objectName, objectName, mm);
 			}
 		}
 

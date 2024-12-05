@@ -138,19 +138,26 @@ public interface AddXMLType extends XMLAction<XMLModelSlot, XMLType> {
 				XSDMetaModel mm = getMetamodel().getBindingValue(evaluationContext);
 				if (mm != null) {
 
-					if (father != null) {
-						newClass = model.getMetaModel().createNewType(father.getURI().replace('#', '/') + "#" + newTypeName, newTypeName,
-								isSimpleType());
-
-						newClass.setSuperType(father);
+					if (isSimpleType()) {
+						newClass = model.getMetaModel().getModelFactory()
+								.makeSimpleType(father.getURI().replace('#', '/') + "#" + newTypeName, newTypeName, model.getMetaModel());
 					}
 					else {
+						newClass = model.getMetaModel().getModelFactory()
+								.makeComplexType(father.getURI().replace('#', '/') + "#" + newTypeName, newTypeName, model.getMetaModel());
+					}
 
+					if (father != null) {
+						newClass.setSuperType(father);
+					}
+
+					/*else {
+					
 						newClass = model.getMetaModel().createNewType(mm.getURI() + "/" + newTypeName, newTypeName, isSimpleType());
 					}
-					logger.info("Added class " + newClass.getName() + " as " + father);
-
+					logger.info("Added class " + newClass.getName() + " as " + father);*/
 				}
+
 				else {
 					logger.warning("CANNOT create a new type in a null MetaModel!");
 				}

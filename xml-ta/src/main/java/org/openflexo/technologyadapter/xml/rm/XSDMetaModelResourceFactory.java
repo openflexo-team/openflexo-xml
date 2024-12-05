@@ -24,10 +24,11 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 import org.openflexo.foundation.resource.FlexoResourceCenter;
-import org.openflexo.foundation.resource.TechnologySpecificFlexoResourceFactory;
+import org.openflexo.foundation.technologyadapter.TechnologyContextManager;
 import org.openflexo.pamela.exceptions.ModelDefinitionException;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModelFactory;
 import org.openflexo.toolbox.StringUtils;
 import org.openflexo.xml.XMLRootElementInfo;
 import org.openflexo.xml.XMLRootElementReader;
@@ -38,8 +39,7 @@ import org.openflexo.xml.XMLRootElementReader;
  * @author sylvain
  *
  */
-public class XSDMetaModelResourceFactory
-		extends TechnologySpecificFlexoResourceFactory<XSDMetaModelResource, XSDMetaModel, XMLTechnologyAdapter> {
+public class XSDMetaModelResourceFactory extends AbstractXMLResourceFactory<XSDMetaModelResource, XSDMetaModel, XSDMetaModelFactory> {
 
 	private static final Logger logger = Logger.getLogger(XSDMetaModelResourceFactory.class.getPackage().getName());
 
@@ -52,9 +52,14 @@ public class XSDMetaModelResourceFactory
 	}
 
 	@Override
+	public XSDMetaModelFactory makeModelFactory(XSDMetaModelResource resource,
+			TechnologyContextManager<XMLTechnologyAdapter> technologyContextManager) throws ModelDefinitionException {
+		return new XSDMetaModelFactory(resource, technologyContextManager.getServiceManager().getEditingContext());
+	}
+
+	@Override
 	public XSDMetaModel makeEmptyResourceData(XSDMetaModelResource resource) {
-		// TODO
-		return null;
+		return resource.getFactory().makeXSDMetaModel();
 	}
 
 	@Override

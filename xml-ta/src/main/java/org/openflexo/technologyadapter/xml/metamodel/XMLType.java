@@ -43,15 +43,15 @@ import java.lang.reflect.Type;
 import org.openflexo.foundation.InnerResourceData;
 import org.openflexo.pamela.annotations.Getter;
 import org.openflexo.pamela.annotations.ImplementationClass;
-import org.openflexo.pamela.annotations.Initializer;
+import org.openflexo.pamela.annotations.Import;
+import org.openflexo.pamela.annotations.Imports;
 import org.openflexo.pamela.annotations.ModelEntity;
-import org.openflexo.pamela.annotations.Parameter;
 import org.openflexo.pamela.annotations.Setter;
 import org.openflexo.technologyadapter.xml.XMLObject;
-import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
 
 @ModelEntity(isAbstract = true)
 @ImplementationClass(XMLType.XMLTypeImpl.class)
+@Imports({ @Import(XMLSimpleType.class), @Import(XMLComplexType.class) })
 public interface XMLType extends XMLObject<XSDMetaModel>, Type, InnerResourceData<XSDMetaModel> {
 
 	public final String MM = "metamodel";
@@ -64,14 +64,17 @@ public interface XMLType extends XMLObject<XSDMetaModel>, Type, InnerResourceDat
 
 	static final String NAME_ATTR = "name";
 
-	@Initializer
-	public XMLType init(@Parameter(MM) XSDMetaModel mm);
+	// @Initializer
+	// public XMLType init(@Parameter(MM) XSDMetaModel mm);
 
 	@Getter(FQN)
 	public String getFullyQualifiedName();
 
 	@Getter(MM)
 	XSDMetaModel getMetamodel();
+
+	@Setter(MM)
+	void setMetamodel(XSDMetaModel metaModel);
 
 	@Setter(NAME)
 	public void setName(String name);
@@ -88,12 +91,12 @@ public interface XMLType extends XMLObject<XSDMetaModel>, Type, InnerResourceDat
 	@Setter(ABSTRACT)
 	public void setIsAbstract(boolean t);
 
-	public static abstract class XMLTypeImpl extends FlexoObjectImpl implements XMLType {
+	public static abstract class XMLTypeImpl extends XMLObjectImpl<XSDMetaModel> implements XMLType {
 
-		@Override
+		/*@Override
 		public XMLTechnologyAdapter getTechnologyAdapter() {
 			return this.getMetamodel().getTechnologyAdapter();
-		}
+		}*/
 
 		@Override
 		public String getFullyQualifiedName() {

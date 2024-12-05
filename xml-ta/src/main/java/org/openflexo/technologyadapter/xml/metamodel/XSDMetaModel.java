@@ -96,7 +96,7 @@ public interface XSDMetaModel extends AbstractXMLDocument<XSDMetaModel>, FlexoMe
 	public static String LONG_URI = "xs:long";
 	public static String SHORT_URI = "xs:short";
 
-	@Getter(value = TYPES, cardinality = Cardinality.LIST)
+	@Getter(value = TYPES, cardinality = Cardinality.LIST, inverse = XMLType.MM)
 	@CloningStrategy(StrategyType.IGNORE)
 	@Embedded
 	public List<? extends XMLType> getTypes();
@@ -104,7 +104,7 @@ public interface XSDMetaModel extends AbstractXMLDocument<XSDMetaModel>, FlexoMe
 	@Finder(attribute = XMLType.URI, collection = TYPES, isMultiValued = true)
 	public XMLType getTypeFromURI(String string);
 
-	public XMLType getTypeFromURI(String string, boolean createsWhenNonExistant);
+	// public XMLType getTypeFromURI(String string, boolean createsWhenNonExistant);
 
 	/**
 	 * Creates a new type in this MetaModel, simple or complex, depending on the parameters
@@ -114,14 +114,14 @@ public interface XSDMetaModel extends AbstractXMLDocument<XSDMetaModel>, FlexoMe
 	 * @param simpleType
 	 * @return
 	 */
-	public XMLType createNewType(String uri, String localName, boolean simpleType);
+	// public XMLType createNewType(String uri, String localName, boolean simpleType);
 
 	@Adder(TYPES)
 	@PastingPoint
-	public void addType(XMLType aType);
+	public void addToTypes(XMLType aType);
 
 	@Remover(TYPES)
-	public void removeType(XMLType aType);
+	public void removeFromTypes(XMLType aType);
 
 	@Override
 	@Getter(value = READ_ONLY, defaultValue = "true")
@@ -129,6 +129,9 @@ public interface XSDMetaModel extends AbstractXMLDocument<XSDMetaModel>, FlexoMe
 
 	@Setter(READ_ONLY)
 	public void setReadOnly(boolean value);
+
+	@Override
+	public XSDMetaModelFactory getModelFactory();
 
 	public static abstract class XSDMetaModelImpl extends AbstractXMLDocumentImpl<XSDMetaModel> implements XSDMetaModel {
 
@@ -139,6 +142,11 @@ public interface XSDMetaModel extends AbstractXMLDocument<XSDMetaModel>, FlexoMe
 
 		public XSDMetaModelImpl() {
 			types = new HashMap<>();
+		}
+
+		@Override
+		public XSDMetaModelFactory getModelFactory() {
+			return (XSDMetaModelFactory) super.getModelFactory();
 		}
 
 		// private XSDMetaModelResource xsdResource;
@@ -215,37 +223,41 @@ public interface XSDMetaModel extends AbstractXMLDocument<XSDMetaModel>, FlexoMe
 
 		@Override
 		public XMLType getTypeFromURI(String uri) {
-			return getTypeFromURI(uri, true);
+			return types.get(uri);
+
+			/*if (t == null) {
+			System.out.println("Tous les types que je connais");
+			for (XMLType xmlType : types.values()) {
+				System.out.println(" > " + xmlType + " of " + xmlType.getClass() + " uri=" + xmlType.getURI());
+			}
+			}*/
+
+			// System.out.println("On cherche un type " + uri);
+			// return getTypeFromURI(uri, true);
 		}
 
-		@Override
+		/*@Override
 		public XMLType getTypeFromURI(String uri, boolean createsWhenNonExistant) {
-
+		
 			XMLType t = types.get(uri);
-
+		
 			if (t == null && createsWhenNonExistant) {
 				return createNewType(uri, uri, true);
 			}
-
-			/*if (t == null) {
-				System.out.println("Tous les types que je connais");
-				for (XMLType xmlType : types.values()) {
-					System.out.println(" > " + xmlType + " of " + xmlType.getClass() + " uri=" + xmlType.getURI());
-				}
-			}*/
-
 			return t;
-
-		}
+		
+		}*/
 
 		@Override
-		public void addType(XMLType aType) {
+		public void addToTypes(XMLType aType) {
 			types.put(aType.getURI(), aType);
+			aType.setMetamodel(this);
 		}
 
 		@Override
-		public void removeType(XMLType aType) {
+		public void removeFromTypes(XMLType aType) {
 			types.remove(aType);
+			aType.setMetamodel(null);
 		}
 
 		@Override
@@ -254,11 +266,12 @@ public interface XSDMetaModel extends AbstractXMLDocument<XSDMetaModel>, FlexoMe
 			return new ArrayList<>(types.values());
 		}
 
-		@Override
+		/*@Override
 		public XMLType createNewType(String uri, String localName, boolean simpleType) {
-
+		
 			XMLType aType = null;
 			if (simpleType) {
+				System.out.println("On cree un XMLSimpleType pour " + uri);
 				aType = getModelFactory().newInstance(XMLSimpleType.class, this);
 			}
 			else {
@@ -267,11 +280,11 @@ public interface XSDMetaModel extends AbstractXMLDocument<XSDMetaModel>, FlexoMe
 			aType.setIsAbstract(false);
 			aType.setURI(uri);
 			aType.setName(localName);
-
-			addType(aType);
-
+		
+			addToTypes(aType);
+		
 			return aType;
-		}
+		}*/
 
 		/**
 		 * 

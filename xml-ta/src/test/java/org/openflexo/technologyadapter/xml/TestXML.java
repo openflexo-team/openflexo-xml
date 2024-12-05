@@ -248,10 +248,10 @@ public class TestXML extends OpenflexoProjectAtRunTimeTestCase {
 			PamelaModelFactory pamelaModelFactory = new PamelaModelFactory(XSDMetaModel.class);
 			XSDMetaModel aMetamodel = pamelaModelFactory.newInstance(XSDMetaModel.class);
 			aMetamodel.setURI("http://montest.com");
-			Object blobType = aMetamodel.createNewType("http://montest.com#Blob", "Blob", false);
-			aModel.setMetaModel(aMetamodel);
 
-			XMLType aType = aMetamodel.createNewType("http://zutalors.com", "Blib", false);
+			Object blobType = aMetamodel.getModelFactory().makeSimpleType("http://montest.com#Blob", "Blob", aMetamodel);
+			aModel.setMetaModel(aMetamodel);
+			XMLType aType = aMetamodel.getModelFactory().makeSimpleType("http://zutalors.com", "Blib", aMetamodel);
 
 			// TODO Manage several namespaces in same file!!
 			// aType = new XMLType("http://zutalors.com", "Blib", "pt:Blib",

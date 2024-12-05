@@ -69,4 +69,45 @@ public class XSDMetaModelFactory extends AbstractXMLDocumentFactory<XSDMetaModel
 	public XSDMetaModel makeXSDMetaModel() {
 		return newInstance(XSDMetaModel.class);
 	}
+
+	public XMLComplexType makeComplexType(String uri, String localName, XSDMetaModel metaModel) {
+		System.out.println("On cree un XMLComplexType " + localName + " " + uri);
+		XMLComplexType returned = newInstance(XMLComplexType.class);
+		returned.setIsAbstract(false);
+		returned.setURI(uri);
+		returned.setName(localName);
+		metaModel.addToTypes(returned);
+		return returned;
+	}
+
+	public XMLSimpleType makeSimpleType(String uri, String localName, XSDMetaModel metaModel) {
+		System.out.println("On cree un XMLSimpleType " + localName + " " + uri);
+		XMLSimpleType returned = newInstance(XMLSimpleType.class);
+		returned.setIsAbstract(false);
+		returned.setURI(uri);
+		returned.setName(localName);
+		metaModel.addToTypes(returned);
+		return returned;
+	}
+
+	/*@Override
+	public XMLType createNewType(String uri, String localName, boolean simpleType) {
+	
+		XMLType aType = null;
+		if (simpleType) {
+			System.out.println("On cree un XMLSimpleType pour " + uri);
+			aType = getModelFactory().newInstance(XMLSimpleType.class, this);
+		}
+		else {
+			aType = getModelFactory().newInstance(XMLComplexType.class, this);
+		}
+		aType.setIsAbstract(false);
+		aType.setURI(uri);
+		aType.setName(localName);
+	
+		addType(aType);
+	
+		return aType;
+	}*/
+
 }

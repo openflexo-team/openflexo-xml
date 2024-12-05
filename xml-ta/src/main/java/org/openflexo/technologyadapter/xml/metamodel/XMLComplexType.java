@@ -89,6 +89,8 @@ public interface XMLComplexType extends XMLType {
 		public XMLComplexTypeImpl() {
 			super();
 			this.properties = new HashMap<>();
+			// System.out.println("Hop un ComplexTypeImpl");
+			// Thread.dumpStack();
 		}
 
 		@SuppressWarnings("unchecked")
@@ -179,6 +181,11 @@ public interface XMLComplexType extends XMLType {
 		@Override
 		public String getDisplayableDescription() {
 			return "Complex XML Type named : " + this.getName();
+		}
+
+		@Override
+		public String toString() {
+			return "XMLComplexType[" + getName() + "]";
 		}
 
 	}
