@@ -50,7 +50,7 @@ import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.Parameter;
 import org.openflexo.pamela.annotations.Setter;
 import org.openflexo.technologyadapter.xml.XMLObject;
-import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
+import org.openflexo.toolbox.StringUtils;
 
 /**
  * 
@@ -59,7 +59,7 @@ import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
  * @author sylvain,xtof
  * 
  */
-@ModelEntity
+@ModelEntity(isAbstract = true)
 @ImplementationClass(XMLProperty.XMLPropertyImpl.class)
 @Imports({ @Import(XMLObjectProperty.class), @Import(XMLDataProperty.class) })
 public interface XMLProperty extends XMLObject<XSDMetaModel>, Comparable<XMLProperty>, InnerResourceData<XSDMetaModel> {
@@ -76,6 +76,8 @@ public interface XMLProperty extends XMLObject<XSDMetaModel>, Comparable<XMLProp
 	 * This indicates if property was created from an XML element or attribute
 	 */
 	public static final String IS_FROM_ELEMENT = "isFromXMLElement";
+	public static final String DEFAULT_VALUE_KEY = "defaultValue";
+	public static final String FIXED_VALUE_KEY = "fixedValue";
 
 	public static final String LOWER_BOUND = "lowerBound";
 	public static final String UPPER_BOUND = "upperBound";
@@ -115,11 +117,19 @@ public interface XMLProperty extends XMLObject<XSDMetaModel>, Comparable<XMLProp
 
 	public boolean hasDefaultValue();
 
+	@Getter(DEFAULT_VALUE_KEY)
 	public String getDefaultValue();
+
+	@Setter(DEFAULT_VALUE_KEY)
+	public void setDefaultValue(String value);
 
 	public boolean hasFixedValue();
 
+	@Getter(FIXED_VALUE_KEY)
 	public String getFixedValue();
+
+	@Setter(FIXED_VALUE_KEY)
+	public void setFixedValue(String value);
 
 	public boolean isRequired();
 
@@ -138,16 +148,11 @@ public interface XMLProperty extends XMLObject<XSDMetaModel>, Comparable<XMLProp
 	/**
 	 * Default implementation for {@link XMLProperty}
 	 */
-	public static abstract class XMLPropertyImpl extends FlexoObjectImpl implements XMLProperty {
+	public static abstract class XMLPropertyImpl extends XMLObjectImpl<XSDMetaModel> implements XMLProperty {
 
 		@Override
 		public int compareTo(XMLProperty arg0) {
 			return this.getName().compareTo(arg0.getName());
-		}
-
-		@Override
-		public XMLTechnologyAdapter getTechnologyAdapter() {
-			return this.getContainer().getTechnologyAdapter();
 		}
 
 		@Override
@@ -170,6 +175,20 @@ public interface XMLProperty extends XMLObject<XSDMetaModel>, Comparable<XMLProp
 			return null;
 		}
 
+		@Override
+		public boolean hasFixedValue() {
+			return StringUtils.isNotEmpty(getFixedValue());
+		}
+
+		@Override
+		public boolean hasDefaultValue() {
+			return StringUtils.isNotEmpty(getDefaultValue());
+		}
+
+		@Override
+		public boolean isRequired() {
+			return false;
+		}
 	}
 
 }

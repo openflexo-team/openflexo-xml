@@ -51,7 +51,7 @@ import org.openflexo.technologyadapter.xml.rm.XMLResource;
  * 
  * @author sylvain
  */
-@ModelEntity
+@ModelEntity(isAbstract = true)
 @ImplementationClass(AbstractXMLDocumentImpl.class)
 public interface AbstractXMLDocument<RD extends AbstractXMLDocument<RD>> extends XMLObject<RD>, ResourceData<RD> {
 

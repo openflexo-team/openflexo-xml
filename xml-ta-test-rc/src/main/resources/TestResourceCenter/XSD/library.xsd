@@ -10,8 +10,8 @@
   <xs:complexType name="LibraryType">
     <xs:sequence>
       <xs:element name="name" type="xs:string" />
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="writers" type="Writer" />
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="books" type="Book" />
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="Writer" type="Writer" />
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="Book" type="Book" />
     </xs:sequence>
   </xs:complexType>
   
@@ -27,7 +27,7 @@
   <xs:complexType name="Writer">
     <xs:sequence>
       <xs:element name="name" type="xs:string" />
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="books" type="xs:anyURI" />
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="Book" type="xs:anyURI" />
     </xs:sequence>
   </xs:complexType>
   

@@ -80,11 +80,6 @@ public interface XMLDataProperty extends XMLProperty {
 		}
 
 		@Override
-		public boolean hasFixedValue() {
-			return StringUtils.isNotEmpty(getFixedValue());
-		}
-
-		@Override
 		public String getFixedValue() {
 			/*
 			if (attributeUse != null) {
