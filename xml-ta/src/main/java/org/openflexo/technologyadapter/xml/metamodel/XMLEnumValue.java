@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright (c) 2014-2015, Openflexo
+ * Copyright (c) 2014, Openflexo
  * 
  * This file is part of Xmlconnector, a component of the software infrastructure 
  * developed at Openflexo.
@@ -38,84 +38,44 @@
 
 package org.openflexo.technologyadapter.xml.metamodel;
 
-import java.lang.reflect.Type;
-
-import org.openflexo.foundation.InnerResourceData;
 import org.openflexo.pamela.annotations.Getter;
 import org.openflexo.pamela.annotations.ImplementationClass;
-import org.openflexo.pamela.annotations.Import;
-import org.openflexo.pamela.annotations.Imports;
 import org.openflexo.pamela.annotations.ModelEntity;
+import org.openflexo.pamela.annotations.PropertyIdentifier;
 import org.openflexo.pamela.annotations.Setter;
 import org.openflexo.technologyadapter.xml.XMLObject;
+import org.openflexo.technologyadapter.xml.model.free.XMLElement;
 
-@ModelEntity(isAbstract = true)
-@ImplementationClass(XMLType.XMLTypeImpl.class)
-@Imports({ @Import(XMLSimpleType.class), @Import(XMLComplexType.class), @Import(XMLEnumerationType.class) })
-public interface XMLType extends XMLObject<XSDMetaModel>, Type, InnerResourceData<XSDMetaModel> {
+@ModelEntity
+@ImplementationClass(XMLEnumValue.XMLEnumValueImpl.class)
+public interface XMLEnumValue extends XMLObject<XSDMetaModel> {
 
-	public final String MM = "metamodel";
+	@PropertyIdentifier(type = String.class)
+	public static final String NAME_KEY = "name";
+	@PropertyIdentifier(type = XMLElement.class)
+	public static final String TYPE_KEY = "type";
 
-	// TODO : manage the calculation of FQN
-	// TODO: check emboitage avec URI et NSPrexiw => FQN
-	public final String FQN = "fullyQualifiedName";
-	public final String SUPERTYPE = "superType";
-	public final String ABSTRACT = "abstract";
+	@Override
+	@Getter(NAME_KEY)
+	public String getName();
 
-	static final String NAME_ATTR = "name";
-
-	// @Initializer
-	// public XMLType init(@Parameter(MM) XSDMetaModel mm);
-
-	@Getter(FQN)
-	public String getFullyQualifiedName();
-
-	@Getter(MM)
-	XSDMetaModel getMetamodel();
-
-	@Setter(MM)
-	void setMetamodel(XSDMetaModel metaModel);
-
-	@Setter(NAME)
+	@Setter(NAME_KEY)
 	public void setName(String name);
 
-	@Getter(SUPERTYPE)
-	public XMLType getSuperType();
+	@Getter(TYPE_KEY)
+	public XMLEnumerationType getType();
 
-	@Setter(SUPERTYPE)
-	public void setSuperType(XMLType t);
+	@Setter(TYPE_KEY)
+	public void setType(XMLEnumerationType type);
 
-	@Getter(value = ABSTRACT, defaultValue = "false")
-	public boolean isAbstract();
-
-	@Setter(ABSTRACT)
-	public void setIsAbstract(boolean t);
-
-	public static abstract class XMLTypeImpl extends XMLObjectImpl<XSDMetaModel> implements XMLType {
-
-		/*@Override
-		public XMLTechnologyAdapter getTechnologyAdapter() {
-			return this.getMetamodel().getTechnologyAdapter();
-		}*/
-
-		@Override
-		public String getFullyQualifiedName() {
-			if (getURI() != null && !getURI().isEmpty())
-				return getURI();
-			else
-				return getName();
-		}
-
-		@Override
-		public String getDisplayableDescription() {
-			return "(Unexpected type)";
-		}
-
+	/**
+	 * Default implementation for {@link XMLProperty}
+	 */
+	public static abstract class XMLEnumValueImpl extends XMLObjectImpl<XSDMetaModel> implements XMLEnumValue {
 		@Override
 		public XSDMetaModel getResourceData() {
-			return getMetamodel();
+			return getType().getMetamodel();
 		}
-
 	}
 
 }

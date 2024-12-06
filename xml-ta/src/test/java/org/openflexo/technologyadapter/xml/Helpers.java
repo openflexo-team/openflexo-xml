@@ -40,6 +40,8 @@ package org.openflexo.technologyadapter.xml;
 
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLDataProperty;
+import org.openflexo.technologyadapter.xml.metamodel.XMLEnumValue;
+import org.openflexo.technologyadapter.xml.metamodel.XMLEnumerationType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLObjectProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLSimpleType;
@@ -81,10 +83,23 @@ public class Helpers {
 		System.out.println("Simple types : ");
 		for (XMLType t : metamodel.getTypes()) {
 			if (t instanceof XMLSimpleType) {
-				System.out.println(" - " + t.getName() + " [" + t.getURI() + "]" + (t.isAbstract() ? "[Abstract]" : ""));
+				System.out.println(" - " + t.getName() + (t instanceof XMLEnumerationType ? enumValues((XMLEnumerationType) t) : "") + " ["
+						+ t.getURI() + "]" + (t.isAbstract() ? "[Abstract]" : ""));
 			}
 		}
 
+	}
+
+	private static String enumValues(XMLEnumerationType t) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("(");
+		boolean isFirst = true;
+		for (XMLEnumValue xmlEnumValue : t.getEnumValues()) {
+			sb.append((isFirst ? "" : ",") + xmlEnumValue.getName());
+			isFirst = false;
+		}
+		sb.append(")");
+		return sb.toString();
 	}
 
 	/**

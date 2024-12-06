@@ -40,6 +40,7 @@ package org.openflexo.technologyadapter.xml.rm;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.openflexo.foundation.FlexoException;
@@ -52,6 +53,7 @@ import org.openflexo.pamela.annotations.XMLElement;
 import org.openflexo.technologyadapter.xml.XMLObject;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
+import org.openflexo.technologyadapter.xml.metamodel.XMLEnumerationType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
@@ -62,6 +64,7 @@ import org.openflexo.toolbox.JavaUtils;
 import com.sun.xml.xsom.XSAttributeDecl;
 import com.sun.xml.xsom.XSComplexType;
 import com.sun.xml.xsom.XSElementDecl;
+import com.sun.xml.xsom.XSFacet;
 import com.sun.xml.xsom.XSParticle;
 import com.sun.xml.xsom.XSRestrictionSimpleType;
 import com.sun.xml.xsom.XSSchemaSet;
@@ -90,20 +93,8 @@ public interface XSDMetaModelResource
 
 		private static final Logger logger = Logger.getLogger(XSDMetaModelResourceImpl.class.getPackage().getName());
 
-		// Properties
-
 		private XSSchemaSet schemaSet;
 		private XSDeclarationsFetcher fetcher;
-
-		/*private boolean isLoaded = false;
-		private boolean isLoading = false;
-		private boolean isReadOnly = true;
-		
-		private Exception creationException;
-		
-		public XSDMetaModelResourceImpl() {
-			creationException = new Exception();
-		}*/
 
 		@Override
 		public XSDMetaModel getMetaModelData() {
@@ -119,34 +110,8 @@ public interface XSDMetaModelResource
 			return null;
 		}
 
-		/**
-		 * Load the &quot;real&quot; load resource data of this resource.
-		 * 
-		 * @param progress
-		 *            a progress monitor in case the resource data is not immediately available.
-		 * @return the resource data.
-		 * @throws ResourceLoadingCancelledException
-		 * @throws FlexoException
-		 */
-		/*@Override
-		public XSDMetaModel loadResourceData() throws ResourceLoadingCancelledException, FlexoException {
-		
-			if (getFlexoIOStreamDelegate() == null) {
-				throw new FlexoException("Cannot load XML document with this IO/delegate: " + getIODelegate());
-			}
-		
-			if (loadWhenUnloaded())
-				return resourceData;
-			else {
-				logger.warning("Not able to load resource");
-				return null;
-			}
-		}*/
-
 		private void loadTypes() {
 			// TODO if a declaration (base) type is derived, get the correct
-			// superclass
-
 			if (resourceData != null) {
 
 				/*System.out.println("------> ce qu'on obtient");
@@ -162,56 +127,11 @@ public interface XSDMetaModelResource
 				System.out.println("<------ DONE");*/
 
 				for (XSComplexType complexType : fetcher.getComplexTypes()) {
-
 					ensureTypeExists(complexType);
-
-					/*String complexTypeURI = fetcher.getUri(complexType);
-					
-					// if (!complexTypeURI.equals("http://www.w3.org/2001/XMLSchema#anyType")) {
-					
-					XMLType xmlType = resourceData.getTypeFromURI(complexTypeURI);
-					
-					if (xmlType == null) {
-						// create New XMLComplexeType as it does not exist
-						// xsType = resourceData.createNewType(complexTypeURI, complexType.getName(), false);
-						xmlType = getFactory().makeComplexType(complexTypeURI, complexType.getName(), resourceData);
-						// xsType.setIsAbstract(true);
-					}
-					
-					XSType btype = complexType.getBaseType();
-					
-					if (btype != null && !btype.getName().equalsIgnoreCase("anyType")) {
-						XMLType superType = resourceData.getTypeFromURI(fetcher.getUri(btype));
-						if (superType == null) {
-							// create New Type if it does not exist
-							// superType = resourceData.createNewType(btype.getName(), fetcher.getUri(btype), false);
-							superType = getFactory().makeComplexType(fetcher.getUri(btype), btype.getName(), resourceData);
-							xmlType.setIsAbstract(true);
-						}
-						if (superType != null) {
-							xmlType.setSuperType(superType);
-					
-						}
-					}
-					// }*/
 				}
 
-				// Creates complex types that come with complex Element declarations
-
 				for (XSElementDecl element : fetcher.getElementDecls()) {
-					/*if (element.getType().isComplexType()) {
-						// XMLType xsType = resourceData.createNewType(fetcher.getUri(element), element.getName(), false);
-						XMLType xsType = getFactory().makeComplexType(fetcher.getUri(element), element.getName(), resourceData);
-						XSType type = element.getType();
-						if (type != null) {
-							XMLType superType = resourceData.getTypeFromURI(fetcher.getUri(type));
-							if (superType != null)
-								xsType.setSuperType(superType);
-						}
-					}
-					else*/ if (element.getType().isSimpleType()) {
-						// System.out.println(" -------> Penser aussi a creer le simple type " + element.getType() + " uri="
-						// + fetcher.getUri(element.getType()));
+					if (element.getType().isSimpleType()) {
 						ensureTypeExists(element.getType());
 					}
 				}
@@ -227,25 +147,48 @@ public interface XSDMetaModelResource
 			if (returned != null) {
 				return returned;
 			}
+			return buildType(type);
+		}
+
+		private XMLType buildType(XSType type) {
+
+			String uri = fetcher.getUri(type);
 			if (type.isComplexType()) {
-				returned = getFactory().makeComplexType(uri, type.getName(), resourceData);
+				XMLType returned = getFactory().makeComplexType(uri, type.getName(), resourceData);
 				XSType btype = type.getBaseType();
 				XMLType superType = ensureTypeExists(btype);
 				if (superType != null && superType != returned) {
 					returned.setSuperType(superType);
 					superType.setIsAbstract(true); // TODO : should we really do this ???
 				}
+				return returned;
 			}
 			else if (type.isSimpleType()) {
-				System.out.println("Hop on cree un type " + type.getName() + " uri=" + uri);
-				returned = getFactory().makeSimpleType(uri, type.getName(), resourceData);
+
+				// System.out.println("SimpleType: " + type.getClass().getSimpleName() + " " + type.getName() + " uri=" + uri);
+
+				if (type instanceof XSRestrictionSimpleType) {
+					XSRestrictionSimpleType restrictionType = (XSRestrictionSimpleType) type;
+					List<XSFacet> facets = restrictionType.getDeclaredFacets("enumeration");
+					if (facets.size() > 0) {
+						// This is an enumeration
+						XMLEnumerationType returned = getFactory().makeEnumerationType(uri, type.getName(), resourceData);
+						for (XSFacet xsFacet : facets) {
+							System.out.println(" > " + xsFacet.getName() + "=" + xsFacet.getValue() + " fixed:" + xsFacet.isFixed());
+							getFactory().makeEnumValue(xsFacet.getValue().toString(), returned);
+						}
+						return returned;
+					}
+				}
+
+				return getFactory().makeSimpleType(uri, type.getName(), resourceData);
+
 			}
-			return returned;
+			return null;
 		}
 
 		private void loadDataProperties() {
 
-			// Simple Elements that maps to a simpleType
 			for (XSElementDecl element : fetcher.getElementDecls()) {
 				XSType elementType = element.getType();
 				if (!elementType.isComplexType()) {
@@ -254,26 +197,24 @@ public interface XSDMetaModelResource
 					if (ownerUri != null) {
 						XMLType owner = resourceData.getTypeFromURI(ownerUri);
 						if (owner != null && owner instanceof XMLComplexType) {
-							// TODO: better manage types
-
-							/*if (resourceData.getTypeFromURI(XSDMetaModel.STRING_URI) == null) {
-								System.out.println("Zut alors....");
-								System.out.println("element=" + element);
-								System.out.println("elementType=" + elementType);
-								System.out.println("uri=" + uri);
-								System.out.println("ownerUri=" + ownerUri);
-								System.out.println("owner=" + owner);
-								System.out.println("mais: " + resourceData.getTypeFromURI(fetcher.getUri(elementType)));
-								System.exit(-1);
-							}*/
-
 							((XMLComplexType) owner).createProperty(element.getName(),
 									resourceData.getTypeFromURI(fetcher.getUri(elementType)));
 						}
 						else {
+
+							System.out.println("Pour l'element " + element);
+
 							logger.warning("unable to find an owner type for attribute: " + uri);
 							logger.warning("ownerUri=" + ownerUri);
 							logger.warning("owner=" + owner);
+
+							System.out.println("tous les types que je connais :");
+							for (XMLType xmlType : resourceData.getTypes()) {
+								if (xmlType instanceof XMLComplexType) {
+									System.out.println(" > " + xmlType.getURI());
+								}
+							}
+							// System.exit(-1);
 						}
 					}
 					else {
@@ -323,7 +264,6 @@ public interface XSDMetaModelResource
 					String uri = fetcher.getUri(element);
 					XMLType t = resourceData.getTypeFromURI(fetcher.getUri(elementType));
 					String name = element.getName();
-					String propertyName = JavaUtils.getVariableName(name);
 
 					String ownerUri = fetcher.getOwnerURI(uri);
 
@@ -331,12 +271,17 @@ public interface XSDMetaModelResource
 						XMLType owner = resourceData.getTypeFromURI(ownerUri);
 						if (owner != null && owner instanceof XMLComplexType) {
 
-							// TODO: better manage types
-							XMLProperty newProperty = ((XMLComplexType) owner).createProperty(propertyName, t);
+							String propertyName = JavaUtils.getVariableName(name);
 							XSParticle particle = fetcher.getParticle(element);
+							if (particle != null && particle.isRepeated()) {
+								propertyName = propertyName + "s";
+							}
+							XMLProperty newProperty = ((XMLComplexType) owner).createProperty(propertyName, t);
 							if (particle != null) {
-								newProperty.setLowerBound(particle.getMinOccurs().intValue());
-								newProperty.setUpperBound(particle.getMaxOccurs().intValue());
+								if (particle.getMinOccurs() != null)
+									newProperty.setLowerBound(particle.getMinOccurs().intValue());
+								if (particle.getMaxOccurs() != null)
+									newProperty.setUpperBound(particle.getMaxOccurs().intValue());
 								// System.out.println("" + particle + " " + particle.getTerm() + " of " + particle.getTerm().getClass()
 								// + " minOccurs=" + particle.getMinOccurs() + " maxOccurs=" + particle.getMaxOccurs());
 							}
@@ -376,107 +321,16 @@ public interface XSDMetaModelResource
 			notifyResourceLoaded();
 
 			return resourceData;
-
-			/*if (resourceData == null) {
-				this.resourceData = getFactory().makeXSDMetaModel();
-				resourceData.getResource();
-				resourceData.setResource(this);
-				resourceData.setURI(this.getURI());
-			}
-			
-			if (isLoading() == true) {
-				return resourceData;
-			}
-			isLoading = true;
-			isLoaded = false;
-			schemaSet = XSOMUtils.read(getInputStream());
-			
-			if (schemaSet != null) {
-				fetcher = new XSDeclarationsFetcher();
-				fetcher.fetch(schemaSet);
-				loadTypes();
-				loadDataProperties();
-				loadObjectProperties();
-				isLoaded = true;
-			}
-			else
-				logger.info("I've not been able to parse the stream" + getInputStream());
-			isLoading = false;
-			return isLoaded;*/
 		}
-
-		/*public boolean loadWhenUnloaded() {
-			if (isLoaded() == false) {
-				return load();
-			}
-			return true;
-		}*/
-
-		/*@Override
-		public boolean isLoaded() {
-			return isLoaded;
-		}
-		
-		@Override
-		public boolean isLoading() {
-			return isLoading;
-		}
-		
-		public boolean getIsReadOnly() {
-			return isReadOnly;
-		}
-		
-		public void setReadOnly(boolean isReadOnly) {
-			this.isReadOnly = isReadOnly;
-		}*/
-
-		// TODO : pas propre, a traiter rapidement
 
 		public XSDeclarationsFetcher getFetcher() {
 			return fetcher;
 		}
 
-		/**
-		 * Save the &quot;real&quot; resource data of this resource.
-		 */
-		/*@Override
-		public void save() {
-			logger.info("Not implemented yet");
-		}*/
-
 		@Override
 		public Class<XSDMetaModel> getResourceDataClass() {
 			return XSDMetaModel.class;
 		}
-
-		/**
-		 * Return a FlexoIOStreamDelegate associated to this flexo resource
-		 * 
-		 * @return
-		 */
-		/*@Override
-		public StreamIODelegate<?> getFlexoIOStreamDelegate() {
-			if (getIODelegate() instanceof StreamIODelegate) {
-				return (StreamIODelegate<?>) getIODelegate();
-			}
-			return null;
-		}
-		
-		@Override
-		public InputStream getInputStream() {
-			if (getFlexoIOStreamDelegate() != null) {
-				return getFlexoIOStreamDelegate().getInputStream();
-			}
-			return null;
-		}
-		
-		@Override
-		public OutputStream getOutputStream() {
-			if (getFlexoIOStreamDelegate() != null) {
-				return getFlexoIOStreamDelegate().getOutputStream();
-			}
-			return null;
-		}*/
 
 		@Override
 		public XMLObject findObject(String objectIdentifier, String userIdentifier) {

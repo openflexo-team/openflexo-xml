@@ -67,6 +67,9 @@ public interface XMLComplexType extends XMLType {
 	public List<? extends XMLProperty> getProperties();
 
 	@Finder(attribute = XMLProperty.URI, collection = PROPERTIES, isMultiValued = true)
+	public XMLProperty getPropertyByURI(String name);
+
+	@Finder(attribute = XMLProperty.NAME, collection = PROPERTIES, isMultiValued = true)
 	public XMLProperty getPropertyByName(String name);
 
 	public XMLProperty createProperty(String name, Type t);
@@ -157,8 +160,12 @@ public interface XMLComplexType extends XMLType {
 
 		@Override
 		public XMLProperty getPropertyByName(String name) {
+
 			if (name != null) {
 				XMLProperty prop = properties.get(name);
+				if (prop != null) {
+					return prop;
+				}
 				// Looks for the property in super-Type
 				if (this.getSuperType() != null) {
 					prop = ((XMLComplexType) this.getSuperType()).getPropertyByName(name);
