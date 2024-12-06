@@ -65,7 +65,6 @@ import com.sun.xml.xsom.XSElementDecl;
 import com.sun.xml.xsom.XSParticle;
 import com.sun.xml.xsom.XSRestrictionSimpleType;
 import com.sun.xml.xsom.XSSchemaSet;
-import com.sun.xml.xsom.XSSimpleType;
 import com.sun.xml.xsom.XSType;
 
 /**
@@ -150,7 +149,7 @@ public interface XSDMetaModelResource
 
 			if (resourceData != null) {
 
-				System.out.println("------> ce qu'on obtient");
+				/*System.out.println("------> ce qu'on obtient");
 				for (XSComplexType complexType : fetcher.getComplexTypes()) {
 					System.out.println(" > complexType : " + complexType + " uri=" + fetcher.getUri(complexType));
 				}
@@ -160,25 +159,27 @@ public interface XSDMetaModelResource
 				for (XSElementDecl element : fetcher.getElementDecls()) {
 					System.out.println(" > element : " + element);
 				}
-				System.out.println("<------ DONE");
+				System.out.println("<------ DONE");*/
 
 				for (XSComplexType complexType : fetcher.getComplexTypes()) {
 
-					String complexTypeURI = fetcher.getUri(complexType);
+					ensureTypeExists(complexType);
 
+					/*String complexTypeURI = fetcher.getUri(complexType);
+					
 					// if (!complexTypeURI.equals("http://www.w3.org/2001/XMLSchema#anyType")) {
-
+					
 					XMLType xmlType = resourceData.getTypeFromURI(complexTypeURI);
-
+					
 					if (xmlType == null) {
 						// create New XMLComplexeType as it does not exist
 						// xsType = resourceData.createNewType(complexTypeURI, complexType.getName(), false);
 						xmlType = getFactory().makeComplexType(complexTypeURI, complexType.getName(), resourceData);
 						// xsType.setIsAbstract(true);
 					}
-
+					
 					XSType btype = complexType.getBaseType();
-
+					
 					if (btype != null && !btype.getName().equalsIgnoreCase("anyType")) {
 						XMLType superType = resourceData.getTypeFromURI(fetcher.getUri(btype));
 						if (superType == null) {
@@ -189,10 +190,10 @@ public interface XSDMetaModelResource
 						}
 						if (superType != null) {
 							xmlType.setSuperType(superType);
-
+					
 						}
 					}
-					// }
+					// }*/
 				}
 
 				// Creates complex types that come with complex Element declarations
@@ -228,6 +229,12 @@ public interface XSDMetaModelResource
 			}
 			if (type.isComplexType()) {
 				returned = getFactory().makeComplexType(uri, type.getName(), resourceData);
+				XSType btype = type.getBaseType();
+				XMLType superType = ensureTypeExists(btype);
+				if (superType != null && superType != returned) {
+					returned.setSuperType(superType);
+					superType.setIsAbstract(true); // TODO : should we really do this ???
+				}
 			}
 			else if (type.isSimpleType()) {
 				System.out.println("Hop on cree un type " + type.getName() + " uri=" + uri);
