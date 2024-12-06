@@ -38,6 +38,7 @@
 
 package org.openflexo.technologyadapter.xml.model.free;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -201,6 +202,27 @@ public interface XMLElement extends XMLObject<FreeXMLDocument> {
 				sb.append("/>");
 			}
 			return sb.toString();
+		}
+
+		@Override
+		public String getURI() {
+			if (getParentElement() != null) {
+				List<XMLElement> eltsWithSameName = new ArrayList<>();
+				for (XMLElement c : getParentElement().getChildElements()) {
+					if (c.getName().equals(getName())) {
+						eltsWithSameName.add(c);
+					}
+				}
+				if (eltsWithSameName.size() == 1) {
+					return getParentElement().getURI() + "/" + getName();
+				}
+				else {
+					return getParentElement().getURI() + "/" + getName() + "." + eltsWithSameName.indexOf(this);
+				}
+			}
+			else {
+				return getDocument().getURI() + "/" + getName();
+			}
 		}
 	}
 

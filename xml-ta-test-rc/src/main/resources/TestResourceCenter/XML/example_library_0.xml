@@ -2,9 +2,15 @@
 <Library>
   <name>A Library</name>
   <Book>
-   <title encoding="truc" >toto</title>
+   <title encoding="truc">toto</title>
    <pages>35</pages>
    <category>Mystery</category>
    <author>Le Lapin</author>
+  </Book>
+  <Book>
+   <title encoding="utf8">tutu</title>
+   <pages>42</pages>
+   <category>SF</category>
+   <author>Dark Vador</author>
   </Book>
 </Library>

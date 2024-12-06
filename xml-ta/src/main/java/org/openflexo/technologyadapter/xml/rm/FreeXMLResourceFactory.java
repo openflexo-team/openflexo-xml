@@ -58,7 +58,6 @@ public class FreeXMLResourceFactory extends AbstractXMLResourceFactory<FreeXMLRe
 	@Override
 	public <I> boolean isValidArtefact(I serializationArtefact, FlexoResourceCenter<I> resourceCenter) {
 		if (resourceCenter.retrieveName(serializationArtefact).endsWith(XML_EXTENSION)) {
-			System.out.println("Tiens, ce fichier XML la est-il FREE ? " + serializationArtefact);
 			return getSchemaURI(serializationArtefact, resourceCenter) == null;
 		}
 		return false;
