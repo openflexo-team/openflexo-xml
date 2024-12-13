@@ -111,10 +111,10 @@ public interface XMLObjectProperty extends XMLProperty {
 			return -1;
 		}*/
 
-		@Override
+		/*@Override
 		public boolean isFromXMLElement() {
 			return true;
-		}
+		}*/
 
 		@Override
 		public Class<?> getImplementedInterface() {

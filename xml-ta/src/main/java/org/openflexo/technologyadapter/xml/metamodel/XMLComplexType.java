@@ -54,6 +54,7 @@ import org.openflexo.pamela.annotations.Getter.Cardinality;
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.Remover;
+import org.openflexo.technologyadapter.xml.metamodel.XMLProperty.XMLSupport;
 import org.openflexo.xml.XMLCst;
 
 @ModelEntity
@@ -72,7 +73,7 @@ public interface XMLComplexType extends XMLType {
 	@Finder(attribute = XMLProperty.NAME, collection = PROPERTIES, isMultiValued = true)
 	public XMLProperty getPropertyByName(String name);
 
-	public XMLProperty createProperty(String name, Type t);
+	public XMLProperty createProperty(String name, Type t, XMLSupport xmlSupport, String xmlSupportName);
 
 	public Boolean hasProperty(String name);
 
@@ -118,7 +119,7 @@ public interface XMLComplexType extends XMLType {
 		}
 
 		@Override
-		public XMLProperty createProperty(String name, Type aType) {
+		public XMLProperty createProperty(String name, Type aType, XMLSupport xmlSupport, String xmlSupportName) {
 			XMLProperty prop = null;
 
 			if (!hasProperty(name)) {
@@ -126,12 +127,18 @@ public interface XMLComplexType extends XMLType {
 					if (aType instanceof XMLComplexType) {
 
 						prop = getModelFactory().newInstance(XMLObjectProperty.class, name, aType, this);
+						prop.setXMLSupport(XMLSupport.ELEMENT);
+						prop.setXMLSupportName(xmlSupportName);
 					}
 					else if (aType instanceof XMLSimpleType) {
 						prop = getModelFactory().newInstance(XMLDataProperty.class, name, aType, this);
+						prop.setXMLSupport(xmlSupport);
+						prop.setXMLSupportName(xmlSupportName);
 					}
 					else if (aType.equals(String.class)) {
 						prop = getModelFactory().newInstance(XMLDataProperty.class, name, aType, this);
+						prop.setXMLSupport(xmlSupport);
+						prop.setXMLSupportName(xmlSupportName);
 					}
 					else {
 						logger.warning("UNABLE to create a new property named [" + name + "] as it does not map to any known type: "
@@ -173,7 +180,7 @@ public interface XMLComplexType extends XMLType {
 				// Creates the property for PCDATA
 				if (prop == null && name.equals(XMLCst.CDATA_ATTR_NAME)) {
 					System.out.println("mm=" + getMetamodel());
-					prop = createProperty(name, this.getMetamodel().getTypeFromURI(XSDMetaModel.STRING_URI));
+					prop = createProperty(name, this.getMetamodel().getTypeFromURI(XSDMetaModel.STRING_URI), XMLSupport.CDATA, null);
 				}
 				return prop;
 			}

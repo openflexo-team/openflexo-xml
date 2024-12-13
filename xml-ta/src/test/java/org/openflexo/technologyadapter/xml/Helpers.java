@@ -70,11 +70,13 @@ public class Helpers {
 				for (XMLProperty x : ((XMLComplexType) t).getProperties()) {
 					XMLType pt = x.getType();
 					if (pt instanceof XMLSimpleType) {
-						System.out.println("    -- data: " + x.getName() + " :: " + pt.getName() + " [" + pt.getURI() + "]");
+						System.out.println("    -- data: " + x.getName() + " :: " + pt.getName() + " [" + pt.getURI() + "]" + " ["
+								+ x.getXMLSupport() + "/" + x.getXMLSupportName() + "]");
 					}
 					else {
 						String card = "(" + x.getLowerBound() + "-" + (x.getUpperBound() == -1 ? "*" : x.getUpperBound()) + ")";
-						System.out.println("    -- obj:  " + card + " " + x.getName() + " :: " + pt.getName() + " [" + pt.getURI() + "]");
+						System.out.println("    -- obj:  " + card + " " + x.getName() + " :: " + pt.getName() + " [" + pt.getURI() + "]"
+								+ " [" + x.getXMLSupport() + "/" + x.getXMLSupportName() + "]");
 					}
 				}
 			}

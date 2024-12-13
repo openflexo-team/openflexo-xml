@@ -1,0 +1,16 @@
+<PurchaseOrder xmlns="http://tempuri.org/PurchaseOrderSchema.xsd" OrderDate="2024-12-09">
+    <ShipTo country="US">
+        <name>Emily Johnson</name>
+        <street>789 Pine Street</street>
+        <city>Seattle</city>
+        <state>WA</state>
+        <zip>98101</zip>
+    </ShipTo>
+    <BillTo country="US">
+        <name>Michael Johnson</name>
+        <street>456 Oak Avenue</street>
+        <city>Portland</city>
+        <state>OR</state>
+        <zip>97205</zip>
+    </BillTo>
+</PurchaseOrder>

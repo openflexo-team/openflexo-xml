@@ -1,0 +1,23 @@
+<PurchaseOrder xmlns="http://tempuri.org/PurchaseOrderSchema.xsd" OrderDate="2023-11-15">
+    <ShipTo country="US">
+        <name>Sarah Connor</name>
+        <street>100 Terminator Drive</street>
+        <city>Los Angeles</city>
+        <state>CA</state>
+        <zip>90001</zip>
+    </ShipTo>
+    <ShipTo country="US">
+        <name>Kyle Reese</name>
+        <street>101 Resistance Blvd</street>
+        <city>San Diego</city>
+        <state>CA</state>
+        <zip>92101</zip>
+    </ShipTo>
+    <BillTo country="US">
+        <name>John Connor</name>
+        <street>300 Future Lane</street>
+        <city>Las Vegas</city>
+        <state>NV</state>
+        <zip>89101</zip>
+    </BillTo>
+</PurchaseOrder>

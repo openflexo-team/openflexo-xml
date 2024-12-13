@@ -64,6 +64,7 @@ import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLDataProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLObjectProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
+import org.openflexo.technologyadapter.xml.metamodel.XMLProperty.XMLSupport;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.xml.XMLCst;
@@ -306,7 +307,7 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 				XSDMetaModel mm = getContainerModel().getMetaModel();
 				if (!mm.isReadOnly()) {
 					// TODO Manage complex types and actual types for objects.
-					prop = this.getType().createProperty(name, mm.getTypeFromURI(XSDMetaModel.STRING_URI));
+					prop = this.getType().createProperty(name, mm.getTypeFromURI(XSDMetaModel.STRING_URI), XMLSupport.ELEMENT, name);
 				}
 				else {
 					logger.warning("CANNOT give a value  for a non existant attribute :" + name);

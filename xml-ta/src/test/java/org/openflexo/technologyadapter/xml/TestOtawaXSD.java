@@ -41,26 +41,18 @@ package org.openflexo.technologyadapter.xml;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
 import java.util.logging.Logger;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openflexo.connie.type.ParameterizedTypeImpl;
 import org.openflexo.foundation.FlexoException;
 import org.openflexo.foundation.resource.FlexoResourceCenter;
 import org.openflexo.foundation.resource.ResourceLoadingCancelledException;
 import org.openflexo.foundation.test.OpenflexoTestCase;
-import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
-import org.openflexo.technologyadapter.xml.metamodel.XMLDataProperty;
-import org.openflexo.technologyadapter.xml.metamodel.XMLEnumerationType;
-import org.openflexo.technologyadapter.xml.metamodel.XMLObjectProperty;
-import org.openflexo.technologyadapter.xml.metamodel.XMLSimpleType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.rm.TypedXMLResource;
 import org.openflexo.technologyadapter.xml.rm.XMLModelRepository;
@@ -70,9 +62,9 @@ import org.openflexo.test.OrderedRunner;
 import org.openflexo.test.TestOrder;
 
 @RunWith(OrderedRunner.class)
-public class TestXSDResource extends OpenflexoTestCase {
+public class TestOtawaXSD extends OpenflexoTestCase {
 
-	protected static final Logger logger = Logger.getLogger(TestXSDResource.class.getPackage().getName());
+	protected static final Logger logger = Logger.getLogger(TestOtawaXSD.class.getPackage().getName());
 
 	private static XMLTechnologyAdapter xmlAdapter;
 	private static XMLModelRepository<?> modelRepository;
@@ -121,7 +113,7 @@ public class TestXSDResource extends OpenflexoTestCase {
 	}
 
 	/**
-	 * Test Library XSD
+	 * Test Otawa cache XSD (http://mem4csd.telecom-paris.fr/OtawaCache)
 	 * 
 	 * @throws FlexoException
 	 * @throws ResourceLoadingCancelledException
@@ -129,94 +121,10 @@ public class TestXSDResource extends OpenflexoTestCase {
 	 * 
 	 */
 	@Test
-	@TestOrder(2)
-	public void testLibraryMetamodel() throws FileNotFoundException, ResourceLoadingCancelledException, FlexoException {
+	@TestOrder(4)
+	public void testOtawaCache() throws FileNotFoundException, ResourceLoadingCancelledException, FlexoException {
 
-		XSDMetaModelResource mmRes = mmRepository.getResource("http://www.example.org/Library");
-
-		/*for (XSDMetaModelResource r : mmRepository.getAllResources()) {
-			System.out.println("> Resource: " + r.getURI());
-		}*/
-
-		assertNotNull(mmRes);
-		assertFalse(mmRes.isLoaded());
-		mmRes.loadResourceData();
-		assertTrue(mmRes.isLoaded());
-
-		XSDMetaModel metaModel = mmRes.getMetaModelData();
-
-		Helpers.dumpTypes(metaModel);
-
-		assertEquals(8, metaModel.getTypes().size());
-
-		XMLSimpleType anyURIType = metaModel.getSimpleTypeFromURI("http://www.w3.org/2001/XMLSchema#anyURI");
-		assertNotNull(anyURIType);
-		XMLSimpleType stringType = metaModel.getSimpleTypeFromURI("http://www.w3.org/2001/XMLSchema#string");
-		assertNotNull(stringType);
-		XMLSimpleType intType = metaModel.getSimpleTypeFromURI("http://www.w3.org/2001/XMLSchema#int");
-		assertNotNull(intType);
-
-		XMLEnumerationType categoryType = metaModel.getEnumerationTypeFromURI("http://www.example.org/Library#BookCategory");
-		assertNotNull(categoryType);
-		assertEquals(3, categoryType.getEnumValues().size());
-
-		XMLComplexType anyType = metaModel.getComplexTypeFromURI("http://www.w3.org/2001/XMLSchema#anyType");
-		assertNotNull(anyType);
-
-		XMLComplexType writerType = metaModel.getComplexTypeFromURI("http://www.example.org/Library#Writer");
-		assertNotNull(writerType);
-		XMLDataProperty writerBookProperty = (XMLDataProperty) writerType.getPropertyByName("Book");
-		assertNotNull(writerBookProperty);
-		assertSame(anyURIType, writerBookProperty.getType());
-		XMLDataProperty writerNameProperty = (XMLDataProperty) writerType.getPropertyByName("name");
-		assertNotNull(writerNameProperty);
-		assertSame(stringType, writerNameProperty.getType());
-
-		XMLComplexType bookType = metaModel.getComplexTypeFromURI("http://www.example.org/Library#Book");
-		assertNotNull(bookType);
-		XMLDataProperty bookAuthorProperty = (XMLDataProperty) bookType.getPropertyByName("author");
-		assertNotNull(bookAuthorProperty);
-		assertSame(anyURIType, bookAuthorProperty.getType());
-		XMLDataProperty bookCategoryProperty = (XMLDataProperty) bookType.getPropertyByName("category");
-		assertNotNull(bookCategoryProperty);
-		assertSame(categoryType, bookCategoryProperty.getType());
-		XMLDataProperty bookPagesProperty = (XMLDataProperty) bookType.getPropertyByName("pages");
-		assertNotNull(bookPagesProperty);
-		assertSame(intType, bookPagesProperty.getType());
-		XMLDataProperty bookTitleProperty = (XMLDataProperty) bookType.getPropertyByName("title");
-		assertNotNull(bookTitleProperty);
-		assertSame(stringType, bookTitleProperty.getType());
-
-		XMLComplexType libraryType = metaModel.getComplexTypeFromURI("http://www.example.org/Library#LibraryType");
-		assertNotNull(libraryType);
-		XMLDataProperty nameProperty = (XMLDataProperty) libraryType.getPropertyByName("name");
-		assertNotNull(nameProperty);
-		XMLObjectProperty writersProperty = (XMLObjectProperty) libraryType.getPropertyByName("writers");
-		assertNotNull(writersProperty);
-		assertSame(writerType, writersProperty.getType());
-		assertEquals(new ParameterizedTypeImpl(List.class, XMLIndividualType.getXMLIndividualOfType(writerType)),
-				writersProperty.getAccessedType());
-		XMLObjectProperty booksProperty = (XMLObjectProperty) libraryType.getPropertyByName("books");
-		assertNotNull(booksProperty);
-		assertSame(bookType, booksProperty.getType());
-		assertEquals(new ParameterizedTypeImpl(List.class, XMLIndividualType.getXMLIndividualOfType(bookType)),
-				booksProperty.getAccessedType());
-
-	}
-
-	/**
-	 * Test Maven XSD (http://maven.apache.org/POM/4.0.0)
-	 * 
-	 * @throws FlexoException
-	 * @throws ResourceLoadingCancelledException
-	 * @throws FileNotFoundException
-	 * 
-	 */
-	@Test
-	@TestOrder(3)
-	public void testMavenMetamodel() throws FileNotFoundException, ResourceLoadingCancelledException, FlexoException {
-
-		XSDMetaModelResource mmRes = mmRepository.getResource("http://maven.apache.org/POM/4.0.0");
+		XSDMetaModelResource mmRes = mmRepository.getResource("http://mem4csd.telecom-paris.fr/OtawaCache");
 
 		/*for (XSDMetaModelResource r : mmRepository.getAllResources()) {
 			System.out.println("> Resource: " + r.getURI());

@@ -45,6 +45,7 @@ import java.util.List;
 
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
+import org.openflexo.technologyadapter.xml.metamodel.XMLProperty.XMLSupport;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.xml.SaxBasedObjectGraphFactory;
@@ -181,7 +182,7 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory {
 			if (prop == null) {
 				if (!mm.isReadOnly() || name.equals(XMLCst.CDATA_ATTR_NAME)) {
 
-					prop = t.createProperty(name, value.getClass());
+					prop = t.createProperty(name, value.getClass(), XMLSupport.CDATA, null);
 
 					if (prop != null) {
 						((XMLIndividual) object).addPropertyValue(prop, value);

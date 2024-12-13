@@ -75,12 +75,19 @@ public interface XMLProperty extends XMLObject<XSDMetaModel>, Comparable<XMLProp
 	/**
 	 * This indicates if property was created from an XML element or attribute
 	 */
-	public static final String IS_FROM_ELEMENT = "isFromXMLElement";
+	// public static final String IS_FROM_ELEMENT = "isFromXMLElement";
 	public static final String DEFAULT_VALUE_KEY = "defaultValue";
 	public static final String FIXED_VALUE_KEY = "fixedValue";
 
 	public static final String LOWER_BOUND = "lowerBound";
 	public static final String UPPER_BOUND = "upperBound";
+
+	public static final String XML_SUPPORT_KEY = "xmlSupport";
+	public static final String XML_SUPPORT_NAME_KEY = "xmlSupportName";
+
+	public static enum XMLSupport {
+		ELEMENT, ATTRIBUTE, CDATA
+	}
 
 	@Initializer
 	public XMLProperty init(@Parameter(NAME) String s, @Parameter(TYPE) Type t, @Parameter(CONTAINER) XMLType container);
@@ -109,11 +116,26 @@ public interface XMLProperty extends XMLObject<XSDMetaModel>, Comparable<XMLProp
 	 * 
 	 * @return
 	 */
-	@Getter(value = IS_FROM_ELEMENT, defaultValue = "false")
-	public boolean isFromXMLElement();
+	@Getter(XML_SUPPORT_KEY)
+	public XMLSupport getXMLSupport();
 
-	@Setter(IS_FROM_ELEMENT)
-	public void setIsFromXMLElement(boolean fromElement);
+	@Setter(XML_SUPPORT_KEY)
+	public void setXMLSupport(XMLSupport xmlSupport);
+
+	/**
+	 * Return the name of the element or attribute used as XMLSupport<br>
+	 * <ul>
+	 * <li>If {@link XMLSupport} is ELEMENT : this is the name of the Element</li>
+	 * <li>If {@link XMLSupport} is ATTRIBUTE : this is the name of the Attribute</li>
+	 * </ul>
+	 * 
+	 * @return
+	 */
+	@Getter(XML_SUPPORT_NAME_KEY)
+	public String getXMLSupportName();
+
+	@Setter(XML_SUPPORT_NAME_KEY)
+	public void setXMLSupportName(String aName);
 
 	public boolean hasDefaultValue();
 

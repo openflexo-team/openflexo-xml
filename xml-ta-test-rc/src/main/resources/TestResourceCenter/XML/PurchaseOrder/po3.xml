@@ -1,0 +1,16 @@
+<PurchaseOrder xmlns="http://tempuri.org/PurchaseOrderSchema.xsd" OrderDate="2024-01-01">
+    <ShipTo country="US">
+        <name>Anna Bell</name>
+        <street>10 Sunset Boulevard</street>
+        <city>Miami</city>
+        <state>FL</state>
+        <zip>33101</zip>
+    </ShipTo>
+    <BillTo country="US">
+        <name>Anna Bell</name>
+        <street>10 Sunset Boulevard</street>
+        <city>Miami</city>
+        <state>FL</state>
+        <zip>33101</zip>
+    </BillTo>
+</PurchaseOrder>

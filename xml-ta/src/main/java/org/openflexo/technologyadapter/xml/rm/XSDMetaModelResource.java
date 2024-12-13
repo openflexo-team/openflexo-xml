@@ -55,6 +55,7 @@ import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLEnumerationType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
+import org.openflexo.technologyadapter.xml.metamodel.XMLProperty.XMLSupport;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModelFactory;
@@ -65,6 +66,7 @@ import com.sun.xml.xsom.XSAttributeDecl;
 import com.sun.xml.xsom.XSComplexType;
 import com.sun.xml.xsom.XSElementDecl;
 import com.sun.xml.xsom.XSFacet;
+import com.sun.xml.xsom.XSModelGroup;
 import com.sun.xml.xsom.XSParticle;
 import com.sun.xml.xsom.XSRestrictionSimpleType;
 import com.sun.xml.xsom.XSSchemaSet;
@@ -131,7 +133,42 @@ public interface XSDMetaModelResource
 				}
 
 				for (XSElementDecl element : fetcher.getElementDecls()) {
-					if (element.getType().isSimpleType()) {
+
+					if (element.getType().isComplexType()) {
+						// XMLType xsType = resourceData.createNewType(fetcher.getUri(element), element.getName(), false);
+						/*XMLType xsType = getFactory().makeComplexType(fetcher.getUri(element), element.getName(), resourceData);
+						XSType type = element.getType();
+						if (type != null) {
+							XMLType superType = resourceData.getTypeFromURI(fetcher.getUri(type));
+							if (superType != null)
+								xsType.setSuperType(superType);
+						}*/
+
+						/*System.out.println("Hey ??? faudrait pas creer le type " + element.getName() + " " + element.getType() + " ???");
+						System.out.println("name=" + element.getName());
+						System.out.println("uri=" + fetcher.getUri(element));*/
+
+						// We browse all the element
+						// If we find anonymous types, we use the element as the base of a XMLComplexType
+						if (!element.getType().isGlobal()) {
+
+							System.out.println("Found " + element.getType() + " of " + element.getType().getClass());
+
+							XMLComplexType returned = getFactory().makeComplexType(fetcher.getUri(element), element.getName(),
+									resourceData);
+							XSType basetype = element.getType().getBaseType();
+							XMLType superType = ensureTypeExists(basetype);
+							if (superType != null && superType != returned) {
+								returned.setSuperType(superType);
+								superType.setIsAbstract(true); // TODO : should we really do this ???
+							}
+						}
+						// return returned;
+
+						// ensureTypeExists(element.getType());
+
+					}
+					else if (element.getType().isSimpleType()) {
 						ensureTypeExists(element.getType());
 					}
 				}
@@ -155,8 +192,8 @@ public interface XSDMetaModelResource
 			String uri = fetcher.getUri(type);
 			if (type.isComplexType()) {
 				XMLType returned = getFactory().makeComplexType(uri, type.getName(), resourceData);
-				XSType btype = type.getBaseType();
-				XMLType superType = ensureTypeExists(btype);
+				XSType basetype = type.getBaseType();
+				XMLType superType = ensureTypeExists(basetype);
 				if (superType != null && superType != returned) {
 					returned.setSuperType(superType);
 					superType.setIsAbstract(true); // TODO : should we really do this ???
@@ -187,6 +224,164 @@ public interface XSDMetaModelResource
 			return null;
 		}
 
+		private XMLProperty _createProperty(String name, XMLType type, XMLComplexType owner, XMLSupport xmlSupport, String xmlSupportName) {
+			/*String uriType = fetcher.getUri(type);
+			XMLType xmlType = resourceData.getTypeFromURI(uriType);
+			if (xmlType == null) {
+				System.out.println("Zut, je ne trouve pas le type " + uriType + " pour " + name + " owner=" + owner + " type=" + type);
+				System.out.println("Property : " + name + " de " + owner);
+				Thread.dumpStack();
+				System.exit(-1);
+			}*/
+			return owner.createProperty(name, type /*resourceData.getTypeFromURI(fetcher.getUri(type))*/, xmlSupport, xmlSupportName);
+		}
+
+		private XMLProperty createProperty(XSElementDecl element, XSType type, XMLComplexType owner) {
+			XSType elementType = element.getType();
+			String propertyName = JavaUtils.getVariableName(element.getName());
+
+			XMLType propertyType;
+
+			/*if (propertyName.equals("dcache")) {
+				System.out.println("C'est la que c'est chiant");
+				System.out.println("elementType=" + elementType + " uri=" + fetcher.getUri(elementType));
+				System.out.println("element=" + element + " uri=" + fetcher.getUri(element));
+			}*/
+
+			if (!elementType.isGlobal()) {
+				propertyType = resourceData.getTypeFromURI(fetcher.getUri(element));
+			}
+			else {
+				propertyType = resourceData.getTypeFromURI(fetcher.getUri(elementType));
+			}
+
+			if (elementType.isComplexType()) {
+				XSParticle particle = fetcher.getParticle(element);
+				if (particle != null && particle.isRepeated()) {
+					propertyName = propertyName + "s";
+				}
+
+				System.out.println("Pour la propriete " + propertyName + " de " + owner + " propertyType=" + propertyType);
+
+				XMLProperty newProperty = _createProperty(propertyName, propertyType, owner, XMLSupport.ELEMENT, element.getName());
+				if (particle != null) {
+					if (particle.getMinOccurs() != null)
+						newProperty.setLowerBound(particle.getMinOccurs().intValue());
+					if (particle.getMaxOccurs() != null)
+						newProperty.setUpperBound(particle.getMaxOccurs().intValue());
+					// System.out.println("" + particle + " " + particle.getTerm() + " of " + particle.getTerm().getClass()
+					// + " minOccurs=" + particle.getMinOccurs() + " maxOccurs=" + particle.getMaxOccurs());
+				}
+				return newProperty;
+
+			}
+			else {
+				return _createProperty(propertyName, propertyType, owner, XMLSupport.ELEMENT, element.getName());
+			}
+
+		}
+
+		private void loadProperties() {
+
+			// We first iterate on all element declarations
+			for (XSElementDecl element : fetcher.getElementDecls()) {
+				XSType elementType = element.getType();
+				String uri = fetcher.getUri(element);
+				String ownerUri = fetcher.getOwnerURI(uri);
+				if (ownerUri != null) {
+					XMLType owner = resourceData.getTypeFromURI(ownerUri);
+					if (owner instanceof XMLComplexType) {
+						createProperty(element, elementType, (XMLComplexType) owner);
+						/*if (elementType.isComplexType()) {
+							String propertyName = JavaUtils.getVariableName(element.getName());
+							XSParticle particle = fetcher.getParticle(element);
+							if (particle != null && particle.isRepeated()) {
+								propertyName = propertyName + "s";
+							}
+							XMLProperty newProperty = createProperty(propertyName, elementType, (XMLComplexType) owner);
+							if (particle != null) {
+								if (particle.getMinOccurs() != null)
+									newProperty.setLowerBound(particle.getMinOccurs().intValue());
+								if (particle.getMaxOccurs() != null)
+									newProperty.setUpperBound(particle.getMaxOccurs().intValue());
+								// System.out.println("" + particle + " " + particle.getTerm() + " of " + particle.getTerm().getClass()
+								// + " minOccurs=" + particle.getMinOccurs() + " maxOccurs=" + particle.getMaxOccurs());
+							}
+						
+						}
+						else {
+							createProperty(element.getName(), elementType, (XMLComplexType) owner);
+						}*/
+					}
+				}
+				else {
+					XMLType owner = resourceData.getTypeFromURI(uri);
+					if (owner instanceof XMLComplexType) {
+						if (elementType.isComplexType()) {
+							XSComplexType xsType = (XSComplexType) elementType;
+							XSParticle particle = xsType.getContentType().asParticle();
+							if (particle != null) {
+								if (particle.getTerm().isModelGroup()) {
+									XSModelGroup mg = particle.getTerm().asModelGroup();
+									for (XSParticle childParticle : mg.getChildren()) {
+										if (childParticle.getTerm() != null && childParticle.getTerm().isElementDecl()) {
+											System.out.println("Hop dans " + element + " y'a " + childParticle.getTerm().asElementDecl());
+											XSElementDecl childElement = childParticle.getTerm().asElementDecl();
+											System.out.println("child : " + childElement + " type=" + childElement.getType());
+											System.out.println("uri=" + uri);
+											XMLType leType = resourceData.getTypeFromURI(fetcher.getUri(element));
+											System.out.println("leType=" + leType);
+											createProperty(childElement, elementType, (XMLComplexType) leType);
+
+										}
+									}
+								}
+							}
+						}
+
+					}
+				}
+			}
+
+			// Attributes defined on a complexType
+			for (XSAttributeDecl attribute : fetcher.getAttributeDecls()) {
+				String uri = fetcher.getUri(attribute);
+
+				String ownerUri = fetcher.getOwnerURI(uri);
+
+				if (ownerUri != null) {
+					XMLType owner = resourceData.getTypeFromURI(ownerUri);
+					if (owner != null && owner instanceof XMLComplexType) {
+						XMLType type;
+						if (attribute.getType() instanceof XSRestrictionSimpleType) {
+							XSRestrictionSimpleType rType = (XSRestrictionSimpleType) attribute.getType();
+							type = resourceData.getTypeFromURI("xs:" + rType.getName());
+							if (type == null) {
+								System.out.println("Zut alors, je trouve pas " + "xs:" + rType.getName());
+								for (XMLType xmlType : resourceData.getTypes()) {
+									System.out.println("> " + xmlType.getURI());
+								}
+							}
+						}
+						else {
+							type = resourceData.getTypeFromURI(XSDMetaModel.ANY_TYPE_URI);
+						}
+
+						// TODO: better manage types
+						((XMLComplexType) owner).createProperty(attribute.getName(), type, XMLSupport.ATTRIBUTE, attribute.getName());
+					}
+					else {
+						logger.warning("unable to find an owner type for attribute: " + uri);
+					}
+				}
+				else {
+					logger.warning("unable to find an owner for : " + uri);
+				}
+			}
+
+		}
+
+		@Deprecated
 		private void loadDataProperties() {
 
 			for (XSElementDecl element : fetcher.getElementDecls()) {
@@ -198,7 +393,7 @@ public interface XSDMetaModelResource
 						XMLType owner = resourceData.getTypeFromURI(ownerUri);
 						if (owner != null && owner instanceof XMLComplexType) {
 							((XMLComplexType) owner).createProperty(element.getName(),
-									resourceData.getTypeFromURI(fetcher.getUri(elementType)));
+									resourceData.getTypeFromURI(fetcher.getUri(elementType)), XMLSupport.ELEMENT, element.getName());
 						}
 						else {
 
@@ -218,10 +413,20 @@ public interface XSDMetaModelResource
 						}
 					}
 					else {
-						logger.warning("unable to find an owner for : " + uri);
+						logger.warning("Tiens ici, unable to find an owner for : " + uri);
+						logger.warning("ownerUri=" + ownerUri);
 					}
 
 				}
+
+				/*System.out.println("Et sinon: " + getFetcher().getParticle(element) + " pour " + element);
+				XSParticle particle = getFetcher().getParticle(element);
+				if (particle != null && particle.getTerm() != null) {
+					if (particle.getTerm().isElementDecl()) {
+						XSElementDecl referencedElement = particle.getTerm().asElementDecl();
+						System.out.println("On dirait que " + element + " reference " + referencedElement);
+					}
+				}*/
 			}
 
 			// Attributes defined on a complexType
@@ -242,7 +447,7 @@ public interface XSDMetaModelResource
 							type = resourceData.getTypeFromURI(XSDMetaModel.ANY_TYPE_URI);
 						}
 						// TODO: better manage types
-						((XMLComplexType) owner).createProperty(attribute.getName(), type);
+						((XMLComplexType) owner).createProperty(attribute.getName(), type, XMLSupport.ATTRIBUTE, attribute.getName());
 					}
 					else {
 						logger.warning("unable to find an owner type for attribute: " + uri);
@@ -254,13 +459,20 @@ public interface XSDMetaModelResource
 			}
 		}
 
+		@Deprecated
 		private void loadObjectProperties() {
 
 			for (XSElementDecl element : fetcher.getElementDecls()) {
 
+				/*System.out.println("> " + element.getName());
+				if (element.getName().equals("block_bits")) {
+					System.err.println("Bon ok, je le chope");
+				}*/
+
 				XSType elementType = element.getType();
 
 				if (elementType.isComplexType()) {
+
 					String uri = fetcher.getUri(element);
 					XMLType t = resourceData.getTypeFromURI(fetcher.getUri(elementType));
 					String name = element.getName();
@@ -271,6 +483,82 @@ public interface XSDMetaModelResource
 						XMLType owner = resourceData.getTypeFromURI(ownerUri);
 						if (owner != null && owner instanceof XMLComplexType) {
 
+							String propertyName = JavaUtils.getVariableName(name);
+							XSParticle particle = fetcher.getParticle(element);
+							if (particle != null && particle.isRepeated()) {
+								propertyName = propertyName + "s";
+							}
+							XMLProperty newProperty = ((XMLComplexType) owner).createProperty(propertyName, t, XMLSupport.ELEMENT,
+									element.getName());
+							if (particle != null) {
+								if (particle.getMinOccurs() != null)
+									newProperty.setLowerBound(particle.getMinOccurs().intValue());
+								if (particle.getMaxOccurs() != null)
+									newProperty.setUpperBound(particle.getMaxOccurs().intValue());
+								// System.out.println("" + particle + " " + particle.getTerm() + " of " + particle.getTerm().getClass()
+								// + " minOccurs=" + particle.getMinOccurs() + " maxOccurs=" + particle.getMaxOccurs());
+							}
+						}
+						else {
+							logger.warning("unable to find an owner type for attribute: " + uri);
+						}
+					}
+				}
+			}
+
+		}
+
+		@Deprecated
+		private void loadReferenceProperties() {
+
+			for (XSElementDecl element : fetcher.getElementDecls()) {
+
+				/*System.out.println("> " + element.getName());
+				if (element.getName().equals("block_bits")) {
+					System.err.println("Bon ok, je le chope");
+				}*/
+
+				XSType elementType = element.getType();
+
+				if (elementType.isComplexType()) {
+
+					String uri = fetcher.getUri(element);
+					XMLType t = resourceData.getTypeFromURI(fetcher.getUri(elementType));
+					String name = element.getName();
+
+					String ownerUri = fetcher.getOwnerURI(uri);
+
+					if (ownerUri == null) {
+
+						System.out.println("Pour " + element + " on trouve le type " + elementType + " of " + elementType.getClass());
+						System.out.println("ownerUri=" + ownerUri);
+
+						XSComplexType xsType = (XSComplexType) elementType;
+						XSParticle particle2 = xsType.getContentType().asParticle();
+						if (particle2 != null) {
+							System.out.println("particle=" + particle2);
+							System.out.println("term=" + particle2.getTerm());
+							if (particle2.getTerm().isModelGroup()) {
+								XSModelGroup mg = particle2.getTerm().asModelGroup();
+								for (XSParticle childParticle : mg.getChildren()) {
+									if (childParticle.getTerm() != null && childParticle.getTerm().isElementDecl()) {
+										System.out.println("Hop dans " + element + " y'a " + childParticle.getTerm().asElementDecl());
+										XSElementDecl childElement = childParticle.getTerm().asElementDecl();
+										System.out.println("child : " + childElement + " type=" + childElement.getType());
+										System.out.println("uri=" + uri);
+										XMLType leType = resourceData.getTypeFromURI(fetcher.getUri(element));
+										System.out.println("leType=" + leType);
+
+									}
+								}
+							}
+						}
+					}
+
+					/*if (ownerUri != null) {
+						XMLType owner = resourceData.getTypeFromURI(ownerUri);
+						if (owner != null && owner instanceof XMLComplexType) {
+					
 							String propertyName = JavaUtils.getVariableName(name);
 							XSParticle particle = fetcher.getParticle(element);
 							if (particle != null && particle.isRepeated()) {
@@ -289,7 +577,7 @@ public interface XSDMetaModelResource
 						else {
 							logger.warning("unable to find an owner type for attribute: " + uri);
 						}
-					}
+					}*/
 				}
 			}
 
@@ -310,8 +598,10 @@ public interface XSDMetaModelResource
 				fetcher = new XSDeclarationsFetcher();
 				fetcher.fetch(schemaSet);
 				loadTypes();
-				loadDataProperties();
+				/*loadDataProperties();
 				loadObjectProperties();
+				loadReferenceProperties();*/
+				loadProperties();
 				// isLoaded = true;
 			}
 			else {

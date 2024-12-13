@@ -49,6 +49,7 @@ import org.openflexo.pamela.exceptions.ModelDefinitionException;
 import org.openflexo.pamela.factory.PamelaModelFactory;
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
+import org.openflexo.technologyadapter.xml.metamodel.XMLProperty.XMLSupport;
 import org.openflexo.technologyadapter.xml.metamodel.XMLSimpleType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
@@ -107,10 +108,10 @@ public class TestXMLModel extends OpenflexoTestCase {
 		XMLSimpleType ts = metamodel.getModelFactory().makeSimpleType(XSDMetaModel.STRING_URI, "BASIC_STRING", metamodel);
 
 		XMLComplexType t = metamodel.getModelFactory().makeComplexType("http://www.openflexo.org/aTestModel#Fleumeu", "Fleumeu", metamodel);
-		t.createProperty("TOTO", ts);
+		t.createProperty("TOTO", ts, XMLSupport.ELEMENT, "TOTO");
 
 		t = metamodel.getModelFactory().makeComplexType("http://www.openflexo.org/aTestModel#Flouk", "Flouk", metamodel);
-		t.createProperty("TOTO", ts);
+		t.createProperty("TOTO", ts, XMLSupport.ELEMENT, "TOTO");
 
 		XMLIndividual xmind = model
 				.addNewIndividual((XMLComplexType) metamodel.getTypeFromURI("http://www.openflexo.org/aTestModel#Fleumeu"));
