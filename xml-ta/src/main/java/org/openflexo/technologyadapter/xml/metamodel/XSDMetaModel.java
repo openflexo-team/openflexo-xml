@@ -82,6 +82,8 @@ public interface XSDMetaModel extends AbstractXMLDocument<XSDMetaModel>, FlexoMe
 	public static String TYPES = "types";
 	public static String READ_ONLY = "readOnly";
 
+	public static String XML_SCHEMA_URI = "http://www.w3.org/2001/XMLSchema";
+
 	// static simple Types URI
 	public static String ANY_TYPE_URI = "xs:anyType";
 	public static String STRING_URI = "xs:string";

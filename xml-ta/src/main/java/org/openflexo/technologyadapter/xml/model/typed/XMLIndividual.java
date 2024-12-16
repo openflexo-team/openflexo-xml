@@ -307,7 +307,9 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 				XSDMetaModel mm = getContainerModel().getMetaModel();
 				if (!mm.isReadOnly()) {
 					// TODO Manage complex types and actual types for objects.
-					prop = this.getType().createProperty(name, mm.getTypeFromURI(XSDMetaModel.STRING_URI), XMLSupport.ELEMENT, name);
+					prop = mm.getModelFactory().makeProperty(name, mm.getTypeFromURI(XSDMetaModel.STRING_URI), XMLSupport.ELEMENT, name,
+							getType());
+
 				}
 				else {
 					logger.warning("CANNOT give a value  for a non existant attribute :" + name);

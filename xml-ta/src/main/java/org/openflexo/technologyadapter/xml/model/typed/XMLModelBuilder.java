@@ -45,11 +45,9 @@ import java.util.List;
 
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
-import org.openflexo.technologyadapter.xml.metamodel.XMLProperty.XMLSupport;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.xml.SaxBasedObjectGraphFactory;
-import org.openflexo.xml.XMLCst;
 import org.openflexo.xml.XMLReaderSAXHandler;
 import org.xml.sax.SAXException;
 
@@ -180,10 +178,10 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory {
 			XSDMetaModel mm = model.getMetaModel();
 
 			if (prop == null) {
-				if (!mm.isReadOnly() || name.equals(XMLCst.CDATA_ATTR_NAME)) {
-
-					prop = t.createProperty(name, value.getClass(), XMLSupport.CDATA, null);
-
+				/*if (!mm.isReadOnly() || name.equals(XMLCst.CDATA_ATTR_NAME)) {
+				
+					prop = mm.getModelFactory().makeProperty(name, value.getClass(), XMLSupport.CDATA, null, t);
+				
 					if (prop != null) {
 						((XMLIndividual) object).addPropertyValue(prop, value);
 					}
@@ -194,7 +192,8 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory {
 				else {
 					LOGGER.warning(
 							"TRYING to give a value to a non existant property: " + name + " -- " + name.equals(XMLCst.CDATA_ATTR_NAME));
-				}
+				}*/
+				LOGGER.warning("Please implement this"); // When still required ??? not sure (sylvain)
 			}
 			else {
 				((XMLIndividual) object).addPropertyValue(prop, value);

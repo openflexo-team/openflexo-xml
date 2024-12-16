@@ -47,11 +47,17 @@ import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.technologyadapter.xml.XMLIndividualType;
 import org.openflexo.toolbox.StringUtils;
 
+/**
+ * An {@link XMLProperty} with a complex type {@link XMLComplexType}
+ * 
+ * @author sylvain, xtof
+ *
+ */
 @ModelEntity
 @ImplementationClass(XMLObjectProperty.XMLObjectPropertyImpl.class)
-public interface XMLObjectProperty extends XMLProperty {
+public interface XMLObjectProperty extends XMLProperty<XMLComplexType> {
 
-	public static abstract class XMLObjectPropertyImpl extends XMLPropertyImpl implements XMLObjectProperty {
+	public static abstract class XMLObjectPropertyImpl extends XMLPropertyImpl<XMLComplexType> implements XMLObjectProperty {
 
 		@Override
 		public boolean hasDefaultValue() {
@@ -80,7 +86,7 @@ public interface XMLObjectProperty extends XMLProperty {
 
 		@Override
 		public String getDisplayableDescription() {
-			StringBuffer buffer = new StringBuffer("InnerElement ");
+			StringBuffer buffer = new StringBuffer("XMLObjectProperty ");
 			buffer.append(" (").append(getType().getName()).append(") is ");
 			if (isRequired()) {
 				buffer.append(" required");

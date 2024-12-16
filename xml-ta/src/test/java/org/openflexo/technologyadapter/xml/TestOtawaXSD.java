@@ -41,6 +41,7 @@ package org.openflexo.technologyadapter.xml;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.io.FileNotFoundException;
@@ -53,6 +54,11 @@ import org.openflexo.foundation.FlexoException;
 import org.openflexo.foundation.resource.FlexoResourceCenter;
 import org.openflexo.foundation.resource.ResourceLoadingCancelledException;
 import org.openflexo.foundation.test.OpenflexoTestCase;
+import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
+import org.openflexo.technologyadapter.xml.metamodel.XMLDataProperty;
+import org.openflexo.technologyadapter.xml.metamodel.XMLObjectProperty;
+import org.openflexo.technologyadapter.xml.metamodel.XMLProperty.XMLSupport;
+import org.openflexo.technologyadapter.xml.metamodel.XMLSimpleType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.rm.TypedXMLResource;
 import org.openflexo.technologyadapter.xml.rm.XMLModelRepository;
@@ -61,6 +67,9 @@ import org.openflexo.technologyadapter.xml.rm.XSDMetaModelResource;
 import org.openflexo.test.OrderedRunner;
 import org.openflexo.test.TestOrder;
 
+/**
+ * Perform some tests in the context of {@link XSDMetaModel} management (XSD files)
+ */
 @RunWith(OrderedRunner.class)
 public class TestOtawaXSD extends OpenflexoTestCase {
 
@@ -139,7 +148,72 @@ public class TestOtawaXSD extends OpenflexoTestCase {
 
 		Helpers.dumpTypes(metaModel);
 
-		assertEquals(39, metaModel.getTypes().size());
+		assertEquals(5, metaModel.getTypes().size());
+
+		XMLSimpleType byteType = metaModel.getSimpleTypeFromURI("http://www.w3.org/2001/XMLSchema#byte");
+		assertNotNull(byteType);
+
+		XMLComplexType anyType = metaModel.getComplexTypeFromURI("http://www.w3.org/2001/XMLSchema#anyType");
+		assertNotNull(anyType);
+
+		XMLComplexType iCacheType = metaModel.getComplexTypeFromURI("http://mem4csd.telecom-paris.fr/OtawaCache#icache");
+		assertNotNull(iCacheType);
+		XMLDataProperty blockBitsProperty = (XMLDataProperty) iCacheType.getPropertyByName("blockBits");
+		assertNotNull(blockBitsProperty);
+		assertEquals(XMLSupport.ELEMENT, blockBitsProperty.getXMLSupport());
+		assertEquals("block_bits", blockBitsProperty.getXMLSupportName());
+		assertSame(byteType, blockBitsProperty.getType());
+		XMLDataProperty missPenaltyProperty = (XMLDataProperty) iCacheType.getPropertyByName("missPenalty");
+		assertNotNull(missPenaltyProperty);
+		assertEquals(XMLSupport.ELEMENT, missPenaltyProperty.getXMLSupport());
+		assertEquals("miss_penalty", missPenaltyProperty.getXMLSupportName());
+		assertSame(byteType, missPenaltyProperty.getType());
+		XMLDataProperty rowBitsProperty = (XMLDataProperty) iCacheType.getPropertyByName("rowBits");
+		assertNotNull(rowBitsProperty);
+		assertEquals(XMLSupport.ELEMENT, rowBitsProperty.getXMLSupport());
+		assertEquals("row_bits", rowBitsProperty.getXMLSupportName());
+		assertSame(byteType, rowBitsProperty.getType());
+		XMLDataProperty wayBitsProperty = (XMLDataProperty) iCacheType.getPropertyByName("wayBits");
+		assertNotNull(wayBitsProperty);
+		assertEquals(XMLSupport.ELEMENT, wayBitsProperty.getXMLSupport());
+		assertEquals("way_bits", wayBitsProperty.getXMLSupportName());
+		assertSame(byteType, wayBitsProperty.getType());
+
+		XMLComplexType dCacheType = metaModel.getComplexTypeFromURI("http://mem4csd.telecom-paris.fr/OtawaCache#dcache");
+		assertNotNull(dCacheType);
+		blockBitsProperty = (XMLDataProperty) dCacheType.getPropertyByName("blockBits");
+		assertNotNull(blockBitsProperty);
+		assertEquals(XMLSupport.ELEMENT, blockBitsProperty.getXMLSupport());
+		assertEquals("block_bits", blockBitsProperty.getXMLSupportName());
+		assertSame(byteType, blockBitsProperty.getType());
+		missPenaltyProperty = (XMLDataProperty) dCacheType.getPropertyByName("missPenalty");
+		assertNotNull(missPenaltyProperty);
+		assertEquals(XMLSupport.ELEMENT, missPenaltyProperty.getXMLSupport());
+		assertEquals("miss_penalty", missPenaltyProperty.getXMLSupportName());
+		assertSame(byteType, missPenaltyProperty.getType());
+		rowBitsProperty = (XMLDataProperty) dCacheType.getPropertyByName("rowBits");
+		assertNotNull(rowBitsProperty);
+		assertEquals(XMLSupport.ELEMENT, rowBitsProperty.getXMLSupport());
+		assertEquals("row_bits", rowBitsProperty.getXMLSupportName());
+		assertSame(byteType, rowBitsProperty.getType());
+		wayBitsProperty = (XMLDataProperty) dCacheType.getPropertyByName("wayBits");
+		assertNotNull(wayBitsProperty);
+		assertEquals(XMLSupport.ELEMENT, wayBitsProperty.getXMLSupport());
+		assertEquals("way_bits", wayBitsProperty.getXMLSupportName());
+		assertSame(byteType, wayBitsProperty.getType());
+
+		XMLComplexType cacheConfigType = metaModel.getComplexTypeFromURI("http://mem4csd.telecom-paris.fr/OtawaCache#cache-config");
+		assertNotNull(cacheConfigType);
+		XMLObjectProperty dcacheProperty = (XMLObjectProperty) cacheConfigType.getPropertyByName("dcache");
+		assertNotNull(dcacheProperty);
+		assertEquals(XMLSupport.ELEMENT, dcacheProperty.getXMLSupport());
+		assertEquals("dcache", dcacheProperty.getXMLSupportName());
+		assertSame(dCacheType, dcacheProperty.getType());
+		XMLObjectProperty iCacheProperty = (XMLObjectProperty) cacheConfigType.getPropertyByName("icache");
+		assertNotNull(iCacheProperty);
+		assertEquals(XMLSupport.ELEMENT, iCacheProperty.getXMLSupport());
+		assertEquals("icache", iCacheProperty.getXMLSupportName());
+		assertSame(iCacheType, iCacheProperty.getType());
 
 	}
 

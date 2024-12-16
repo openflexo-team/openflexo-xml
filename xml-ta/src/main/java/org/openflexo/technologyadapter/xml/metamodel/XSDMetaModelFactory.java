@@ -44,6 +44,7 @@ import org.openflexo.pamela.PamelaMetaModelLibrary;
 import org.openflexo.pamela.exceptions.ModelDefinitionException;
 import org.openflexo.pamela.factory.EditingContext;
 import org.openflexo.pamela.factory.PamelaModelFactory;
+import org.openflexo.technologyadapter.xml.metamodel.XMLProperty.XMLSupport;
 import org.openflexo.technologyadapter.xml.model.AbstractXMLDocumentFactory;
 import org.openflexo.technologyadapter.xml.model.free.FreeXMLDocument;
 import org.openflexo.technologyadapter.xml.rm.FreeXMLResource;
@@ -71,7 +72,7 @@ public class XSDMetaModelFactory extends AbstractXMLDocumentFactory<XSDMetaModel
 	}
 
 	public XMLComplexType makeComplexType(String uri, String localName, XSDMetaModel metaModel) {
-		System.out.println("On cree un XMLComplexType " + localName + " " + uri);
+		// System.out.println("Creating a XMLComplexType " + localName + " " + uri);
 		XMLComplexType returned = newInstance(XMLComplexType.class);
 		returned.setIsAbstract(false);
 		returned.setURI(uri);
@@ -81,7 +82,7 @@ public class XSDMetaModelFactory extends AbstractXMLDocumentFactory<XSDMetaModel
 	}
 
 	public XMLSimpleType makeSimpleType(String uri, String localName, XSDMetaModel metaModel) {
-		System.out.println("On cree un XMLSimpleType " + localName + " " + uri);
+		// System.out.println("Creating a XMLSimpleType " + localName + " " + uri);
 		XMLSimpleType returned = newInstance(XMLSimpleType.class);
 		returned.setIsAbstract(false);
 		returned.setURI(uri);
@@ -91,7 +92,7 @@ public class XSDMetaModelFactory extends AbstractXMLDocumentFactory<XSDMetaModel
 	}
 
 	public XMLEnumerationType makeEnumerationType(String uri, String localName, XSDMetaModel metaModel) {
-		System.out.println("On cree un XMLEnumerationType " + localName + " " + uri);
+		// System.out.println("Creating a XMLEnumerationType " + localName + " " + uri);
 		XMLEnumerationType returned = newInstance(XMLEnumerationType.class);
 		returned.setIsAbstract(false);
 		returned.setURI(uri);
@@ -107,24 +108,76 @@ public class XSDMetaModelFactory extends AbstractXMLDocumentFactory<XSDMetaModel
 		return returned;
 	}
 
-	/*@Override
-	public XMLType createNewType(String uri, String localName, boolean simpleType) {
+	/*public XMLProperty createProperty(String name, Type aType, XMLSupport xmlSupport, String xmlSupportName) {
+		XMLProperty prop = null;
 	
-		XMLType aType = null;
-		if (simpleType) {
-			System.out.println("On cree un XMLSimpleType pour " + uri);
-			aType = getModelFactory().newInstance(XMLSimpleType.class, this);
+		if (!hasProperty(name)) {
+			if (aType != null) {
+				if (aType instanceof XMLComplexType) {
+	
+					prop = getModelFactory().newInstance(XMLObjectProperty.class, name, aType, this);
+					prop.setXMLSupport(XMLSupport.ELEMENT);
+					prop.setXMLSupportName(xmlSupportName);
+				}
+				else if (aType instanceof XMLSimpleType) {
+					prop = getModelFactory().newInstance(XMLDataProperty.class, name, aType, this);
+					prop.setXMLSupport(xmlSupport);
+					prop.setXMLSupportName(xmlSupportName);
+				}
+				else if (aType.equals(String.class)) {
+					prop = getModelFactory().newInstance(XMLDataProperty.class, name, aType, this);
+					prop.setXMLSupport(xmlSupport);
+					prop.setXMLSupportName(xmlSupportName);
+				}
+				else {
+					logger.warning("UNABLE to create a new property named [" + name + "] as it does not map to any known type: "
+							+ aType.toString());
+				}
+			}
+			else {
+				logger.warning("UNABLE to create a new property named [" + name + "]  with a NULL type ");
+			}
+			if (prop != null)
+				addProperty(prop);
 		}
-		else {
-			aType = getModelFactory().newInstance(XMLComplexType.class, this);
-		}
-		aType.setIsAbstract(false);
-		aType.setURI(uri);
-		aType.setName(localName);
-	
-		addType(aType);
-	
-		return aType;
+		return prop;
 	}*/
+
+	public <T extends XMLType> XMLProperty<T> makeProperty(String name, T aType, XMLSupport xmlSupport, String xmlSupportName,
+			XMLComplexType container) {
+
+		if (aType instanceof XMLComplexType) {
+			return (XMLProperty<T>) makeObjectProperty(name, (XMLComplexType) aType, xmlSupportName, container);
+		}
+		else if (aType instanceof XMLSimpleType) {
+			return (XMLProperty<T>) makeDataProperty(name, (XMLSimpleType) aType, xmlSupport, xmlSupportName, container);
+		}
+		/*else if (aType.equals(String.class)) {
+			prop = getModelFactory().newInstance(XMLDataProperty.class, name, aType, this);
+			prop.setXMLSupport(xmlSupport);
+			prop.setXMLSupportName(xmlSupportName);
+		}*/
+		else {
+			logger.warning("UNABLE to create a new property named [" + name + "]  with this type: " + aType);
+			return null;
+		}
+	}
+
+	public XMLObjectProperty makeObjectProperty(String name, XMLComplexType aType, String elementName, XMLComplexType container) {
+		XMLObjectProperty returned = newInstance(XMLObjectProperty.class, name, aType);
+		container.addToProperties(returned);
+		returned.setXMLSupport(XMLSupport.ELEMENT);
+		returned.setXMLSupportName(elementName);
+		return returned;
+	}
+
+	public XMLDataProperty makeDataProperty(String name, XMLSimpleType aType, XMLSupport xmlSupport, String xmlSupportName,
+			XMLComplexType container) {
+		XMLDataProperty returned = newInstance(XMLDataProperty.class, name, aType);
+		container.addToProperties(returned);
+		returned.setXMLSupport(xmlSupport);
+		returned.setXMLSupportName(xmlSupportName);
+		return returned;
+	}
 
 }

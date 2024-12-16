@@ -38,7 +38,6 @@
 
 package org.openflexo.technologyadapter.xml.metamodel;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -54,8 +53,6 @@ import org.openflexo.pamela.annotations.Getter.Cardinality;
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.Remover;
-import org.openflexo.technologyadapter.xml.metamodel.XMLProperty.XMLSupport;
-import org.openflexo.xml.XMLCst;
 
 @ModelEntity
 @ImplementationClass(XMLComplexType.XMLComplexTypeImpl.class)
@@ -63,9 +60,15 @@ public interface XMLComplexType extends XMLType {
 
 	final String PROPERTIES = "properties";
 
-	@Getter(value = PROPERTIES, cardinality = Cardinality.LIST)
+	@Getter(value = PROPERTIES, cardinality = Cardinality.LIST, inverse = XMLProperty.CONTAINER_KEY)
 	@Embedded
 	public List<? extends XMLProperty> getProperties();
+
+	@Adder(PROPERTIES)
+	public void addToProperties(XMLProperty aProperty);
+
+	@Remover(PROPERTIES)
+	public void removeFromProperties(XMLProperty aProperty);
 
 	@Finder(attribute = XMLProperty.URI, collection = PROPERTIES, isMultiValued = true)
 	public XMLProperty getPropertyByURI(String name);
@@ -73,15 +76,10 @@ public interface XMLComplexType extends XMLType {
 	@Finder(attribute = XMLProperty.NAME, collection = PROPERTIES, isMultiValued = true)
 	public XMLProperty getPropertyByName(String name);
 
-	public XMLProperty createProperty(String name, Type t, XMLSupport xmlSupport, String xmlSupportName);
+	// @Deprecated
+	// public XMLProperty createProperty(String name, Type t, XMLSupport xmlSupport, String xmlSupportName);
 
 	public Boolean hasProperty(String name);
-
-	@Adder(PROPERTIES)
-	public void addProperty(XMLProperty anAttribute);
-
-	@Remover(PROPERTIES)
-	public void removeProperty(XMLProperty anAttribute);
 
 	public static abstract class XMLComplexTypeImpl extends XMLTypeImpl implements XMLComplexType {
 
@@ -118,27 +116,31 @@ public interface XMLComplexType extends XMLType {
 			}
 		}
 
+		/*@Deprecated
 		@Override
 		public XMLProperty createProperty(String name, Type aType, XMLSupport xmlSupport, String xmlSupportName) {
 			XMLProperty prop = null;
-
+		
 			if (!hasProperty(name)) {
 				if (aType != null) {
 					if (aType instanceof XMLComplexType) {
-
-						prop = getModelFactory().newInstance(XMLObjectProperty.class, name, aType, this);
+		
+						prop = getModelFactory().newInstance(XMLObjectProperty.class, name, aType);
 						prop.setXMLSupport(XMLSupport.ELEMENT);
 						prop.setXMLSupportName(xmlSupportName);
+						addToProperties(prop);
 					}
 					else if (aType instanceof XMLSimpleType) {
-						prop = getModelFactory().newInstance(XMLDataProperty.class, name, aType, this);
+						prop = getModelFactory().newInstance(XMLDataProperty.class, name, aType);
 						prop.setXMLSupport(xmlSupport);
 						prop.setXMLSupportName(xmlSupportName);
+						addToProperties(prop);
 					}
 					else if (aType.equals(String.class)) {
-						prop = getModelFactory().newInstance(XMLDataProperty.class, name, aType, this);
+						prop = getModelFactory().newInstance(XMLDataProperty.class, name, aType);
 						prop.setXMLSupport(xmlSupport);
 						prop.setXMLSupportName(xmlSupportName);
+						addToProperties(prop);
 					}
 					else {
 						logger.warning("UNABLE to create a new property named [" + name + "] as it does not map to any known type: "
@@ -149,13 +151,13 @@ public interface XMLComplexType extends XMLType {
 					logger.warning("UNABLE to create a new property named [" + name + "]  with a NULL type ");
 				}
 				if (prop != null)
-					addProperty(prop);
+					addToProperties(prop);
 			}
 			return prop;
-		}
+		}*/
 
 		@Override
-		public void addProperty(XMLProperty prop) {
+		public void addToProperties(XMLProperty prop) {
 			if (prop != null)
 				properties.put(prop.getName(), prop);
 		}
@@ -178,10 +180,11 @@ public interface XMLComplexType extends XMLType {
 					prop = ((XMLComplexType) this.getSuperType()).getPropertyByName(name);
 				}
 				// Creates the property for PCDATA
-				if (prop == null && name.equals(XMLCst.CDATA_ATTR_NAME)) {
+				/*if (prop == null && name.equals(XMLCst.CDATA_ATTR_NAME)) {
 					System.out.println("mm=" + getMetamodel());
-					prop = createProperty(name, this.getMetamodel().getTypeFromURI(XSDMetaModel.STRING_URI), XMLSupport.CDATA, null);
-				}
+					prop = getModelFactory().makeProperty(name, this.getMetamodel().getTypeFromURI(XSDMetaModel.STRING_URI),
+							XMLSupport.CDATA, null);
+				}*/
 				return prop;
 			}
 			return null;

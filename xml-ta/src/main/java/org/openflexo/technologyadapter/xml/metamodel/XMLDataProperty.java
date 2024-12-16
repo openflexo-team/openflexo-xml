@@ -47,19 +47,19 @@ import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.toolbox.StringUtils;
 
 /**
- * An attribute with only simple values
+ * An {@link XMLProperty} with a simple type {@link XMLSimpleType}
  * 
- * @author xtof
+ * @author sylvain, xtof
  *
  */
 @ModelEntity
 @ImplementationClass(XMLDataProperty.XMLDataPropertyImpl.class)
-public interface XMLDataProperty extends XMLProperty {
+public interface XMLDataProperty extends XMLProperty<XMLSimpleType> {
 
 	/**
 	 * Default implementation for {@link XMLDataProperty}
 	 */
-	public static abstract class XMLDataPropertyImpl extends XMLPropertyImpl implements XMLDataProperty {
+	public static abstract class XMLDataPropertyImpl extends XMLPropertyImpl<XMLSimpleType> implements XMLDataProperty {
 		// TODO .... get anything from there
 		// private final XSAttributeUse attributeUse = null;
 
@@ -100,7 +100,7 @@ public interface XMLDataProperty extends XMLProperty {
 
 		@Override
 		public String getDisplayableDescription() {
-			StringBuffer buffer = new StringBuffer("Attribute ");
+			StringBuffer buffer = new StringBuffer("XMLDataProperty ");
 			buffer.append(getName());
 			if (isRequired()) {
 				buffer.append(" required");
@@ -140,12 +140,12 @@ public interface XMLDataProperty extends XMLProperty {
 			if (getUpperBound() == null || (getUpperBound() >= 0 && getUpperBound() <= 1)) {
 				// Single cardinality
 				if (getType() instanceof XMLSimpleType) {
-					return ((XMLSimpleType) getType()).getJavaType();
+					return getType().getJavaType();
 				}
 				return Object.class;
 			}
 			if (getType() instanceof XMLSimpleType) {
-				return new ParameterizedTypeImpl(List.class, ((XMLSimpleType) getType()).getJavaType());
+				return new ParameterizedTypeImpl(List.class, getType().getJavaType());
 			}
 			return new ParameterizedTypeImpl(List.class, Object.class);
 		}

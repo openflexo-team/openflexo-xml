@@ -60,8 +60,10 @@ import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLDataProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLEnumerationType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLObjectProperty;
+import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty.XMLSupport;
 import org.openflexo.technologyadapter.xml.metamodel.XMLSimpleType;
+import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.rm.TypedXMLResource;
 import org.openflexo.technologyadapter.xml.rm.XMLModelRepository;
@@ -70,6 +72,9 @@ import org.openflexo.technologyadapter.xml.rm.XSDMetaModelResource;
 import org.openflexo.test.OrderedRunner;
 import org.openflexo.test.TestOrder;
 
+/**
+ * Perform some tests in the context of {@link XSDMetaModel} management (XSD files)
+ */
 @RunWith(OrderedRunner.class)
 public class TestXSD extends OpenflexoTestCase {
 
@@ -177,18 +182,10 @@ public class TestXSD extends OpenflexoTestCase {
 
 		XMLComplexType bookType = metaModel.getComplexTypeFromURI("http://www.example.org/Library#Book");
 		assertNotNull(bookType);
-		XMLDataProperty bookAuthorProperty = (XMLDataProperty) bookType.getPropertyByName("author");
-		assertNotNull(bookAuthorProperty);
-		assertSame(anyURIType, bookAuthorProperty.getType());
-		XMLDataProperty bookCategoryProperty = (XMLDataProperty) bookType.getPropertyByName("category");
-		assertNotNull(bookCategoryProperty);
-		assertSame(categoryType, bookCategoryProperty.getType());
-		XMLDataProperty bookPagesProperty = (XMLDataProperty) bookType.getPropertyByName("pages");
-		assertNotNull(bookPagesProperty);
-		assertSame(intType, bookPagesProperty.getType());
-		XMLDataProperty bookTitleProperty = (XMLDataProperty) bookType.getPropertyByName("title");
-		assertNotNull(bookTitleProperty);
-		assertSame(stringType, bookTitleProperty.getType());
+		XMLDataProperty bookAuthorProperty = (XMLDataProperty) assertProperty("author", anyURIType, bookType);
+		XMLDataProperty bookCategoryProperty = (XMLDataProperty) assertProperty("category", categoryType, bookType);
+		XMLDataProperty bookPagesProperty = (XMLDataProperty) assertProperty("pages", intType, bookType);
+		XMLDataProperty bookTitleProperty = (XMLDataProperty) assertProperty("title", stringType, bookType);
 
 		XMLComplexType libraryType = metaModel.getComplexTypeFromURI("http://www.example.org/Library#LibraryType");
 		assertNotNull(libraryType);
@@ -221,7 +218,7 @@ public class TestXSD extends OpenflexoTestCase {
 	 */
 	@Test
 	@TestOrder(3)
-	public void testPurchaseOrderSchemal() throws FileNotFoundException, ResourceLoadingCancelledException, FlexoException {
+	public void testPurchaseOrderSchema() throws FileNotFoundException, ResourceLoadingCancelledException, FlexoException {
 
 		XSDMetaModelResource mmRes = mmRepository.getResource("http://tempuri.org/PurchaseOrderSchema.xsd");
 
@@ -238,8 +235,49 @@ public class TestXSD extends OpenflexoTestCase {
 
 		Helpers.dumpTypes(metaModel);
 
-		assertEquals(39, metaModel.getTypes().size());
+		assertEquals(7, metaModel.getTypes().size());
 
+		XMLSimpleType stringType = metaModel.getSimpleTypeFromURI("http://www.w3.org/2001/XMLSchema#string");
+		assertNotNull(stringType);
+		XMLSimpleType integerType = metaModel.getSimpleTypeFromURI("http://www.w3.org/2001/XMLSchema#integer");
+		assertNotNull(integerType);
+		XMLSimpleType dateType = metaModel.getSimpleTypeFromURI("http://www.w3.org/2001/XMLSchema#date");
+		assertNotNull(dateType);
+		XMLSimpleType nmTokenType = metaModel.getSimpleTypeFromURI("http://www.w3.org/2001/XMLSchema#NMTOKEN");
+		assertNotNull(nmTokenType);
+
+		XMLComplexType anyType = metaModel.getComplexTypeFromURI("http://www.w3.org/2001/XMLSchema#anyType");
+		assertNotNull(anyType);
+
+		XMLComplexType usAddressType = metaModel.getComplexTypeFromURI("http://tempuri.org/PurchaseOrderSchema.xsd#USAddress");
+		assertNotNull(usAddressType);
+		XMLDataProperty cityProperty = (XMLDataProperty) assertProperty("city", stringType, usAddressType);
+		XMLDataProperty countryProperty = (XMLDataProperty) assertProperty("country", nmTokenType, usAddressType);
+		assertEquals(XMLSupport.ATTRIBUTE, countryProperty.getXMLSupport());
+		assertEquals("country", countryProperty.getXMLSupportName());
+		XMLDataProperty nameProperty = (XMLDataProperty) assertProperty("name", stringType, usAddressType);
+		XMLDataProperty stateProperty = (XMLDataProperty) assertProperty("state", stringType, usAddressType);
+		XMLDataProperty streetProperty = (XMLDataProperty) assertProperty("street", stringType, usAddressType);
+		XMLDataProperty zipProperty = (XMLDataProperty) assertProperty("zip", integerType, usAddressType);
+
+		XMLComplexType poType = metaModel.getComplexTypeFromURI("http://tempuri.org/PurchaseOrderSchema.xsd#PurchaseOrderType");
+		assertNotNull(poType);
+
+		XMLDataProperty dateProperty = (XMLDataProperty) assertProperty("OrderDate", dateType, poType);
+		XMLObjectProperty billsToProperty = (XMLObjectProperty) assertProperty("billTo", usAddressType, poType);
+		assertEquals(1, billsToProperty.getLowerBound().intValue());
+		assertEquals(1, billsToProperty.getUpperBound().intValue());
+		XMLObjectProperty shipToProperty = (XMLObjectProperty) assertProperty("shipTos", usAddressType, poType);
+		assertEquals(1, shipToProperty.getLowerBound().intValue());
+		assertEquals(2, shipToProperty.getUpperBound().intValue());
+
+	}
+
+	private XMLProperty<?> assertProperty(String propertyName, XMLType propertyType, XMLComplexType ownerType) {
+		XMLProperty<?> p = ownerType.getPropertyByName(propertyName);
+		assertNotNull(p);
+		assertSame(propertyType, p.getType());
+		return p;
 	}
 
 	/**
@@ -253,8 +291,6 @@ public class TestXSD extends OpenflexoTestCase {
 	@Test
 	@TestOrder(4)
 	public void testMavenMetamodel() throws FileNotFoundException, ResourceLoadingCancelledException, FlexoException {
-
-		System.exit(-1);
 
 		XSDMetaModelResource mmRes = mmRepository.getResource("http://maven.apache.org/POM/4.0.0");
 
@@ -271,7 +307,7 @@ public class TestXSD extends OpenflexoTestCase {
 
 		Helpers.dumpTypes(metaModel);
 
-		assertEquals(39, metaModel.getTypes().size());
+		assertEquals(88, metaModel.getTypes().size());
 
 	}
 

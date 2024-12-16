@@ -171,8 +171,12 @@ public class XSDeclarationsFetcher implements XSVisitor {
 		}
 		String uri = getUri(decl);
 		if (declarations.containsKey(uri)) {
-			if (logger.isLoggable(Level.WARNING)) {
-				logger.warning("Duplicate URI " + uri);
+			// Warn only if it is a different declaration
+			// Otherwise, in case of references, it may happen
+			if (declarations.get(uri) != decl) {
+				if (logger.isLoggable(Level.WARNING)) {
+					logger.warning("Duplicate URI " + uri);
+				}
 			}
 			return false;
 		}

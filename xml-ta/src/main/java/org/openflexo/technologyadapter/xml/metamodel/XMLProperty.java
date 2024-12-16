@@ -54,55 +54,51 @@ import org.openflexo.toolbox.StringUtils;
 
 /**
  * 
- * Represents an XML Attribute in an XMLModel
+ * Represents an XML property in an XMLModel, as a property of a {@link XMLComplexType}
  * 
- * @author sylvain,xtof
+ * Such a property has basically a name and a type, and is based on a {@link XMLSupport}
+ * 
+ * @author sylvain, xtof
  * 
  */
 @ModelEntity(isAbstract = true)
 @ImplementationClass(XMLProperty.XMLPropertyImpl.class)
 @Imports({ @Import(XMLObjectProperty.class), @Import(XMLDataProperty.class) })
-public interface XMLProperty extends XMLObject<XSDMetaModel>, Comparable<XMLProperty>, InnerResourceData<XSDMetaModel> {
+public interface XMLProperty<T extends XMLType>
+		extends XMLObject<XSDMetaModel>, Comparable<XMLProperty<T>>, InnerResourceData<XSDMetaModel> {
 
-	/**
-	 * The Type of the given attribute. This might be a simple type
-	 */
-	public static final String TYPE = "myType";
-	/**
-	 * XMLType containing the given attribute
-	 */
-	public static final String CONTAINER = "container";
-	/**
-	 * This indicates if property was created from an XML element or attribute
-	 */
-	// public static final String IS_FROM_ELEMENT = "isFromXMLElement";
+	public static final String TYPE_KEY = "type";
+	public static final String CONTAINER_KEY = "container";
 	public static final String DEFAULT_VALUE_KEY = "defaultValue";
 	public static final String FIXED_VALUE_KEY = "fixedValue";
 
-	public static final String LOWER_BOUND = "lowerBound";
-	public static final String UPPER_BOUND = "upperBound";
+	public static final String LOWER_BOUND_KEY = "lowerBound";
+	public static final String UPPER_BOUND_KEY = "upperBound";
 
 	public static final String XML_SUPPORT_KEY = "xmlSupport";
 	public static final String XML_SUPPORT_NAME_KEY = "xmlSupportName";
 
+	/**
+	 * XML serialization support for a {@link XMLProperty} (element, attribute or CDATA)
+	 */
 	public static enum XMLSupport {
 		ELEMENT, ATTRIBUTE, CDATA
 	}
 
 	@Initializer
-	public XMLProperty init(@Parameter(NAME) String s, @Parameter(TYPE) Type t, @Parameter(CONTAINER) XMLType container);
+	public XMLProperty<T> init(@Parameter(NAME) String s, @Parameter(TYPE_KEY) T type);
 
-	@Getter(CONTAINER)
-	public XMLType getContainer();
+	@Getter(CONTAINER_KEY)
+	public XMLComplexType getContainer();
 
-	@Setter(CONTAINER)
-	public void setContainer(XMLType containedIn);
+	@Setter(CONTAINER_KEY)
+	public void setContainer(XMLComplexType container);
 
-	@Getter(value = TYPE, ignoreType = true)
-	public XMLType getType();
+	@Getter(value = TYPE_KEY, ignoreType = true)
+	public T getType();
 
-	@Setter(TYPE)
-	public void setType(XMLType aType);
+	@Setter(TYPE_KEY)
+	public void setType(T aType);
 
 	/**
 	 * Return type beeing reflected by access of this property
@@ -155,38 +151,26 @@ public interface XMLProperty extends XMLObject<XSDMetaModel>, Comparable<XMLProp
 
 	public boolean isRequired();
 
-	@Getter(value = LOWER_BOUND, ignoreType = true)
+	@Getter(value = LOWER_BOUND_KEY, ignoreType = true)
 	public Integer getLowerBound();
 
-	@Setter(LOWER_BOUND)
+	@Setter(LOWER_BOUND_KEY)
 	public void setLowerBound(Integer b);
 
-	@Getter(value = UPPER_BOUND, ignoreType = true)
+	@Getter(value = UPPER_BOUND_KEY, ignoreType = true)
 	public Integer getUpperBound();
 
-	@Setter(UPPER_BOUND)
+	@Setter(UPPER_BOUND_KEY)
 	public void setUpperBound(Integer b);
 
 	/**
 	 * Default implementation for {@link XMLProperty}
 	 */
-	public static abstract class XMLPropertyImpl extends XMLObjectImpl<XSDMetaModel> implements XMLProperty {
+	public static abstract class XMLPropertyImpl<T extends XMLType> extends XMLObjectImpl<XSDMetaModel> implements XMLProperty<T> {
 
 		@Override
-		public int compareTo(XMLProperty arg0) {
+		public int compareTo(XMLProperty<T> arg0) {
 			return this.getName().compareTo(arg0.getName());
-		}
-
-		@Override
-		public String getDisplayableDescription() {
-			if (this instanceof XMLDataProperty) {
-				return "XML Simple property named : " + this.getName();
-			}
-			else if (this instanceof XMLObjectProperty) {
-				return "XML Object Property named : " + this.getName();
-			}
-			else
-				return "(Unknown)";
 		}
 
 		@Override
