@@ -49,6 +49,9 @@ import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.Setter;
 import org.openflexo.technologyadapter.xml.XMLObject;
 
+/**
+ * Base interface for {@link XMLSimpleType} and {@link XMLComplexType}
+ */
 @ModelEntity(isAbstract = true)
 @ImplementationClass(XMLType.XMLTypeImpl.class)
 @Imports({ @Import(XMLSimpleType.class), @Import(XMLComplexType.class), @Import(XMLEnumerationType.class) })

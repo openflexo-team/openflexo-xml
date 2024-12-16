@@ -73,10 +73,13 @@ import org.w3c.dom.Element;
 
 /**
  * 
- * an XMLIndividual represents a single instance of XML Element in a XMLModel
+ * An {@link XMLIndividual} represents a single instance of XML Element in a {@link XMLModel} conform to an XSD file<br>
  * 
+ * Such individual is typed with a {@link XMLComplexType}<br>
  * 
- * @author xtof
+ * XML individuals are structured with a tree (see {@link #getParent()} and {@link #getChildren()} methods)
+ * 
+ * @author sylvain, xtof
  * 
  */
 @ModelEntity

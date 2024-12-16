@@ -47,6 +47,9 @@ import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.Setter;
 
+/**
+ * Represents a simple XML type, reflected by a base java type
+ */
 @ModelEntity
 @ImplementationClass(XMLSimpleType.XMLSimpleTypeImpl.class)
 public interface XMLSimpleType extends XMLType {

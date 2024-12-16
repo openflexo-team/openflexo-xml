@@ -53,7 +53,13 @@ import org.openflexo.pamela.annotations.Getter.Cardinality;
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.Remover;
+import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
 
+/**
+ * Represents a complex XML type, reflected at runtime by an instance of {@link XMLIndividual}<br>
+ * (this is the type of an {@link XMLIndividual})
+ * 
+ */
 @ModelEntity
 @ImplementationClass(XMLComplexType.XMLComplexTypeImpl.class)
 public interface XMLComplexType extends XMLType {
