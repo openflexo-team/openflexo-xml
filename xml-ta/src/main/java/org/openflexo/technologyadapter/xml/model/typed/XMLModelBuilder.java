@@ -51,7 +51,9 @@ import org.openflexo.xml.SaxBasedObjectGraphFactory;
 import org.openflexo.xml.XMLReaderSAXHandler;
 import org.xml.sax.SAXException;
 
-@Deprecated
+/**
+ * A builder for a {@link XMLModel} (sax-based)
+ */
 public class XMLModelBuilder extends SaxBasedObjectGraphFactory {
 
 	private XMLModel model = null;
@@ -60,42 +62,56 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory {
 	public Object getInstanceOf(Type aType, String name) {
 
 		if (aType instanceof XMLComplexType) {
-			XMLIndividual _inst = model.addNewIndividual((XMLComplexType) aType);
-			return _inst;
+
+			System.out.println("Make XMLIndividual for type" + aType);
+			Thread.dumpStack();
+
+			XMLIndividual returned = model.addNewIndividual((XMLComplexType) aType);
+
+			return returned;
 		}
 
 		return null;
 	}
 
 	@Override
-	public Type getTypeForObject(String typeURI, Object container, String objectName) {
+	public XMLType getTypeForObject(String typeURI, Object container, String objectName) {
 
 		XSDMetaModel mm = model.getMetaModel();
-		XMLType tt = null;
+		XMLType returned = null;
 		if (mm != null) {
-			tt = mm.getTypeFromURI(typeURI);
+			returned = mm.getTypeFromURI(typeURI);
+		}
+
+		if (returned == null) {
+			System.out.println("Not found : " + typeURI);
+			// Thread.dumpStack();
+			// System.exit(-1);
 		}
 
 		// Try to match as local uri
 		if (container instanceof XMLIndividual) {
 			XMLType parentType = ((XMLIndividual) container).getType();
-			if (tt == null && !typeURI.startsWith(parentType.getFullyQualifiedName())) {
-				tt = mm.getTypeFromURI(parentType.getFullyQualifiedName() + "#" + typeURI);
+			if (returned == null && !typeURI.startsWith(parentType.getFullyQualifiedName())) {
+				returned = mm.getTypeFromURI(parentType.getFullyQualifiedName() + "#" + typeURI);
 			}
 		}
 
 		// Create the type if it does not exist and that we can!!
-		if (!mm.isReadOnly() && tt == null) {
+		if (!mm.isReadOnly() && returned == null) {
 			if (container instanceof XMLIndividual) {
 				XMLType parentType = ((XMLIndividual) container).getType();
-				tt = mm.getModelFactory().makeComplexType(parentType.getFullyQualifiedName() + "#" + objectName, objectName, mm);
+				returned = mm.getModelFactory().makeComplexType(parentType.getFullyQualifiedName() + "#" + objectName, objectName, mm);
 			}
 			else {
-				tt = mm.getModelFactory().makeComplexType(mm.getURI() + "#" + objectName, objectName, mm);
+				returned = mm.getModelFactory().makeComplexType(mm.getURI() + "#" + objectName, objectName, mm);
 			}
 		}
 
-		return tt;
+		System.out.println(
+				"getTypeForObject() ??? " + typeURI + " container: " + container + " objectName=" + objectName + " returns " + returned);
+
+		return returned;
 	}
 
 	@Override
@@ -158,6 +174,9 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory {
 
 	@Override
 	public boolean objectHasAttributeNamed(Object object, String propertyName) {
+
+		System.out.println("***** objectHasAttributeNamed??? object=" + object + " propertyName=" + propertyName);
+
 		if (object instanceof XMLIndividual) {
 
 			XMLProperty prop = ((XMLIndividual) object).getType().getPropertyByName(propertyName);
@@ -169,6 +188,8 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory {
 
 	@Override
 	public void addAttributeValueForObject(Object object, String name, Object value) {
+
+		System.out.println("***** addAttributeValueForObject object=" + object + " name=" + name + " value=" + value);
 
 		if (object instanceof XMLIndividual) {
 			XMLComplexType t = ((XMLIndividual) object).getType();

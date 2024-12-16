@@ -53,9 +53,7 @@ import org.openflexo.pamela.annotations.Embedded;
 import org.openflexo.pamela.annotations.Getter;
 import org.openflexo.pamela.annotations.Getter.Cardinality;
 import org.openflexo.pamela.annotations.ImplementationClass;
-import org.openflexo.pamela.annotations.Initializer;
 import org.openflexo.pamela.annotations.ModelEntity;
-import org.openflexo.pamela.annotations.Parameter;
 import org.openflexo.pamela.annotations.PastingPoint;
 import org.openflexo.pamela.annotations.Remover;
 import org.openflexo.pamela.annotations.Setter;
@@ -65,7 +63,6 @@ import org.openflexo.technologyadapter.xml.metamodel.XMLDataProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLObjectProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty.XMLSupport;
-import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.xml.XMLCst;
 import org.w3c.dom.Document;
@@ -102,13 +99,16 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 	 */
 	public static final String CONTENT = "contentDATA";
 
-	@Initializer
-	public XMLIndividual init(@Parameter(MODEL) XMLModel m, @Parameter(TYPE) XMLType t);
+	// @Initializer
+	// public XMLIndividual init(@Parameter(MODEL) XMLModel m, @Parameter(TYPE) XMLType t);
 
 	@Getter(MODEL)
 	public XMLModel getContainerModel();
 
-	@Getter(TYPE)
+	@Setter(MODEL)
+	public void setContainerModel(XMLModel aModel);
+
+	@Getter(value = TYPE, ignoreType = true)
 	public XMLComplexType getType();
 
 	@Setter(TYPE)
@@ -198,6 +198,11 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 			uuid = UUID.randomUUID().toString();
 			propertiesValues = new HashMap<>();
 			children = new HashMap<>();
+		}
+
+		@Override
+		public XMLModel getResourceData() {
+			return getContainerModel();
 		}
 
 		@Override
@@ -309,7 +314,7 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 			if (prop == null) {
 				XSDMetaModel mm = getContainerModel().getMetaModel();
 				if (!mm.isReadOnly()) {
-					// TODO Manage complex types and actual types for objects.
+					// TODO Manage complex typesForURI and actual typesForURI for objects.
 					prop = mm.getModelFactory().makeProperty(name, mm.getTypeFromURI(XSDMetaModel.STRING_URI), XMLSupport.ELEMENT, name,
 							getType());
 
@@ -392,7 +397,11 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 		@Override
 		public String getDisplayableDescription() {
 			return "XML Individual of type: " + getName();
+		}
 
+		@Override
+		public String toString() {
+			return "XMLIndividual" + getFlexoID() + "[" + getType().getName() + "]";
 		}
 
 	}

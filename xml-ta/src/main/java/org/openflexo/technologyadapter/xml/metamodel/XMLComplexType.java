@@ -64,28 +64,38 @@ import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
 @ImplementationClass(XMLComplexType.XMLComplexTypeImpl.class)
 public interface XMLComplexType extends XMLType {
 
-	final String PROPERTIES = "properties";
+	public final String PROPERTIES_KEY = "properties";
+	public final String ELEMENT_OCCURENCES_KEY = "elementOccurences";
 
-	@Getter(value = PROPERTIES, cardinality = Cardinality.LIST, inverse = XMLProperty.CONTAINER_KEY)
+	@Getter(value = PROPERTIES_KEY, cardinality = Cardinality.LIST, inverse = XMLProperty.CONTAINER_KEY)
 	@Embedded
 	public List<? extends XMLProperty> getProperties();
 
-	@Adder(PROPERTIES)
+	@Adder(PROPERTIES_KEY)
 	public void addToProperties(XMLProperty aProperty);
 
-	@Remover(PROPERTIES)
+	@Remover(PROPERTIES_KEY)
 	public void removeFromProperties(XMLProperty aProperty);
 
-	@Finder(attribute = XMLProperty.URI, collection = PROPERTIES, isMultiValued = true)
+	@Finder(attribute = XMLProperty.URI, collection = PROPERTIES_KEY, isMultiValued = true)
 	public XMLProperty getPropertyByURI(String name);
 
-	@Finder(attribute = XMLProperty.NAME, collection = PROPERTIES, isMultiValued = true)
+	@Finder(attribute = XMLProperty.NAME, collection = PROPERTIES_KEY, isMultiValued = true)
 	public XMLProperty getPropertyByName(String name);
 
 	// @Deprecated
 	// public XMLProperty createProperty(String name, Type t, XMLSupport xmlSupport, String xmlSupportName);
 
 	public Boolean hasProperty(String name);
+
+	@Getter(value = ELEMENT_OCCURENCES_KEY, cardinality = Cardinality.LIST)
+	public List<String> getElementOccurences();
+
+	@Adder(ELEMENT_OCCURENCES_KEY)
+	public void addToElementOccurences(String aName);
+
+	@Remover(ELEMENT_OCCURENCES_KEY)
+	public void removeFromElementOccurences(String aName);
 
 	public static abstract class XMLComplexTypeImpl extends XMLTypeImpl implements XMLComplexType {
 

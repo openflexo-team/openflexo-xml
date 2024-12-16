@@ -54,7 +54,7 @@ import org.openflexo.technologyadapter.xml.model.typed.XMLPropertyValue;
 public class Helpers {
 
 	/**
-	 * Prints all types...
+	 * Prints all typesForURI...
 	 * 
 	 * @param metamodel
 	 */
@@ -62,7 +62,7 @@ public class Helpers {
 
 		System.out.println("\n\n");
 
-		System.out.println("Complex types : ");
+		System.out.println("Complex typesForURI : ");
 		for (XMLType t : metamodel.getTypes()) {
 			if (t instanceof XMLComplexType) {
 				System.out.println(" - " + t.getName() + (t.getSuperType() != null ? " extends " + t.getSuperType().getName() : "") + " ["
@@ -82,7 +82,7 @@ public class Helpers {
 			}
 		}
 
-		System.out.println("Simple types : ");
+		System.out.println("Simple typesForURI : ");
 		for (XMLType t : metamodel.getTypes()) {
 			if (t instanceof XMLSimpleType) {
 				System.out.println(" - " + t.getName() + (t instanceof XMLEnumerationType ? enumValues((XMLEnumerationType) t) : "") + " ["
@@ -105,7 +105,7 @@ public class Helpers {
 	}
 
 	/**
-	 * Prints all the property values of an indivudal
+	 * Prints all the property values of an individual
 	 */
 
 	public static final void dumpProperties(XMLIndividual indiv, XMLType aType, String prefix) {

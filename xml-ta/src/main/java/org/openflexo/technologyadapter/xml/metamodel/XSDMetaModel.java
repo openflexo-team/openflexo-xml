@@ -43,6 +43,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openflexo.foundation.technologyadapter.FlexoMetaModel;
 import org.openflexo.pamela.annotations.Adder;
 import org.openflexo.pamela.annotations.CloningStrategy;
@@ -79,7 +80,7 @@ public interface XSDMetaModel extends AbstractXMLDocument<XSDMetaModel>, FlexoMe
 	public IFlexoOntologyDataProperty getDataProperty(String propertyURI);
 	*/
 
-	public static String TYPES = "types";
+	public static String TYPES = "typesForURI";
 	public static String READ_ONLY = "readOnly";
 
 	public static String XML_SCHEMA_URI = "http://www.w3.org/2001/XMLSchema";
@@ -134,10 +135,12 @@ public interface XSDMetaModel extends AbstractXMLDocument<XSDMetaModel>, FlexoMe
 		private static final java.util.logging.Logger logger = org.openflexo.logging.FlexoLogger
 				.getLogger(XSDMetaModelImpl.class.getPackage().getName());
 
-		protected Map<String, XMLType> types = null;
+		protected List<XMLType> types = null;
+		protected Map<String, XMLType> typesForURI = null;
 
 		public XSDMetaModelImpl() {
-			types = new HashMap<>();
+			types = new ArrayList<>();
+			typesForURI = new HashMap<>();
 		}
 
 		@Override
@@ -197,30 +200,68 @@ public interface XSDMetaModel extends AbstractXMLDocument<XSDMetaModel>, FlexoMe
 
 		@Override
 		public XMLType getTypeFromURI(String uri) {
-			return types.get(uri);
+			XMLType returned = typesForURI.get(uri);
+			if (returned == null) {
+				// Check an alternative name
+				for (XMLType xmlType : getTypes()) {
+					if (xmlType instanceof XMLComplexType) {
+						XMLComplexType complexType = (XMLComplexType) xmlType;
+						for (String elementName : complexType.getElementOccurences()) {
+							if (uri.equals(getAlternativeURI(complexType, elementName))) {
+								typesForURI.put(getAlternativeURI(complexType, elementName), xmlType);
+								return xmlType;
+							}
+						}
+					}
+				}
+			}
+			return returned;
+		}
+
+		private String getAlternativeURI(XMLComplexType complexType, String elementName) {
+			if (StringUtils.isNotEmpty(elementName)) {
+				int ind = complexType.getURI().lastIndexOf("#");
+				if (ind > -1) {
+					return complexType.getURI().substring(0, ind) + "#" + elementName;
+				}
+			}
+			return null;
 		}
 
 		@Override
 		public void addToTypes(XMLType aType) {
-			types.put(aType.getURI(), aType);
+			types.add(aType);
+			typesForURI.put(aType.getURI(), aType);
 			aType.setMetamodel(this);
+			if (aType instanceof XMLComplexType) {
+				XMLComplexType complexType = (XMLComplexType) aType;
+				for (String elementName : complexType.getElementOccurences()) {
+					typesForURI.put(getAlternativeURI(complexType, elementName), aType);
+				}
+			}
 		}
 
 		@Override
 		public void removeFromTypes(XMLType aType) {
+			if (aType instanceof XMLComplexType) {
+				XMLComplexType complexType = (XMLComplexType) aType;
+				for (String elementName : complexType.getElementOccurences()) {
+					typesForURI.remove(getAlternativeURI(complexType, elementName));
+				}
+			}
 			types.remove(aType);
+			typesForURI.remove(aType.getURI());
 			aType.setMetamodel(null);
 		}
 
 		@Override
 		public List<? extends XMLType> getTypes() {
-			// TODO: perf issue
-			return new ArrayList<>(types.values());
+			return types;
 		}
 
 		@Override
 		public String getDisplayableDescription() {
-			return null;
+			return "XSDMetaModel" + getURI();
 		}
 
 		@Override

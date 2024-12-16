@@ -92,6 +92,7 @@ public class TypedXMLResourceFactory extends AbstractXMLResourceFactory<TypedXML
 			if (StringUtils.isNotEmpty(mmURI)) {
 				XSDMetaModelResource mmRes = (XSDMetaModelResource) technologyContextManager.getResourceWithURI(mmURI);
 				returned.setMetaModelResource(mmRes);
+				returned.addToDependencies(mmRes);
 			}
 		}
 		return returned;

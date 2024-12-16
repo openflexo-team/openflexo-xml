@@ -76,6 +76,11 @@ public interface XMLEnumValue extends XMLObject<XSDMetaModel> {
 		public XSDMetaModel getResourceData() {
 			return getType().getMetamodel();
 		}
+
+		@Override
+		public String getDisplayableDescription() {
+			return "XMLEnumValue : " + this.getName();
+		}
 	}
 
 }

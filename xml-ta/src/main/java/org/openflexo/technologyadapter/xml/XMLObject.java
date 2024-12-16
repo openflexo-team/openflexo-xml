@@ -122,7 +122,8 @@ public interface XMLObject<RD extends AbstractXMLDocument<RD>> extends Technolog
 			/*if (getResourceData() != null) {
 				return getResourceData().getResource().getConverter().toSerializationIdentifier(this);
 			}*/
-			return "???";
+			// return "???";
+			return "" + getFlexoID();
 		}
 
 		@Override

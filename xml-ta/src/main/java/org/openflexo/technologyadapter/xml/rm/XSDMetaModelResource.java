@@ -138,10 +138,10 @@ public interface XSDMetaModelResource
 					if (element.getType().isComplexType()) {
 
 						// We browse all the element
-						// If we find anonymous types, we use the element as the base of a XMLComplexType
+						// If we find anonymous typesForURI, we use the element as the base of a XMLComplexType
 						if (!element.getType().isGlobal()) {
 
-							// System.out.println("Found " + element.getType() + " of " + element.getType().getClass());
+							// System.out.println("******* Found " + element.getType() + " of " + element.getType().getClass());
 
 							XMLComplexType returned = getFactory().makeComplexType(fetcher.getUri(element), element.getName(),
 									resourceData);
@@ -151,6 +151,19 @@ public interface XSDMetaModelResource
 								returned.setSuperType(superType);
 								superType.setIsAbstract(true); // TODO : should we really do this ???
 							}
+						}
+
+						else {
+							// Register name of element as alternative name
+							String uri = fetcher.getUri(element.getType());
+							XMLComplexType existingType = (XMLComplexType) resourceData.getTypeFromURI(uri);
+							if (!existingType.getName().equals(element.getName())) {
+								// type name is different from element type, also register element name as alternative name
+								// System.out.println("For " + existingType.getName() + " register alternative name " + element.getName());
+								// TODO : may we have multiple alternative names ??? Check this
+								existingType.addToElementOccurences(element.getName());
+							}
+
 						}
 
 					}
@@ -312,7 +325,7 @@ public interface XSDMetaModelResource
 							type = resourceData.getTypeFromURI(XSDMetaModel.ANY_TYPE_URI);
 						}
 
-						// TODO: better manage types
+						// TODO: better manage typesForURI
 						resourceData.getModelFactory().makeProperty(attribute.getName(), type, XMLSupport.ATTRIBUTE, attribute.getName(),
 								(XMLComplexType) owner);
 
@@ -331,7 +344,7 @@ public interface XSDMetaModelResource
 		private XMLType retrieveTypeWithURI(String typeURI) {
 			XMLType returned = resourceData.getTypeFromURI(typeURI);
 			if (returned == null) {
-				// Maybe the type is to be found in simple types found in the fetcher
+				// Maybe the type is to be found in simple typesForURI found in the fetcher
 				for (XSSimpleType simpleType : fetcher.getSimpleTypes()) {
 					// System.out.println(" > " + fetcher.getUri(simpleType));
 					if (fetcher.getUri(simpleType).equals(typeURI)) {

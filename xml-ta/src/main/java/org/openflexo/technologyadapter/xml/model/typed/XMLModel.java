@@ -139,7 +139,7 @@ public interface XMLModel extends AbstractXMLDocument<XMLModel>, FlexoModel<XMLM
 	@Setter(ROOT)
 	public void setRoot(XMLIndividual indiv);
 
-	@Getter(value = IND, cardinality = Cardinality.LIST)
+	@Getter(value = IND, cardinality = Cardinality.LIST, inverse = XMLIndividual.MODEL)
 	@CloningStrategy(StrategyType.CLONE)
 	@Embedded
 	public List<? extends XMLIndividual> getIndividuals();
@@ -279,7 +279,8 @@ public interface XMLModel extends AbstractXMLDocument<XMLModel>, FlexoModel<XMLM
 		@Override
 		public XMLIndividual addNewIndividual(XMLComplexType aType) {
 			XMLIndividual anIndividual = getModelFactory().makeXMLIndividual(this, aType);
-			this.addIndividual(anIndividual);
+			addIndividual(anIndividual);
+			anIndividual.setContainerModel(this);
 			return anIndividual;
 		}
 

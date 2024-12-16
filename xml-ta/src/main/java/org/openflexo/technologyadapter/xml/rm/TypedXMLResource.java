@@ -55,18 +55,15 @@ import org.openflexo.foundation.resource.FileIODelegate;
 import org.openflexo.foundation.resource.FileWritingLock;
 import org.openflexo.foundation.resource.ResourceLoadingCancelledException;
 import org.openflexo.foundation.resource.SaveResourceException;
-import org.openflexo.foundation.technologyadapter.FlexoMetaModelResource;
 import org.openflexo.foundation.technologyadapter.FlexoModelResource;
-import org.openflexo.pamela.annotations.Getter;
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
+import org.openflexo.technologyadapter.xml.model.typed.XMLModelBuilder;
 import org.openflexo.technologyadapter.xml.model.typed.XMLModelFactory;
 import org.openflexo.toolbox.FileUtils;
-import org.openflexo.xml.XMLRootElementInfo;
-import org.openflexo.xml.XMLRootElementReader;
 
 /**
  * A resource allowing access to an XML document conform to an XSD grammar (its metamodel)
@@ -78,13 +75,13 @@ import org.openflexo.xml.XMLRootElementReader;
 public interface TypedXMLResource extends XMLResource<XMLModel, XMLModelFactory>,
 		FlexoModelResource<XMLModel, XSDMetaModel, XMLTechnologyAdapter, XMLTechnologyAdapter> {
 
-	public static final String TARGET_NAMESPACE = "targetNamespace";
+	// public static final String TARGET_NAMESPACE = "targetNamespace";
 
-	@Getter(value = TARGET_NAMESPACE)
-	public String getTargetNamespace() throws IOException;
+	// @Getter(value = TARGET_NAMESPACE)
+	// public String getTargetNamespace() throws IOException;
 
 	// initializes the Metamodel property of XMLModel, given the reference provided by metamodelResource property
-	public void attachMetamodel();
+	// public void attachMetamodel();
 
 	/**
 	 * Default implementation for TypedXMLResource
@@ -92,12 +89,12 @@ public interface TypedXMLResource extends XMLResource<XMLModel, XMLModelFactory>
 	public static abstract class TypedXMLResourceImpl extends XMLResourceImpl<XMLModel, XMLModelFactory> implements TypedXMLResource {
 
 		protected static final Logger logger = Logger.getLogger(TypedXMLResourceImpl.class.getPackage().getName());
-		protected static XMLRootElementReader REreader = new XMLRootElementReader();
+		// protected static XMLRootElementReader REreader = new XMLRootElementReader();
 
 		// Properties
 
-		@Deprecated
-		private boolean isLoaded = false;
+		// @Deprecated
+		// private boolean isLoaded = false;
 
 		/**
 		 * Save the &quot;real&quot; resource data of this resource.
@@ -123,9 +120,9 @@ public interface TypedXMLResource extends XMLResource<XMLModel, XMLModelFactory>
 		 * @throws IOException
 		 * 
 		 */
-		@Override
+		/*@Override
 		public String getTargetNamespace() throws IOException {
-
+		
 			if (!isLoaded()) {
 				XMLRootElementInfo rootInfo;
 				rootInfo = REreader.readRootElement(getIODelegate().getSerializationArtefactAsResource());
@@ -133,7 +130,7 @@ public interface TypedXMLResource extends XMLResource<XMLModel, XMLModelFactory>
 			}
 			return this.getModel().getMetaModel().getURI();
 		}
-
+		
 		public static final String getTargetNamespace(File f) throws IOException {
 			if (f != null && f.exists()) {
 				XMLRootElementInfo rootInfo;
@@ -141,6 +138,35 @@ public interface TypedXMLResource extends XMLResource<XMLModel, XMLModelFactory>
 				return rootInfo.getURI();
 			}
 			throw new IOException("File Not Found ");
+		}*/
+
+		/*@Override
+		public void setFactory(XMLModelFactory factory) {
+			System.out.println("Yes avec " + factory);
+			System.exit(-1);
+		}*/
+
+		@Override
+		protected XMLModel performLoad() throws IOException, Exception {
+
+			resourceData = getFactory().makeXMLModel();
+			resourceData.setResource(this);
+			// resourceData.setURI(this.getURI());
+
+			getMetaModelResource().loadResourceData();
+			resourceData.setMetaModel(getMetaModelResource().getMetaModelData());
+
+			notifyResourceWillLoad();
+
+			XMLModelBuilder builder = new XMLModelBuilder();
+			builder.setContext(resourceData);
+			builder.deserialize(getInputStream());
+			builder.resetContext();
+
+			notifyResourceLoaded();
+
+			return resourceData;
+
 		}
 
 		// @Override
@@ -251,29 +277,29 @@ public interface TypedXMLResource extends XMLResource<XMLModel, XMLModelFactory>
 			return resourceData;
 		}*/
 
-		@Override
+		/*@Override
 		public void attachMetamodel() {
-
+		
 			FlexoMetaModelResource<XMLModel, XSDMetaModel, XMLTechnologyAdapter> mmRes = getMetaModelResource();
 			if (mmRes != null) {
 				resourceData.setMetaModel(mmRes.getMetaModelData());
 			}
 			else {
 				// Create default meta-model, on the fly
-
-				/*XSDMetaModel mm = XMLMetaModelImpl.getModelFactory().newInstance(XSDMetaModel.class);
-				mm.setURI(getURI() + "/Metamodel");
-				mm.setReadOnly(false);
-				
-				resourceData.setMetaModel(mm);*/
-
+		
+				// XSDMetaModel mm = XMLMetaModelImpl.getModelFactory().newInstance(XSDMetaModel.class);
+				// mm.setURI(getURI() + "/Metamodel");
+				// mm.setReadOnly(false);
+		
+				// resourceData.setMetaModel(mm);
+		
 				logger.warning("Not implemented: Create default meta-model, on the fly");
 			}
-
+		
 			if (resourceData.getMetaModel() == null) {
 				logger.warning("Setting a null Metamodel for Model " + this.getURI());
 			}
-		}
+		}*/
 
 		/*
 		@Override
@@ -314,10 +340,10 @@ public interface TypedXMLResource extends XMLResource<XMLModel, XMLModelFactory>
 
 		// Lifecycle Management
 
-		@Override
+		/*@Override
 		public boolean isLoaded() {
 			return isLoaded;
-		}
+		}*/
 
 		/**
 		 * Return a FlexoIOStreamDelegate associated to this flexo resource

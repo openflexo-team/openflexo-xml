@@ -80,8 +80,8 @@ public class XMLModelFactory extends AbstractXMLDocumentFactory<TypedXMLResource
 	}
 
 	public XMLObjectPropertyValue makeXMLObjectPropertyValue(XMLObjectProperty property, XMLIndividual... values) {
-		XMLObjectPropertyValue returned = newInstance(XMLObjectPropertyValue.class);
-		returned.setProperty(property);
+		XMLObjectPropertyValue returned = newInstance(XMLObjectPropertyValue.class, property);
+		// returned.setProperty(property);
 		for (XMLIndividual v : values) {
 			returned.addToValues(v);
 		}
@@ -89,8 +89,8 @@ public class XMLModelFactory extends AbstractXMLDocumentFactory<TypedXMLResource
 	}
 
 	public XMLDataPropertyValue makeXMLDataPropertyValue(XMLDataProperty property, Object value) {
-		XMLDataPropertyValue returned = newInstance(XMLDataPropertyValue.class);
-		returned.setProperty(property);
+		XMLDataPropertyValue returned = newInstance(XMLDataPropertyValue.class, property);
+		// returned.setProperty(property);
 		returned.setValue(value);
 		return returned;
 	}

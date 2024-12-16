@@ -42,7 +42,6 @@ import org.openflexo.pamela.annotations.Getter;
 import org.openflexo.pamela.annotations.Initializer;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.Parameter;
-import org.openflexo.pamela.annotations.Setter;
 import org.openflexo.technologyadapter.xml.XMLObject;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
 
@@ -52,18 +51,18 @@ import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
  * @author sylvain, xtof
  */
 @ModelEntity(isAbstract = true)
-public abstract interface XMLPropertyValue extends XMLObject {
+public abstract interface XMLPropertyValue extends XMLObject<XMLModel> {
 
 	final String PROPERTY = "property";
 
 	@Initializer
-	public void XMLPropertyValue(@Parameter(PROPERTY) XMLProperty prop);
+	public void XMLPropertyValue(@Parameter(PROPERTY) XMLProperty<?> prop);
 
-	@Getter(PROPERTY)
-	public XMLProperty getProperty();
+	@Getter(value = PROPERTY, ignoreType = true)
+	public XMLProperty<?> getProperty();
 
-	@Setter(PROPERTY)
-	public void setProperty(XMLProperty prop);
+	// @Setter(PROPERTY)
+	// public void setProperty(XMLProperty<?> prop);
 
 	public String getStringValue();
 

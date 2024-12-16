@@ -1,0 +1,303 @@
+/**
+ * 
+ * Copyright (c) 2013-2014, Openflexo
+ * Copyright (c) 2012-2012, AgileBirds
+ * 
+ * This file is part of Xmlconnector, a component of the software infrastructure 
+ * developed at Openflexo.
+ * 
+ * 
+ * Openflexo is dual-licensed under the European Union Public License (EUPL, either 
+ * version 1.1 of the License, or any later version ), which is available at 
+ * https://joinup.ec.europa.eu/software/page/eupl/licence-eupl
+ * and the GNU General Public License (GPL, either version 3 of the License, or any 
+ * later version), which is available at http://www.gnu.org/licenses/gpl.html .
+ * 
+ * You can redistribute it and/or modify under the terms of either of these licenses
+ * 
+ * If you choose to redistribute it and/or modify under the terms of the GNU GPL, you
+ * must include the following additional permission.
+ *
+ *          Additional permission under GNU GPL version 3 section 7
+ *
+ *          If you modify this Program, or any covered work, by linking or 
+ *          combining it with software containing parts covered by the terms 
+ *          of EPL 1.0, the licensors of this Program grant you additional permission
+ *          to convey the resulting work. * 
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT ANY 
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A 
+ * PARTICULAR PURPOSE. 
+ *
+ * See http://www.openflexo.org/license.html for details.
+ * 
+ * 
+ * Please contact Openflexo (openflexo-contacts@openflexo.org)
+ * or visit www.openflexo.org if you need additional information.
+ * 
+ */
+
+package org.openflexo.technologyadapter.xml;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.logging.Logger;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.openflexo.foundation.FlexoException;
+import org.openflexo.foundation.resource.FlexoResourceCenter;
+import org.openflexo.foundation.resource.ResourceLoadingCancelledException;
+import org.openflexo.foundation.test.OpenflexoProjectAtRunTimeTestCase;
+import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
+import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
+import org.openflexo.technologyadapter.xml.rm.TypedXMLResource;
+import org.openflexo.technologyadapter.xml.rm.XMLModelRepository;
+import org.openflexo.technologyadapter.xml.rm.XSDMetaModelRepository;
+import org.openflexo.technologyadapter.xml.rm.XSDMetaModelResource;
+import org.openflexo.test.OrderedRunner;
+import org.openflexo.test.TestOrder;
+
+/**
+ * Perform some tests in the context of {@link XSDModel} management (an XML file conform to a XSD)
+ */
+@RunWith(OrderedRunner.class)
+public class TestLibraryXMLModel extends OpenflexoProjectAtRunTimeTestCase {
+
+	protected static final Logger logger = Logger.getLogger(TestLibraryXMLModel.class.getPackage().getName());
+
+	private static XMLTechnologyAdapter xmlAdapter;
+	private static XMLModelRepository<?> modelRepository;
+	private static XSDMetaModelRepository<?> mmRepository;
+	private static String baseUrl;
+
+	/**
+	 * Instanciate test ResourceCenter
+	 * 
+	 * @throws IOException
+	 */
+	@Test
+	@TestOrder(1)
+	public void loadTestResourceCenter() throws IOException {
+		log("loadTestResourceCenter()");
+
+		instanciateTestServiceManager(XMLTechnologyAdapter.class);
+
+		FlexoResourceCenter<?> resourceCenter = serviceManager.getResourceCenterService()
+				.getFlexoResourceCenter("http://openflexo.org/xml-test");
+
+		xmlAdapter = serviceManager.getTechnologyAdapterService().getTechnologyAdapter(XMLTechnologyAdapter.class);
+
+		mmRepository = xmlAdapter.getXSDMetaModelRepository(resourceCenter);
+		assertNotNull(mmRepository);
+		assertTrue(mmRepository.getAllResources().size() > 2);
+		for (XSDMetaModelResource r : mmRepository.getAllResources()) {
+			System.out.println("XSDMetaModelResource: " + r.getURI() + " : " + r);
+		}
+
+		modelRepository = xmlAdapter.getXMLModelRepository(resourceCenter);
+		assertNotNull(modelRepository);
+		assertTrue(modelRepository.getAllResources().size() > 4);
+		for (TypedXMLResource r : modelRepository.getAllResources()) {
+			System.out.println("TypedXMLResource: " + r.getURI() + " : " + r);
+		}
+
+		baseUrl = resourceCenter.getDefaultBaseURI();
+
+		/*
+		 * Found an XSD with uri: http://www.example.org/Library(library.xsd)
+		 * Found an XSD with uri:
+		 * http://maven.apache.org/POM/4.0.0(maven-v4_0_0.xsd) Found an XSD with
+		 * uri: http://www.taskcoach.org/TSK_XSD(taskcoach.xsd)
+		 */
+	}
+
+	@Test
+	@TestOrder(3)
+	public void testExampleLibrary1() throws FileNotFoundException, ResourceLoadingCancelledException, FlexoException {
+
+		log("testExampleLibrary1()");
+
+		XSDMetaModelResource libraryXSDResource = mmRepository.getResource("http://www.example.org/Library");
+		assertNotNull(libraryXSDResource);
+		assertFalse(libraryXSDResource.isLoaded());
+
+		TypedXMLResource library1Resource = modelRepository.getResource(baseUrl + "/TestResourceCenter/XML/example_library_1.xml");
+		assertNotNull(library1Resource);
+		assertFalse(library1Resource.isLoaded());
+
+		assertSame(libraryXSDResource, library1Resource.getMetaModelResource());
+		assertTrue(library1Resource.getDependencies().contains(libraryXSDResource));
+
+		library1Resource.loadResourceData();
+		assertTrue(library1Resource.isLoaded());
+		assertTrue(libraryXSDResource.isLoaded());
+
+		XSDMetaModel metaModel = libraryXSDResource.getMetaModelData();
+
+		Helpers.dumpTypes(metaModel);
+
+		XMLComplexType writerType = metaModel.getComplexTypeFromURI("http://www.example.org/Library#Writer");
+		XMLComplexType bookType = metaModel.getComplexTypeFromURI("http://www.example.org/Library#Book");
+		XMLComplexType libraryType = metaModel.getComplexTypeFromURI("http://www.example.org/Library#LibraryType");
+
+		// assertNotNull(modelRes.getModel().getMetaModel().getTypeFromURI("http://www.example.org/Library#Library"));
+
+		Helpers.dumpIndividual(library1Resource.getModelData().getRoot(), "");
+
+		XMLIndividual library = library1Resource.getModelData().getRoot();
+		XMLIndividual writer1 = library.getChildren().get(0);
+		XMLIndividual writer2 = library.getChildren().get(1);
+		XMLIndividual book1 = library.getChildren().get(2);
+		XMLIndividual book2 = library.getChildren().get(3);
+
+		assertSame(libraryType, library.getType());
+		assertSame(writerType, writer1.getType());
+		assertSame(writerType, writer2.getType());
+		assertSame(bookType, book1.getType());
+		assertSame(bookType, book2.getType());
+
+		assertEquals("Hector", writer1.getPropertyValue("name"));
+		assertEquals("Simeon Le Papillon", writer2.getPropertyValue("name"));
+		assertEquals("Hector", book1.getPropertyValue("title"));
+		assertEquals(35, book1.getPropertyValue("pages"));
+		assertEquals("Mystery", book1.getPropertyValue("category"));
+		assertEquals("Le Lapin Rose des Alpes", book1.getPropertyValue("author"));
+
+		/*
+		 <p:Book>
+		   <p:title>toto</p:title>
+		   <p:pages>35</p:pages>
+		   <p:category>Mystery</p:category>
+		   <p:author>Le Lapin Rose des Alpes</p:author>
+		  </p:Book>
+		  <p:Book>
+		   <p:title>tutu</p:title>
+		   <p:pages>37</p:pages>
+		   <p:category>Biography</p:category>
+		   <p:author>La Poule</p:author>
+		  </p:Book>*/
+
+	}
+
+	/*	@Test
+		@TestOrder(4)
+		public void test2LoadFileAndDump() throws FileNotFoundException, ResourceLoadingCancelledException, FlexoException {
+	
+			log("test2LoadFileAndDump()");
+	
+			assertNotNull(modelRepository);
+	
+			TypedXMLResource modelRes = modelRepository.getResource(baseUrl + "/TestResourceCenter/XML/example_library_2.xml");
+			assertNotNull(modelRes);
+			assertFalse(modelRes.isLoaded());
+			assertNotNull(modelRes.getModelData());
+			assertNotNull(modelRes.loadResourceData());
+			assertTrue(modelRes.isLoaded());
+	
+			// dumpTypes(modelRes.getModel());
+	
+			assertNotNull(modelRes.getModel().getMetaModel().getTypeFromURI("http://www.example.org/Library#Library"));
+	
+			// dumpIndividual(modelRes.getModelData().getRoot(), "");
+		}
+	
+		@Test
+		@TestOrder(5)
+		public void test3LoadFileAndDump() throws FileNotFoundException, ResourceLoadingCancelledException, FlexoException {
+	
+			log("test3LoadFileAndDump()");
+	
+			assertNotNull(modelRepository);
+	
+			TypedXMLResource modelRes = modelRepository.getResource(baseUrl + "/TestResourceCenter/XML/example_library_3.xml");
+			assertNotNull(modelRes);
+			assertFalse(modelRes.isLoaded());
+			assertNotNull(modelRes.getModelData());
+			assertNotNull(modelRes.loadResourceData());
+			assertTrue(modelRes.isLoaded());
+	
+			assertNotNull(modelRes.getModel().getMetaModel().getTypeFromURI("http://www.example.org/Library#Library"));
+	
+			// Helpers.dumpTypes(modelRes.getModel());
+			Helpers.dumpIndividual(modelRes.getModelData().getRoot(), "");
+		}
+	
+		@Test
+		@TestOrder(6)
+		public void test1CreateNewFile() throws Exception {
+	
+			log("test1CreateNewFile()");
+	
+			FlexoResourceCenter<?> resourceCenter = serviceManager.getResourceCenterService()
+					.getFlexoResourceCenter("http://openflexo.org/xml-test");
+	
+			assertNotNull(modelRepository);
+	
+			if (resourceCenter instanceof FileSystemBasedResourceCenter) {
+	
+				String fileUUID = UUID.randomUUID().toString();
+				// URI fileURI = new URI(baseUrl +
+				// "/TestResourceCenter/GenXML/example_File_" + fileUUID + ".xml");
+	
+				File xmlFile = new File(((FileSystemBasedResourceCenter) resourceCenter).getRootDirectory(),
+						"/TestResourceCenter/GenXML/example_File_" + fileUUID + ".xml");
+				System.out.println("xmlFile=" + xmlFile);
+	
+				// File xmlFile = new File(fileURI);
+	
+				TypedXMLResource modelRes = xmlAdapter.getXMLFileResourceFactory().makeResource(xmlFile,
+						(FileSystemBasedResourceCenter) resourceCenter, true);
+	
+				// XMLFileResource modelRes =
+				// XMLFileResourceImpl.makeXMLFileResource(xmlFile,
+				// (XMLTechnologyContextManager)
+				// xmlAdapter.getTechnologyContextManager(),
+				// modelRepository.getResourceCenter());
+	
+				XMLModel aModel = modelRes.getModel();
+				aModel.setNamespace("http://montest.com", "tst");
+	
+				// creating an empty MetaModel for this file and
+				PamelaModelFactory pamelaModelFactory = new PamelaModelFactory(XSDMetaModel.class);
+				XSDMetaModel aMetamodel = pamelaModelFactory.newInstance(XSDMetaModel.class);
+				aMetamodel.setURI("http://montest.com");
+	
+				Object blobType = aMetamodel.getModelFactory().makeSimpleType("http://montest.com#Blob", "Blob", aMetamodel);
+				aModel.setMetaModel(aMetamodel);
+				XMLType aType = aMetamodel.getModelFactory().makeSimpleType("http://zutalors.com", "Blib", aMetamodel);
+	
+				// TODO Manage several namespaces in same file!!
+				// aType = new XMLType("http://zutalors.com", "Blib", "pt:Blib",
+				// aModel);
+				// aModel.addType(aType);
+	
+				XMLIndividual rootIndividual = aModel
+						.addNewIndividual((XMLComplexType) aModel.getMetaModel().getTypeFromURI("http://montest.com#Blob"));
+				aModel.setRoot(rootIndividual);
+	
+				XMLIndividual anIndividual = aModel.addNewIndividual((XMLComplexType) aType);
+				anIndividual.addPropertyValue("name", "Mon velo court");
+				rootIndividual.addChild(anIndividual);
+	
+				anIndividual = aModel.addNewIndividual((XMLComplexType) aType);
+				anIndividual.addPropertyValue("name", "Pan");
+				anIndividual.addPropertyValue("ID", "17");
+				rootIndividual.addChild(anIndividual);
+	
+				assertNotNull(anIndividual);
+	
+				Helpers.dumpTypes(aMetamodel);
+				Helpers.dumpIndividual(modelRes.getModel().getRoot(), "");
+	
+				modelRes.save();
+			}
+		}*/
+}
