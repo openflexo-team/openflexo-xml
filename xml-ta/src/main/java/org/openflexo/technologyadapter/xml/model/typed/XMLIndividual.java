@@ -88,7 +88,7 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 	public static final String _UUID = "uuid";
 	public static final String TYPE = "myType";
 	public static final String MODEL = "containerModel";
-	public static final String CHILD = "children";
+	public static final String CHILD = "childrenByTypes";
 	public static final String PARENT = "parent";
 	public static final String PROPERTIES_VALUES = "propertiesValues";
 
@@ -184,7 +184,8 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 
 		/* Properties */
 
-		private Map<XMLComplexType, Set<XMLIndividualImpl>> children = null;
+		private List<XMLIndividual> children;
+		private Map<XMLComplexType, Set<XMLIndividualImpl>> childrenByTypes = null;
 		private Map<XMLProperty, XMLPropertyValue> propertiesValues = null;
 		private final String uuid;
 
@@ -196,8 +197,9 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 		public XMLIndividualImpl() {
 			super();
 			uuid = UUID.randomUUID().toString();
+			children = new ArrayList();
 			propertiesValues = new HashMap<>();
-			children = new HashMap<>();
+			childrenByTypes = new HashMap<>();
 		}
 
 		@Override
@@ -233,18 +235,20 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 		}
 
 		@Override
-		public void removeChild(XMLIndividual indiv) {
-			children.get(indiv.getType()).remove(indiv);
+		public void removeChild(XMLIndividual anIndividual) {
+			children.remove(anIndividual);
+			childrenByTypes.get(anIndividual.getType()).remove(anIndividual);
 		}
 
 		@Override
 		public void addChild(XMLIndividual anIndividual) {
+			children.add(anIndividual);
 			XMLComplexType aType = anIndividual.getType();
-			Set<XMLIndividualImpl> typedSet = children.get(aType);
+			Set<XMLIndividualImpl> typedSet = childrenByTypes.get(aType);
 
 			if (typedSet == null) {
 				typedSet = new HashSet<>();
-				children.put(aType, typedSet);
+				childrenByTypes.put(aType, typedSet);
 			}
 			typedSet.add((XMLIndividualImpl) anIndividual);
 			((XMLIndividualImpl) anIndividual).setParent(this);
@@ -253,12 +257,12 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 		@Override
 		public List<XMLIndividual> getChildren() {
 
-			List<XMLIndividual> returned = new ArrayList<>();
-
-			for (Set<XMLIndividualImpl> s : children.values()) {
+			/*List<XMLIndividual> returned = new ArrayList<>();
+			
+			for (Set<XMLIndividualImpl> s : childrenByTypes.values()) {
 				returned.addAll(s);
-			}
-			return returned;
+			}*/
+			return children;
 		}
 
 		@Override

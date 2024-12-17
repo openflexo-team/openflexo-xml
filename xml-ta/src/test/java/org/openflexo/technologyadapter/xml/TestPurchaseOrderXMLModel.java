@@ -39,6 +39,7 @@
 
 package org.openflexo.technologyadapter.xml;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
@@ -57,6 +58,7 @@ import org.openflexo.foundation.test.OpenflexoProjectAtRunTimeTestCase;
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
+import org.openflexo.technologyadapter.xml.model.typed.XMLObjectPropertyValue;
 import org.openflexo.technologyadapter.xml.rm.TypedXMLResource;
 import org.openflexo.technologyadapter.xml.rm.XMLModelRepository;
 import org.openflexo.technologyadapter.xml.rm.XSDMetaModelRepository;
@@ -148,23 +150,15 @@ public class TestPurchaseOrderXMLModel extends OpenflexoProjectAtRunTimeTestCase
 		XMLIndividual po = library1Resource.getModelData().getRoot();
 		assertSame(poType, po.getType());
 
-		/*XMLIndividual writer1 = library.getChildren().get(0);
-		XMLIndividual writer2 = library.getChildren().get(1);
-		XMLIndividual book1 = library.getChildren().get(2);
-		XMLIndividual book2 = library.getChildren().get(3);
-		
-		assertSame(libraryType, library.getType());
-		assertSame(writerType, writer1.getType());
-		assertSame(writerType, writer2.getType());
-		assertSame(bookType, book1.getType());
-		assertSame(bookType, book2.getType());
-		
-		assertEquals("Hector", writer1.getPropertyValue("name"));
-		assertEquals("Simeon Le Papillon", writer2.getPropertyValue("name"));
-		assertEquals("Hector", book1.getPropertyValue("title"));
-		assertEquals(35, book1.getPropertyValue("pages"));
-		assertEquals("Mystery", book1.getPropertyValue("category"));
-		assertEquals("Le Lapin Rose des Alpes", book1.getPropertyValue("author"));*/
+		XMLIndividual shippingAddress = po.getChildren().get(0);
+		assertSame(addressType, shippingAddress.getType());
+		XMLIndividual billingAddress = po.getChildren().get(1);
+		assertSame(addressType, billingAddress.getType());
+
+		// assertEquals(billingAddress, ((XMLObjectPropertyValue) po.getPropertyValue("billTo")).getValues().get(0));
+		assertEquals(billingAddress, ((XMLObjectPropertyValue) po.getPropertyValue("billTo")).getValues().get(0));
+		assertEquals(shippingAddress, ((XMLObjectPropertyValue) po.getPropertyValue("shipTos")).getValues().get(1));
+		// assertEquals(shippingAddress, po.getPropertyValue("shipTos"));
 
 	}
 

@@ -64,7 +64,6 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory {
 		if (aType instanceof XMLComplexType) {
 
 			System.out.println("Make XMLIndividual for type" + aType);
-			Thread.dumpStack();
 
 			XMLIndividual returned = model.addNewIndividual((XMLComplexType) aType);
 
@@ -85,8 +84,10 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory {
 
 		if (returned == null) {
 			System.out.println("Not found : " + typeURI);
-			// Thread.dumpStack();
-			// System.exit(-1);
+			returned = mm.getTypeFromContextualURI(typeURI);
+			if (returned == null) {
+				System.out.println("Still not found : " + typeURI);
+			}
 		}
 
 		// Try to match as local uri
@@ -175,28 +176,35 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory {
 	@Override
 	public boolean objectHasAttributeNamed(Object object, String propertyName) {
 
-		System.out.println("***** objectHasAttributeNamed??? object=" + object + " propertyName=" + propertyName);
+		// System.out.println("***** objectHasAttributeNamed??? object=" + object + " propertyName=" + propertyName);
 
 		if (object instanceof XMLIndividual) {
-
-			XMLProperty prop = ((XMLIndividual) object).getType().getPropertyByName(propertyName);
-
-			return (prop != null);
+			return getProperty((XMLIndividual) object, propertyName) != null;
 		}
 		return false;
 	}
 
-	@Override
-	public void addAttributeValueForObject(Object object, String name, Object value) {
+	private XMLProperty<?> getProperty(XMLIndividual object, String propertyName) {
+		XMLProperty<?> prop = object.getType().getPropertyByName(propertyName);
+		if (prop != null) {
+			return prop;
+		}
+		for (XMLProperty<?> property : object.getType().getProperties()) {
+			if (propertyName.equals(property.getXMLSupportName())) {
+				return property;
+			}
+		}
+		return null;
+	}
 
-		System.out.println("***** addAttributeValueForObject object=" + object + " name=" + name + " value=" + value);
+	@Override
+	public void addAttributeValueForObject(Object object, String propertyName, Object value) {
+
+		// System.out.println("***** addAttributeValueForObject object=" + object + " name=" + name + " value=" + value);
 
 		if (object instanceof XMLIndividual) {
-			XMLComplexType t = ((XMLIndividual) object).getType();
 
-			XMLProperty prop = t.getPropertyByName(name);
-
-			XSDMetaModel mm = model.getMetaModel();
+			XMLProperty<?> prop = getProperty((XMLIndividual) object, propertyName);
 
 			if (prop == null) {
 				/*if (!mm.isReadOnly() || name.equals(XMLCst.CDATA_ATTR_NAME)) {
@@ -214,9 +222,12 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory {
 					LOGGER.warning(
 							"TRYING to give a value to a non existant property: " + name + " -- " + name.equals(XMLCst.CDATA_ATTR_NAME));
 				}*/
-				LOGGER.warning("Please implement this"); // When still required ??? not sure (sylvain)
+				LOGGER.warning("Not found : property " + propertyName + " for " + object); // When still required ??? not sure (sylvain)
 			}
 			else {
+
+				// System.out.println("On ajoute " + propertyName + "=" + value + " pour " + object);
+
 				((XMLIndividual) object).addPropertyValue(prop, value);
 
 			}
@@ -225,6 +236,8 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory {
 
 	@Override
 	public void addChildToObject(Object currentObject, Object currentContainer) {
+
+		//System.out.println("------> Et hop, on ajoute " + currentObject + " a " + currentContainer);
 
 		if (currentContainer instanceof XMLIndividual) {
 			((XMLIndividual) currentContainer).addChild((XMLIndividual) currentObject);
@@ -235,6 +248,15 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory {
 	@Override
 	public Type getAttributeType(Object currentContainer, String localName) {
 		XMLProperty prop = ((XMLIndividual) currentContainer).getType().getPropertyByName(localName);
+
+		if (prop == null) {
+			for (XMLProperty property : ((XMLIndividual) currentContainer).getType().getProperties()) {
+				if (localName.equals(property.getXMLSupportName())) {
+					prop = property;
+				}
+			}
+		}
+
 		if (prop != null) {
 			return prop.getType();
 		}

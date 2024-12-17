@@ -113,6 +113,14 @@ public interface XSDMetaModel extends AbstractXMLDocument<XSDMetaModel>, FlexoMe
 	@Finder(attribute = XMLType.URI, collection = TYPES, isMultiValued = true)
 	public XMLType getTypeFromURI(String uri);
 
+	/**
+	 * Return type associated with a contextual URI
+	 * 
+	 * @param uri
+	 * @return
+	 */
+	public XMLType getTypeFromContextualURI(String uri);
+
 	@Adder(TYPES)
 	@PastingPoint
 	public void addToTypes(XMLType aType);
@@ -137,10 +145,12 @@ public interface XSDMetaModel extends AbstractXMLDocument<XSDMetaModel>, FlexoMe
 
 		protected List<XMLType> types = null;
 		protected Map<String, XMLType> typesForURI = null;
+		protected Map<String, XMLType> typesForContextualURI = null;
 
 		public XSDMetaModelImpl() {
 			types = new ArrayList<>();
 			typesForURI = new HashMap<>();
+			typesForContextualURI = new HashMap<>();
 		}
 
 		@Override
@@ -200,7 +210,12 @@ public interface XSDMetaModel extends AbstractXMLDocument<XSDMetaModel>, FlexoMe
 
 		@Override
 		public XMLType getTypeFromURI(String uri) {
-			XMLType returned = typesForURI.get(uri);
+			return typesForURI.get(uri);
+		}
+
+		@Override
+		public XMLType getTypeFromContextualURI(String uri) {
+			XMLType returned = getTypeFromURI(uri);
 			if (returned == null) {
 				// Check an alternative name
 				for (XMLType xmlType : getTypes()) {
@@ -208,7 +223,7 @@ public interface XSDMetaModel extends AbstractXMLDocument<XSDMetaModel>, FlexoMe
 						XMLComplexType complexType = (XMLComplexType) xmlType;
 						for (String elementName : complexType.getElementOccurences()) {
 							if (uri.equals(getAlternativeURI(complexType, elementName))) {
-								typesForURI.put(getAlternativeURI(complexType, elementName), xmlType);
+								typesForContextualURI.put(getAlternativeURI(complexType, elementName), xmlType);
 								return xmlType;
 							}
 						}
@@ -236,7 +251,7 @@ public interface XSDMetaModel extends AbstractXMLDocument<XSDMetaModel>, FlexoMe
 			if (aType instanceof XMLComplexType) {
 				XMLComplexType complexType = (XMLComplexType) aType;
 				for (String elementName : complexType.getElementOccurences()) {
-					typesForURI.put(getAlternativeURI(complexType, elementName), aType);
+					typesForContextualURI.put(getAlternativeURI(complexType, elementName), aType);
 				}
 			}
 		}
@@ -246,7 +261,7 @@ public interface XSDMetaModel extends AbstractXMLDocument<XSDMetaModel>, FlexoMe
 			if (aType instanceof XMLComplexType) {
 				XMLComplexType complexType = (XMLComplexType) aType;
 				for (String elementName : complexType.getElementOccurences()) {
-					typesForURI.remove(getAlternativeURI(complexType, elementName));
+					typesForContextualURI.remove(getAlternativeURI(complexType, elementName));
 				}
 			}
 			types.remove(aType);
