@@ -75,9 +75,9 @@ public interface FreeXMLResource extends XMLResource<FreeXMLDocument, FreeXMLDoc
 			notifyResourceWillLoad();
 
 			FreeXMLDocumentBuilder builder = new FreeXMLDocumentBuilder();
-			builder.setContext(resourceData);
+			builder.setModelContext(resourceData);
 			builder.deserialize(getInputStream());
-			builder.resetContext();
+			builder.resetModelContext();
 
 			notifyResourceLoaded();
 

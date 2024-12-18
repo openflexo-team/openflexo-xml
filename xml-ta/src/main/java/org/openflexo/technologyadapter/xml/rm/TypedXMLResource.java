@@ -159,9 +159,9 @@ public interface TypedXMLResource extends XMLResource<XMLModel, XMLModelFactory>
 			notifyResourceWillLoad();
 
 			XMLModelBuilder builder = new XMLModelBuilder();
-			builder.setContext(resourceData);
+			builder.setModelContext(resourceData);
 			builder.deserialize(getInputStream());
-			builder.resetContext();
+			builder.resetModelContext();
 
 			notifyResourceLoaded();
 

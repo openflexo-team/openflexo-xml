@@ -42,6 +42,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 
+import org.openflexo.technologyadapter.xml.XMLObject;
 import org.openflexo.xml.SaxBasedObjectGraphFactory;
 import org.openflexo.xml.XMLCst;
 import org.xml.sax.SAXException;
@@ -49,14 +50,14 @@ import org.xml.sax.SAXException;
 /**
  * A builder for a {@link FreeXMLDocument} (sax-based)
  */
-public class FreeXMLDocumentBuilder extends SaxBasedObjectGraphFactory {
+public class FreeXMLDocumentBuilder extends SaxBasedObjectGraphFactory<FreeXMLDocument, XMLElement, XMLObject<FreeXMLDocument>> {
 
 	private FreeXMLDocument document = null;
 
 	@Override
-	public Object getInstanceOf(Type aType, String name) {
+	public XMLElement createInstance(Type aType, String name) {
 
-		// System.out.println("Called getInstanceOf() with " + aType + " and " + name);
+		// System.out.println("Called createInstance() with " + aType + " and " + name);
 
 		if (aType == XMLElement.class) {
 			// System.out.println("Creating Element " + name);
@@ -67,7 +68,7 @@ public class FreeXMLDocumentBuilder extends SaxBasedObjectGraphFactory {
 	}
 
 	@Override
-	public Type getTypeForObject(String typeURI, Object container, String objectName) {
+	public Type getTypeForObject(String typeURI, XMLObject<FreeXMLDocument> container, String objectName) {
 
 		// System.out.println(
 		// "Called getTypeForObject() with typeURI=" + typeURI + " and container=" + container + " and objectName=" + objectName);
@@ -109,33 +110,33 @@ public class FreeXMLDocumentBuilder extends SaxBasedObjectGraphFactory {
 	}
 
 	@Override
-	public void addToRootNodes(Object anObject) {
+	public void addToRootNodes(XMLElement anObject) {
 
 		// System.out.println("addToRootNodes with " + anObject);
 
-		document.setRootElement((XMLElement) anObject);
+		document.setRootElement(anObject);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void setContextProperty(String propertyName, Object value) {
+	public void setModelProperty(String propertyName, Object value) {
 
 		// System.out.println("setContextProperty with " + propertyName + " and " + value);
 
 	}
 
 	@Override
-	public void setContext(Object objectGraph) {
-		document = (FreeXMLDocument) objectGraph;
+	public void setModelContext(FreeXMLDocument objectGraph) {
+		document = objectGraph;
 	}
 
 	@Override
-	public void resetContext() {
+	public void resetModelContext() {
 		document = null;
 	}
 
 	@Override
-	public boolean objectHasAttributeNamed(Object object, String propertyName) {
+	public boolean objectHasPropertyNamed(XMLObject<FreeXMLDocument> object, String propertyName) {
 
 		// System.out.println("Called objectHasAttributeNamed() with " + object + " and " + propertyName);
 
@@ -143,32 +144,32 @@ public class FreeXMLDocumentBuilder extends SaxBasedObjectGraphFactory {
 	}
 
 	@Override
-	public void addAttributeValueForObject(Object object, String name, Object value) {
+	public void addPropertyValueForObject(XMLElement object, String name, Object value) {
 
 		// System.out.println("Called addAttributeValueForObject() with " + object + " and " + name + " and " + value);
 
 		if (object instanceof XMLElement) {
 			if (name.equals(XMLCst.CDATA_ATTR_NAME)) {
-				((XMLElement) object).setValue(value);
+				object.setValue(value);
 			}
 			else {
-				((XMLElement) object).setAttributeValue(name, value);
+				object.setAttributeValue(name, value);
 			}
 		}
 	}
 
 	@Override
-	public void addChildToObject(Object currentObject, Object currentContainer) {
+	public void addChildToObject(XMLElement currentObject, XMLElement currentContainer) {
 
 		// System.out.println("addChildToObject with " + currentObject + " and " + currentContainer);
 
 		if (currentObject instanceof XMLElement && currentContainer instanceof XMLElement) {
-			((XMLElement) currentContainer).addToChildElements((XMLElement) currentObject);
+			currentContainer.addToChildElements(currentObject);
 		}
 	}
 
 	@Override
-	public Type getAttributeType(Object currentContainer, String localName) {
+	public Type getTypeForProperty(XMLElement currentContainer, String localName) {
 
 		// System.out.println("getAttributeType with " + currentContainer + " and " + localName);
 

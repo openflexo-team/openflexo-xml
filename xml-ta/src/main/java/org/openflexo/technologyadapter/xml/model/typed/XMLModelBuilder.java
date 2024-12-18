@@ -43,6 +43,7 @@ import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.List;
 
+import org.openflexo.technologyadapter.xml.XMLObject;
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
@@ -54,12 +55,12 @@ import org.xml.sax.SAXException;
 /**
  * A builder for a {@link XMLModel} (sax-based)
  */
-public class XMLModelBuilder extends SaxBasedObjectGraphFactory {
+public class XMLModelBuilder extends SaxBasedObjectGraphFactory<XMLModel, XMLIndividual, XMLObject<XMLModel>> {
 
 	private XMLModel model = null;
 
 	@Override
-	public Object getInstanceOf(Type aType, String name) {
+	public XMLIndividual createInstance(Type aType, String name) {
 
 		if (aType instanceof XMLComplexType) {
 
@@ -74,7 +75,7 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory {
 	}
 
 	@Override
-	public XMLType getTypeForObject(String typeURI, Object container, String objectName) {
+	public XMLType getTypeForObject(String typeURI, XMLObject<XMLModel> container, String objectName) {
 
 		XSDMetaModel mm = model.getMetaModel();
 		XMLType returned = null;
@@ -109,8 +110,8 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory {
 			}
 		}
 
-		System.out.println(
-				"getTypeForObject() ??? " + typeURI + " container: " + container + " objectName=" + objectName + " returns " + returned);
+		// System.out.println(
+		// "getTypeForObject() ??? " + typeURI + " container: " + container + " objectName=" + objectName + " returns " + returned);
 
 		return returned;
 	}
@@ -149,13 +150,13 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory {
 	}
 
 	@Override
-	public void addToRootNodes(Object anObject) {
-		model.setRoot((XMLIndividual) anObject);
+	public void addToRootNodes(XMLIndividual anObject) {
+		model.setRoot(anObject);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void setContextProperty(String propertyName, Object value) {
+	public void setModelProperty(String propertyName, Object value) {
 		if (propertyName.equals(XMLReaderSAXHandler.NAMESPACE_Property)) {
 			model.setNamespace(((List<String>) value).get(0), ((List<String>) value).get(1));
 		}
@@ -163,18 +164,18 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory {
 	}
 
 	@Override
-	public void setContext(Object objectGraph) {
-		model = (XMLModel) objectGraph;
+	public void setModelContext(XMLModel objectGraph) {
+		model = objectGraph;
 
 	}
 
 	@Override
-	public void resetContext() {
+	public void resetModelContext() {
 		model = null;
 	}
 
 	@Override
-	public boolean objectHasAttributeNamed(Object object, String propertyName) {
+	public boolean objectHasPropertyNamed(XMLObject<XMLModel> object, String propertyName) {
 
 		// System.out.println("***** objectHasAttributeNamed??? object=" + object + " propertyName=" + propertyName);
 
@@ -198,13 +199,13 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory {
 	}
 
 	@Override
-	public void addAttributeValueForObject(Object object, String propertyName, Object value) {
+	public void addPropertyValueForObject(XMLIndividual object, String propertyName, Object value) {
 
 		// System.out.println("***** addAttributeValueForObject object=" + object + " name=" + name + " value=" + value);
 
 		if (object instanceof XMLIndividual) {
 
-			XMLProperty<?> prop = getProperty((XMLIndividual) object, propertyName);
+			XMLProperty<?> prop = getProperty(object, propertyName);
 
 			if (prop == null) {
 				/*if (!mm.isReadOnly() || name.equals(XMLCst.CDATA_ATTR_NAME)) {
@@ -228,29 +229,29 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory {
 
 				// System.out.println("On ajoute " + propertyName + "=" + value + " pour " + object);
 
-				((XMLIndividual) object).addPropertyValue(prop, value);
+				object.addPropertyValue(prop, value);
 
 			}
 		}
 	}
 
 	@Override
-	public void addChildToObject(Object currentObject, Object currentContainer) {
+	public void addChildToObject(XMLIndividual currentObject, XMLIndividual currentContainer) {
 
-		//System.out.println("------> Et hop, on ajoute " + currentObject + " a " + currentContainer);
+		// System.out.println("------> Et hop, on ajoute " + currentObject + " a " + currentContainer);
 
 		if (currentContainer instanceof XMLIndividual) {
-			((XMLIndividual) currentContainer).addChild((XMLIndividual) currentObject);
+			currentContainer.addChild(currentObject);
 		}
 
 	}
 
 	@Override
-	public Type getAttributeType(Object currentContainer, String localName) {
-		XMLProperty prop = ((XMLIndividual) currentContainer).getType().getPropertyByName(localName);
+	public Type getTypeForProperty(XMLIndividual currentContainer, String localName) {
+		XMLProperty prop = currentContainer.getType().getPropertyByName(localName);
 
 		if (prop == null) {
-			for (XMLProperty property : ((XMLIndividual) currentContainer).getType().getProperties()) {
+			for (XMLProperty property : currentContainer.getType().getProperties()) {
 				if (localName.equals(property.getXMLSupportName())) {
 					prop = property;
 				}
