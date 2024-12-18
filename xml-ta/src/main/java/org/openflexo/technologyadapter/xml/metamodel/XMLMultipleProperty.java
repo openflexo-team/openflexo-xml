@@ -36,37 +36,54 @@
  * 
  */
 
-package org.openflexo.technologyadapter.xml.model.typed;
+package org.openflexo.technologyadapter.xml.metamodel;
 
+import java.util.List;
+
+import org.openflexo.pamela.annotations.Adder;
 import org.openflexo.pamela.annotations.Getter;
-import org.openflexo.pamela.annotations.Initializer;
+import org.openflexo.pamela.annotations.Getter.Cardinality;
 import org.openflexo.pamela.annotations.ModelEntity;
-import org.openflexo.pamela.annotations.Parameter;
-import org.openflexo.technologyadapter.xml.XMLObject;
-import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
+import org.openflexo.pamela.annotations.Remover;
+import org.openflexo.pamela.annotations.Setter;
 
 /**
- * Implementation of a Property value in XSD/XML technology
  * 
- * @author sylvain, xtof
+ * Represents an XML property with a multiple cardinality
+ * 
+ * @author sylvain
+ * 
+ * @param <TT>
+ *            {@link XMLType} reflected by this property
+ * @param <T>
+ *            actual run-time type beeing accessed though this property
  */
 @ModelEntity(isAbstract = true)
-public abstract interface XMLPropertyValue extends XMLObject<XMLModel> {
+public interface XMLMultipleProperty<TT extends XMLType, T> extends XMLProperty<TT, T> {
 
-	final String PROPERTY = "property";
+	public static final String VALUES_KEY = "values";
+	public static final String LOWER_BOUND_KEY = "lowerBound";
+	public static final String UPPER_BOUND_KEY = "upperBound";
 
-	@Initializer
-	public void XMLPropertyValue(@Parameter(PROPERTY) XMLProperty<?, ?> prop);
+	@Getter(value = VALUES_KEY, cardinality = Cardinality.LIST, ignoreType = true)
+	public List<T> getValues();
 
-	@Getter(value = PROPERTY, ignoreType = true)
-	public XMLProperty<?, ?> getProperty();
+	@Adder(VALUES_KEY)
+	public void addToValues(T aValue);
 
-	// @Setter(PROPERTY)
-	// public void setProperty(XMLProperty<?> prop);
+	@Remover(VALUES_KEY)
+	public void removeFromValues(T aValue);
 
-	public String getStringValue();
+	@Getter(value = LOWER_BOUND_KEY, ignoreType = true)
+	public Integer getLowerBound();
 
-	@Override
-	public boolean equals(Object obj);
+	@Setter(LOWER_BOUND_KEY)
+	public void setLowerBound(Integer b);
+
+	@Getter(value = UPPER_BOUND_KEY, ignoreType = true)
+	public Integer getUpperBound();
+
+	@Setter(UPPER_BOUND_KEY)
+	public void setUpperBound(Integer b);
 
 }

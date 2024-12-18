@@ -185,12 +185,12 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory<XMLModel, XMLInd
 		return false;
 	}
 
-	private XMLProperty<?> getProperty(XMLIndividual object, String propertyName) {
-		XMLProperty<?> prop = object.getType().getPropertyByName(propertyName);
+	private XMLProperty<?, ?> getProperty(XMLIndividual object, String propertyName) {
+		XMLProperty<?, ?> prop = object.getType().getPropertyByName(propertyName);
 		if (prop != null) {
 			return prop;
 		}
-		for (XMLProperty<?> property : object.getType().getProperties()) {
+		for (XMLProperty<?, ?> property : object.getType().getProperties()) {
 			if (propertyName.equals(property.getXMLSupportName())) {
 				return property;
 			}
@@ -205,7 +205,7 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory<XMLModel, XMLInd
 
 		if (object instanceof XMLIndividual) {
 
-			XMLProperty<?> prop = getProperty(object, propertyName);
+			XMLProperty<?, ?> prop = getProperty(object, propertyName);
 
 			if (prop == null) {
 				/*if (!mm.isReadOnly() || name.equals(XMLCst.CDATA_ATTR_NAME)) {

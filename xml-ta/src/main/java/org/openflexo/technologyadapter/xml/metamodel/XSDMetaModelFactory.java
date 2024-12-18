@@ -108,72 +108,53 @@ public class XSDMetaModelFactory extends AbstractXMLDocumentFactory<XSDMetaModel
 		return returned;
 	}
 
-	/*public XMLProperty createProperty(String name, Type aType, XMLSupport xmlSupport, String xmlSupportName) {
-		XMLProperty prop = null;
-	
-		if (!hasProperty(name)) {
-			if (aType != null) {
-				if (aType instanceof XMLComplexType) {
-	
-					prop = getModelFactory().newInstance(XMLObjectProperty.class, name, aType, this);
-					prop.setXMLSupport(XMLSupport.ELEMENT);
-					prop.setXMLSupportName(xmlSupportName);
-				}
-				else if (aType instanceof XMLSimpleType) {
-					prop = getModelFactory().newInstance(XMLDataProperty.class, name, aType, this);
-					prop.setXMLSupport(xmlSupport);
-					prop.setXMLSupportName(xmlSupportName);
-				}
-				else if (aType.equals(String.class)) {
-					prop = getModelFactory().newInstance(XMLDataProperty.class, name, aType, this);
-					prop.setXMLSupport(xmlSupport);
-					prop.setXMLSupportName(xmlSupportName);
-				}
-				else {
-					logger.warning("UNABLE to create a new property named [" + name + "] as it does not map to any known type: "
-							+ aType.toString());
-				}
-			}
-			else {
-				logger.warning("UNABLE to create a new property named [" + name + "]  with a NULL type ");
-			}
-			if (prop != null)
-				addProperty(prop);
-		}
-		return prop;
-	}*/
-
-	public <T extends XMLType> XMLProperty<T> makeProperty(String name, T aType, XMLSupport xmlSupport, String xmlSupportName,
+	public XMLSingleObjectProperty makeSingleObjectProperty(String name, XMLComplexType aType, boolean isRequired, String elementName,
 			XMLComplexType container) {
-
-		if (aType instanceof XMLComplexType) {
-			return (XMLProperty<T>) makeObjectProperty(name, (XMLComplexType) aType, xmlSupportName, container);
-		}
-		else if (aType instanceof XMLSimpleType) {
-			return (XMLProperty<T>) makeDataProperty(name, (XMLSimpleType) aType, xmlSupport, xmlSupportName, container);
-		}
-		/*else if (aType.equals(String.class)) {
-			prop = getModelFactory().newInstance(XMLDataProperty.class, name, aType, this);
-			prop.setXMLSupport(xmlSupport);
-			prop.setXMLSupportName(xmlSupportName);
-		}*/
-		else {
-			logger.warning("UNABLE to create a new property named [" + name + "]  with this type: " + aType);
-			return null;
-		}
+		XMLSingleObjectProperty returned = newInstance(XMLSingleObjectProperty.class, name, aType);
+		container.addToProperties(returned);
+		returned.setIsRequired(isRequired);
+		returned.setXMLSupport(XMLSupport.ELEMENT);
+		returned.setXMLSupportName(elementName);
+		return returned;
 	}
 
-	public XMLObjectProperty makeObjectProperty(String name, XMLComplexType aType, String elementName, XMLComplexType container) {
-		XMLObjectProperty returned = newInstance(XMLObjectProperty.class, name, aType);
+	/**
+	 * 
+	 * @param name
+	 * @param aType
+	 * @param elementName
+	 * @param lowerBound
+	 * @param upperBound
+	 *            -1 for multiple cardinality
+	 * @param container
+	 * @return
+	 */
+	public XMLMultipleObjectProperty makeMultipleObjectProperty(String name, XMLComplexType aType, Integer lowerBound, Integer upperBound,
+			String elementName, XMLComplexType container) {
+		XMLMultipleObjectProperty returned = newInstance(XMLMultipleObjectProperty.class, name, aType);
+		returned.setLowerBound(lowerBound);
+		returned.setUpperBound(upperBound);
 		container.addToProperties(returned);
 		returned.setXMLSupport(XMLSupport.ELEMENT);
 		returned.setXMLSupportName(elementName);
 		return returned;
 	}
 
-	public XMLDataProperty makeDataProperty(String name, XMLSimpleType aType, XMLSupport xmlSupport, String xmlSupportName,
-			XMLComplexType container) {
-		XMLDataProperty returned = newInstance(XMLDataProperty.class, name, aType);
+	public XMLSingleDataProperty<?> makeSingleDataProperty(String name, XMLSimpleType aType, boolean isRequired, XMLSupport xmlSupport,
+			String xmlSupportName, XMLComplexType container) {
+		XMLSingleDataProperty<?> returned = newInstance(XMLSingleDataProperty.class, name, aType);
+		container.addToProperties(returned);
+		returned.setIsRequired(isRequired);
+		returned.setXMLSupport(xmlSupport);
+		returned.setXMLSupportName(xmlSupportName);
+		return returned;
+	}
+
+	public XMLMultipleDataProperty<?> makeMultipleDataProperty(String name, XMLSimpleType aType, Integer lowerBound, Integer upperBound,
+			XMLSupport xmlSupport, String xmlSupportName, XMLComplexType container) {
+		XMLMultipleDataProperty<?> returned = newInstance(XMLMultipleDataProperty.class, name, aType);
+		returned.setLowerBound(lowerBound);
+		returned.setUpperBound(upperBound);
 		container.addToProperties(returned);
 		returned.setXMLSupport(xmlSupport);
 		returned.setXMLSupportName(xmlSupportName);

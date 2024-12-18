@@ -36,37 +36,66 @@
  * 
  */
 
-package org.openflexo.technologyadapter.xml.model.typed;
+package org.openflexo.technologyadapter.xml.metamodel;
 
-import org.openflexo.pamela.annotations.Getter;
+import java.lang.reflect.Type;
+
+import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.Initializer;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.Parameter;
-import org.openflexo.technologyadapter.xml.XMLObject;
-import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
+import org.openflexo.technologyadapter.xml.XMLIndividualType;
+import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
 
 /**
- * Implementation of a Property value in XSD/XML technology
+ * An {@link XMLObjectProperty} with a single cardinality
  * 
- * @author sylvain, xtof
+ * @author sylvain
+ *
  */
 @ModelEntity(isAbstract = true)
-public abstract interface XMLPropertyValue extends XMLObject<XMLModel> {
-
-	final String PROPERTY = "property";
+@ImplementationClass(XMLSingleObjectProperty.XMLSingleObjectPropertyImpl.class)
+public interface XMLSingleObjectProperty extends XMLObjectProperty, XMLSingleProperty<XMLComplexType, XMLIndividual> {
 
 	@Initializer
-	public void XMLPropertyValue(@Parameter(PROPERTY) XMLProperty<?, ?> prop);
+	public XMLSingleObjectProperty init(@Parameter(NAME) String s, @Parameter(TYPE_KEY) XMLComplexType type);
 
-	@Getter(value = PROPERTY, ignoreType = true)
-	public XMLProperty<?, ?> getProperty();
+	public static abstract class XMLSingleObjectPropertyImpl extends XMLObjectPropertyImpl implements XMLSingleObjectProperty {
 
-	// @Setter(PROPERTY)
-	// public void setProperty(XMLProperty<?> prop);
+		@Override
+		public Integer getLowerBound() {
+			if (isRequired())
+				return 1;
+			else
+				return 0;
+		}
 
-	public String getStringValue();
+		@Override
+		public Integer getUpperBound() {
+			return 1;
+		}
 
-	@Override
-	public boolean equals(Object obj);
+		@Override
+		public String getDisplayableDescription() {
+			StringBuffer buffer = new StringBuffer("XMLSingleObjectProperty ");
+			buffer.append(" (").append(getType().getName()).append(") is ");
+			if (isRequired()) {
+				buffer.append(" required");
+			}
+			else {
+				buffer.append(" optional");
+			}
+			return buffer.toString();
+		}
+
+		@Override
+		public Type getAccessedType() {
+			if (getType() != null) {
+				return XMLIndividualType.getXMLIndividualOfType(getType());
+			}
+			return XMLIndividual.class;
+		}
+
+	}
 
 }

@@ -36,37 +36,52 @@
  * 
  */
 
-package org.openflexo.technologyadapter.xml.model.typed;
+package org.openflexo.technologyadapter.xml.metamodel;
 
-import org.openflexo.pamela.annotations.Getter;
+import java.lang.reflect.Type;
+import java.util.List;
+
+import org.openflexo.connie.type.ParameterizedTypeImpl;
+import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.Initializer;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.Parameter;
-import org.openflexo.technologyadapter.xml.XMLObject;
-import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
 
 /**
- * Implementation of a Property value in XSD/XML technology
+ * An {@link XMLDataProperty} with a multiple cardinality
  * 
  * @author sylvain, xtof
+ *
  */
-@ModelEntity(isAbstract = true)
-public abstract interface XMLPropertyValue extends XMLObject<XMLModel> {
-
-	final String PROPERTY = "property";
+@ModelEntity
+@ImplementationClass(XMLMultipleDataProperty.XMLMultipleDataPropertyImpl.class)
+public interface XMLMultipleDataProperty<T> extends XMLDataProperty<T>, XMLMultipleProperty<XMLSimpleType, T> {
 
 	@Initializer
-	public void XMLPropertyValue(@Parameter(PROPERTY) XMLProperty<?, ?> prop);
+	public XMLMultipleDataProperty<T> init(@Parameter(NAME) String s, @Parameter(TYPE_KEY) XMLSimpleType type);
 
-	@Getter(value = PROPERTY, ignoreType = true)
-	public XMLProperty<?, ?> getProperty();
+	/**
+	 * Default implementation for {@link XMLMultipleDataProperty}
+	 */
+	public static abstract class XMLMultipleDataPropertyImpl<T> extends XMLDataPropertyImpl<T> implements XMLMultipleDataProperty<T> {
 
-	// @Setter(PROPERTY)
-	// public void setProperty(XMLProperty<?> prop);
+		@Override
+		public String getDisplayableDescription() {
+			StringBuffer buffer = new StringBuffer("XMLMultipleDataProperty ");
+			buffer.append(getName());
+			buffer.append(" lowerBound=" + getLowerBound());
+			buffer.append(" upperBound" + getUpperBound());
+			return buffer.toString();
+		}
 
-	public String getStringValue();
+		@Override
+		public Type getAccessedType() {
+			if (getType() instanceof XMLSimpleType) {
+				return new ParameterizedTypeImpl(List.class, getType().getJavaType());
+			}
+			return new ParameterizedTypeImpl(List.class, Object.class);
+		}
 
-	@Override
-	public boolean equals(Object obj);
+	}
 
 }

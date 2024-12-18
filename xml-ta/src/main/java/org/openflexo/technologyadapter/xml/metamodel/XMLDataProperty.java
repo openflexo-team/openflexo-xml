@@ -38,13 +38,8 @@
 
 package org.openflexo.technologyadapter.xml.metamodel;
 
-import java.lang.reflect.Type;
-import java.util.List;
-
-import org.openflexo.connie.type.ParameterizedTypeImpl;
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
-import org.openflexo.toolbox.StringUtils;
 
 /**
  * An {@link XMLProperty} with a simple type {@link XMLSimpleType}
@@ -52,103 +47,14 @@ import org.openflexo.toolbox.StringUtils;
  * @author sylvain, xtof
  *
  */
-@ModelEntity
+@ModelEntity(isAbstract = true)
 @ImplementationClass(XMLDataProperty.XMLDataPropertyImpl.class)
-public interface XMLDataProperty extends XMLProperty<XMLSimpleType> {
+public interface XMLDataProperty<T> extends XMLProperty<XMLSimpleType, T> {
 
 	/**
 	 * Default implementation for {@link XMLDataProperty}
 	 */
-	public static abstract class XMLDataPropertyImpl extends XMLPropertyImpl<XMLSimpleType> implements XMLDataProperty {
-		// TODO .... get anything from there
-		// private final XSAttributeUse attributeUse = null;
-
-		@Override
-		public boolean hasDefaultValue() {
-			return StringUtils.isNotEmpty(getDefaultValue());
-		}
-
-		@Override
-		public String getDefaultValue() {
-			/*	if (attributeUse != null) {
-					if (attributeUse.getDefaultValue() != null) {
-						return attributeUse.getDefaultValue().toString();
-					}
-				}
-				*/
-			return null;
-		}
-
-		@Override
-		public String getFixedValue() {
-			/*
-			if (attributeUse != null) {
-				if (attributeUse.getFixedValue() != null) {
-					return attributeUse.getFixedValue().toString();
-				}
-			}*/
-			return null;
-		}
-
-		@Override
-		public boolean isRequired() {
-			/* if (attributeUse != null) {
-				return attributeUse.isRequired();
-			} */
-			return false;
-		}
-
-		@Override
-		public String getDisplayableDescription() {
-			StringBuffer buffer = new StringBuffer("XMLDataProperty ");
-			buffer.append(getName());
-			if (isRequired()) {
-				buffer.append(" required");
-			}
-			else {
-				buffer.append(" optional");
-			}
-			if (hasDefaultValue()) {
-				buffer.append(", default: '").append(getDefaultValue()).append("'");
-			}
-			if (hasFixedValue()) {
-				buffer.append(", fixed: '").append(getFixedValue()).append("'");
-			}
-			return buffer.toString();
-		}
-
-		/*@Override
-		public Integer getLowerBound() {
-			if (isRequired())
-				return 1;
-			else
-				return 0;
-		}*/
-
-		/*@Override
-		public Integer getUpperBound() {
-			return 1;
-		}*/
-
-		@Override
-		public Class<?> getImplementedInterface() {
-			return XMLDataProperty.class;
-		}
-
-		@Override
-		public Type getAccessedType() {
-			if (getUpperBound() == null || (getUpperBound() >= 0 && getUpperBound() <= 1)) {
-				// Single cardinality
-				if (getType() instanceof XMLSimpleType) {
-					return getType().getJavaType();
-				}
-				return Object.class;
-			}
-			if (getType() instanceof XMLSimpleType) {
-				return new ParameterizedTypeImpl(List.class, getType().getJavaType());
-			}
-			return new ParameterizedTypeImpl(List.class, Object.class);
-		}
+	public static abstract class XMLDataPropertyImpl<T> extends XMLPropertyImpl<XMLSimpleType, T> implements XMLDataProperty<T> {
 
 	}
 

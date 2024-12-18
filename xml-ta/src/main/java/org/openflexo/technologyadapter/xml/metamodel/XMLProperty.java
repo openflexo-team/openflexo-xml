@@ -45,12 +45,9 @@ import org.openflexo.pamela.annotations.Getter;
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.Import;
 import org.openflexo.pamela.annotations.Imports;
-import org.openflexo.pamela.annotations.Initializer;
 import org.openflexo.pamela.annotations.ModelEntity;
-import org.openflexo.pamela.annotations.Parameter;
 import org.openflexo.pamela.annotations.Setter;
 import org.openflexo.technologyadapter.xml.XMLObject;
-import org.openflexo.toolbox.StringUtils;
 
 /**
  * 
@@ -60,20 +57,20 @@ import org.openflexo.toolbox.StringUtils;
  * 
  * @author sylvain, xtof
  * 
+ * @param <TT>
+ *            {@link XMLType} reflected by this property
+ * @param <T>
+ *            actual run-time type beeing accessed though this property
  */
 @ModelEntity(isAbstract = true)
 @ImplementationClass(XMLProperty.XMLPropertyImpl.class)
-@Imports({ @Import(XMLObjectProperty.class), @Import(XMLDataProperty.class) })
-public interface XMLProperty<T extends XMLType>
-		extends XMLObject<XSDMetaModel>, Comparable<XMLProperty<T>>, InnerResourceData<XSDMetaModel> {
+@Imports({ @Import(XMLSingleDataProperty.class), @Import(XMLMultipleDataProperty.class), @Import(XMLSingleObjectProperty.class),
+		@Import(XMLMultipleObjectProperty.class) })
+public interface XMLProperty<TT extends XMLType, T>
+		extends XMLObject<XSDMetaModel>, Comparable<XMLProperty<TT, T>>, InnerResourceData<XSDMetaModel> {
 
 	public static final String TYPE_KEY = "type";
 	public static final String CONTAINER_KEY = "container";
-	public static final String DEFAULT_VALUE_KEY = "defaultValue";
-	public static final String FIXED_VALUE_KEY = "fixedValue";
-
-	public static final String LOWER_BOUND_KEY = "lowerBound";
-	public static final String UPPER_BOUND_KEY = "upperBound";
 
 	public static final String XML_SUPPORT_KEY = "xmlSupport";
 	public static final String XML_SUPPORT_NAME_KEY = "xmlSupportName";
@@ -85,9 +82,6 @@ public interface XMLProperty<T extends XMLType>
 		ELEMENT, ATTRIBUTE, CDATA
 	}
 
-	@Initializer
-	public XMLProperty<T> init(@Parameter(NAME) String s, @Parameter(TYPE_KEY) T type);
-
 	@Getter(CONTAINER_KEY)
 	public XMLComplexType getContainer();
 
@@ -95,10 +89,10 @@ public interface XMLProperty<T extends XMLType>
 	public void setContainer(XMLComplexType container);
 
 	@Getter(value = TYPE_KEY, ignoreType = true)
-	public T getType();
+	public TT getType();
 
 	@Setter(TYPE_KEY)
-	public void setType(T aType);
+	public void setType(TT aType);
 
 	/**
 	 * Return type beeing reflected by access of this property
@@ -106,6 +100,10 @@ public interface XMLProperty<T extends XMLType>
 	 * @return
 	 */
 	public Type getAccessedType();
+
+	public Integer getLowerBound();
+
+	public Integer getUpperBound();
 
 	/**
 	 * Returns true if this property was created from an XML element and false if from an XMLAttribute
@@ -133,43 +131,13 @@ public interface XMLProperty<T extends XMLType>
 	@Setter(XML_SUPPORT_NAME_KEY)
 	public void setXMLSupportName(String aName);
 
-	public boolean hasDefaultValue();
-
-	@Getter(DEFAULT_VALUE_KEY)
-	public String getDefaultValue();
-
-	@Setter(DEFAULT_VALUE_KEY)
-	public void setDefaultValue(String value);
-
-	public boolean hasFixedValue();
-
-	@Getter(FIXED_VALUE_KEY)
-	public String getFixedValue();
-
-	@Setter(FIXED_VALUE_KEY)
-	public void setFixedValue(String value);
-
-	public boolean isRequired();
-
-	@Getter(value = LOWER_BOUND_KEY, ignoreType = true)
-	public Integer getLowerBound();
-
-	@Setter(LOWER_BOUND_KEY)
-	public void setLowerBound(Integer b);
-
-	@Getter(value = UPPER_BOUND_KEY, ignoreType = true)
-	public Integer getUpperBound();
-
-	@Setter(UPPER_BOUND_KEY)
-	public void setUpperBound(Integer b);
-
 	/**
 	 * Default implementation for {@link XMLProperty}
 	 */
-	public static abstract class XMLPropertyImpl<T extends XMLType> extends XMLObjectImpl<XSDMetaModel> implements XMLProperty<T> {
+	public static abstract class XMLPropertyImpl<TT extends XMLType, T> extends XMLObjectImpl<XSDMetaModel> implements XMLProperty<TT, T> {
 
 		@Override
-		public int compareTo(XMLProperty<T> arg0) {
+		public int compareTo(XMLProperty<TT, T> arg0) {
 			return this.getName().compareTo(arg0.getName());
 		}
 
@@ -181,20 +149,6 @@ public interface XMLProperty<T extends XMLType>
 			return null;
 		}
 
-		@Override
-		public boolean hasFixedValue() {
-			return StringUtils.isNotEmpty(getFixedValue());
-		}
-
-		@Override
-		public boolean hasDefaultValue() {
-			return StringUtils.isNotEmpty(getDefaultValue());
-		}
-
-		@Override
-		public boolean isRequired() {
-			return false;
-		}
 	}
 
 }

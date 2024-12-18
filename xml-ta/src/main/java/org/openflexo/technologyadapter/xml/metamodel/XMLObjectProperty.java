@@ -38,111 +38,21 @@
 
 package org.openflexo.technologyadapter.xml.metamodel;
 
-import java.lang.reflect.Type;
-import java.util.List;
-
-import org.openflexo.connie.type.ParameterizedTypeImpl;
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
-import org.openflexo.technologyadapter.xml.XMLIndividualType;
-import org.openflexo.toolbox.StringUtils;
+import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
 
 /**
  * An {@link XMLProperty} with a complex type {@link XMLComplexType}
  * 
- * @author sylvain, xtof
+ * @author sylvain
  *
  */
-@ModelEntity
+@ModelEntity(isAbstract = true)
 @ImplementationClass(XMLObjectProperty.XMLObjectPropertyImpl.class)
-public interface XMLObjectProperty extends XMLProperty<XMLComplexType> {
+public interface XMLObjectProperty extends XMLProperty<XMLComplexType, XMLIndividual> {
 
-	public static abstract class XMLObjectPropertyImpl extends XMLPropertyImpl<XMLComplexType> implements XMLObjectProperty {
-
-		@Override
-		public boolean hasDefaultValue() {
-			return StringUtils.isNotEmpty(getDefaultValue());
-		}
-
-		@Override
-		public String getDefaultValue() {
-			return null;
-		}
-
-		@Override
-		public boolean hasFixedValue() {
-			return StringUtils.isNotEmpty(getFixedValue());
-		}
-
-		@Override
-		public String getFixedValue() {
-			return null;
-		}
-
-		@Override
-		public boolean isRequired() {
-			return false;
-		}
-
-		@Override
-		public String getDisplayableDescription() {
-			StringBuffer buffer = new StringBuffer("XMLObjectProperty ");
-			buffer.append(" (").append(getType().getName()).append(") is ");
-			if (isRequired()) {
-				buffer.append(" required");
-			}
-			else {
-				buffer.append(" optional");
-			}
-			if (hasDefaultValue()) {
-				buffer.append(", default: '").append(getDefaultValue()).append("'");
-			}
-			if (hasFixedValue()) {
-				buffer.append(", fixed: '").append(getFixedValue()).append("'");
-			}
-			return buffer.toString();
-		}
-
-		/*@Override
-		public Integer getLowerBound() {
-			if (isRequired())
-				return 1;
-			else
-				return 0;
-		}
-		
-		@Override
-		public Integer getUpperBound() {
-			// Object Properties are unbound
-			return -1;
-		}*/
-
-		/*@Override
-		public boolean isFromXMLElement() {
-			return true;
-		}*/
-
-		@Override
-		public Class<?> getImplementedInterface() {
-			return XMLObjectProperty.class;
-		}
-
-		@Override
-		public Type getAccessedType() {
-			if (getUpperBound() == null || (getUpperBound() >= 0 && getUpperBound() <= 1)) {
-				// Single cardinality
-				if (getType() != null) {
-					return XMLIndividualType.getXMLIndividualOfType(getType());
-				}
-				return Object.class;
-			}
-			else {
-				if (getType() != null) {
-					return new ParameterizedTypeImpl(List.class, XMLIndividualType.getXMLIndividualOfType(getType()));
-				}
-				return new ParameterizedTypeImpl(List.class, Object.class);
-			}
-		}
+	public static abstract class XMLObjectPropertyImpl extends XMLPropertyImpl<XMLComplexType, XMLIndividual> implements XMLObjectProperty {
 
 	}
 

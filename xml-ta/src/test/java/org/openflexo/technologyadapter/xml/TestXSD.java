@@ -171,7 +171,7 @@ public class TestXSD extends OpenflexoTestCase {
 
 		XMLComplexType writerType = metaModel.getComplexTypeFromURI("http://www.example.org/Library#Writer");
 		assertNotNull(writerType);
-		XMLDataProperty writerBookProperty = (XMLDataProperty) writerType.getPropertyByName("book");
+		XMLDataProperty writerBookProperty = (XMLDataProperty) writerType.getPropertyByName("books");
 		assertNotNull(writerBookProperty);
 		assertEquals(XMLSupport.ELEMENT, writerBookProperty.getXMLSupport());
 		assertEquals("Book", writerBookProperty.getXMLSupportName());
@@ -273,8 +273,8 @@ public class TestXSD extends OpenflexoTestCase {
 
 	}
 
-	private XMLProperty<?> assertProperty(String propertyName, XMLType propertyType, XMLComplexType ownerType) {
-		XMLProperty<?> p = ownerType.getPropertyByName(propertyName);
+	private XMLProperty<?, ?> assertProperty(String propertyName, XMLType propertyType, XMLComplexType ownerType) {
+		XMLProperty<?, ?> p = ownerType.getPropertyByName(propertyName);
 		assertNotNull(p);
 		assertSame(propertyType, p.getType());
 		return p;

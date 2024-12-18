@@ -63,6 +63,7 @@ import org.openflexo.technologyadapter.xml.metamodel.XMLDataProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLObjectProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty.XMLSupport;
+import org.openflexo.technologyadapter.xml.metamodel.XMLSimpleType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.xml.XMLCst;
 import org.w3c.dom.Document;
@@ -319,8 +320,8 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 				XSDMetaModel mm = getContainerModel().getMetaModel();
 				if (!mm.isReadOnly()) {
 					// TODO Manage complex typesForURI and actual typesForURI for objects.
-					prop = mm.getModelFactory().makeProperty(name, mm.getTypeFromURI(XSDMetaModel.STRING_URI), XMLSupport.ELEMENT, name,
-							getType());
+					prop = mm.getModelFactory().makeSingleDataProperty(name, (XMLSimpleType) mm.getTypeFromURI(XSDMetaModel.STRING_URI),
+							false, XMLSupport.ELEMENT, name, getType());
 
 				}
 				else {

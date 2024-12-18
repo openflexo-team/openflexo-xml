@@ -36,37 +36,51 @@
  * 
  */
 
-package org.openflexo.technologyadapter.xml.model.typed;
+package org.openflexo.technologyadapter.xml.metamodel;
 
-import org.openflexo.pamela.annotations.Getter;
+import java.lang.reflect.Type;
+import java.util.List;
+
+import org.openflexo.connie.type.ParameterizedTypeImpl;
+import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.Initializer;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.Parameter;
-import org.openflexo.technologyadapter.xml.XMLObject;
-import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
+import org.openflexo.technologyadapter.xml.XMLIndividualType;
+import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
 
 /**
- * Implementation of a Property value in XSD/XML technology
+ * An {@link XMLObjectProperty} with a multiple cardinality
  * 
- * @author sylvain, xtof
+ * @author sylvain
+ *
  */
-@ModelEntity(isAbstract = true)
-public abstract interface XMLPropertyValue extends XMLObject<XMLModel> {
-
-	final String PROPERTY = "property";
+@ModelEntity
+@ImplementationClass(XMLMultipleObjectProperty.XMLMultipleObjectPropertyImpl.class)
+public interface XMLMultipleObjectProperty extends XMLObjectProperty, XMLMultipleProperty<XMLComplexType, XMLIndividual> {
 
 	@Initializer
-	public void XMLPropertyValue(@Parameter(PROPERTY) XMLProperty<?, ?> prop);
+	public XMLMultipleObjectProperty init(@Parameter(NAME) String s, @Parameter(TYPE_KEY) XMLComplexType type);
 
-	@Getter(value = PROPERTY, ignoreType = true)
-	public XMLProperty<?, ?> getProperty();
+	public static abstract class XMLMultipleObjectPropertyImpl extends XMLObjectPropertyImpl implements XMLMultipleObjectProperty {
 
-	// @Setter(PROPERTY)
-	// public void setProperty(XMLProperty<?> prop);
+		@Override
+		public String getDisplayableDescription() {
+			StringBuffer buffer = new StringBuffer("XMLMultipleObjectProperty ");
+			buffer.append(getName());
+			buffer.append(" lowerBound=" + getLowerBound());
+			buffer.append(" upperBound" + getUpperBound());
+			return buffer.toString();
+		}
 
-	public String getStringValue();
+		@Override
+		public Type getAccessedType() {
+			if (getType() != null) {
+				return new ParameterizedTypeImpl(List.class, XMLIndividualType.getXMLIndividualOfType(getType()));
+			}
+			return new ParameterizedTypeImpl(List.class, XMLIndividualType.class);
+		}
 
-	@Override
-	public boolean equals(Object obj);
+	}
 
 }

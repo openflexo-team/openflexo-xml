@@ -56,6 +56,7 @@ import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLEnumerationType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty.XMLSupport;
+import org.openflexo.technologyadapter.xml.metamodel.XMLSimpleType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModelFactory;
@@ -231,7 +232,7 @@ public interface XSDMetaModelResource
 		 * @param owner
 		 * @return
 		 */
-		private XMLProperty<?> createProperty(XSElementDecl element, XMLComplexType owner) {
+		private XMLProperty<?, ?> createProperty(XSElementDecl element, XMLComplexType owner) {
 			XSType elementType = element.getType();
 			String propertyName = JavaUtils.getVariableName(element.getName());
 
@@ -250,20 +251,43 @@ public interface XSDMetaModelResource
 					propertyName = propertyName + "s";
 				}
 
-				XMLProperty newProperty = resourceData.getModelFactory().makeProperty(propertyName, propertyType, XMLSupport.ELEMENT,
-						element.getName(), owner);
 				if (particle != null) {
+					Integer lowerBound = 0;
+					Integer upperBound = 1;
 					if (particle.getMinOccurs() != null)
-						newProperty.setLowerBound(particle.getMinOccurs().intValue());
+						lowerBound = particle.getMinOccurs().intValue();
 					if (particle.getMaxOccurs() != null)
-						newProperty.setUpperBound(particle.getMaxOccurs().intValue());
+						upperBound = particle.getMaxOccurs().intValue();
+					return resourceData.getModelFactory().makeMultipleObjectProperty(propertyName, (XMLComplexType) propertyType,
+							lowerBound, upperBound, element.getName(), owner);
 				}
-				return newProperty;
+				else {
+					return resourceData.getModelFactory().makeSingleObjectProperty(propertyName, (XMLComplexType) propertyType, false,
+							element.getName(), owner);
+				}
 
 			}
 			else {
-				return resourceData.getModelFactory().makeProperty(propertyName, propertyType, XMLSupport.ELEMENT, element.getName(),
-						owner);
+				XSParticle particle = fetcher.getParticle(element);
+				if (particle != null && particle.isRepeated()) {
+					propertyName = propertyName + "s";
+				}
+
+				if (particle != null) {
+					Integer lowerBound = 0;
+					Integer upperBound = 1;
+					if (particle.getMinOccurs() != null)
+						lowerBound = particle.getMinOccurs().intValue();
+					if (particle.getMaxOccurs() != null)
+						upperBound = particle.getMaxOccurs().intValue();
+					return resourceData.getModelFactory().makeMultipleDataProperty(propertyName, (XMLSimpleType) propertyType, lowerBound,
+							upperBound, XMLSupport.ELEMENT, element.getName(), owner);
+				}
+				else {
+					return resourceData.getModelFactory().makeSingleDataProperty(propertyName, (XMLSimpleType) propertyType, false,
+							XMLSupport.ELEMENT, element.getName(), owner);
+				}
+
 			}
 
 		}
@@ -326,8 +350,8 @@ public interface XSDMetaModelResource
 						}
 
 						// TODO: better manage typesForURI
-						resourceData.getModelFactory().makeProperty(attribute.getName(), type, XMLSupport.ATTRIBUTE, attribute.getName(),
-								(XMLComplexType) owner);
+						resourceData.getModelFactory().makeSingleDataProperty(attribute.getName(), (XMLSimpleType) type, false,
+								XMLSupport.ATTRIBUTE, attribute.getName(), (XMLComplexType) owner);
 
 					}
 					else {

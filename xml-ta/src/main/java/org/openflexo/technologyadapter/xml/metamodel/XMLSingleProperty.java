@@ -36,37 +36,38 @@
  * 
  */
 
-package org.openflexo.technologyadapter.xml.model.typed;
+package org.openflexo.technologyadapter.xml.metamodel;
 
 import org.openflexo.pamela.annotations.Getter;
-import org.openflexo.pamela.annotations.Initializer;
 import org.openflexo.pamela.annotations.ModelEntity;
-import org.openflexo.pamela.annotations.Parameter;
-import org.openflexo.technologyadapter.xml.XMLObject;
-import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
+import org.openflexo.pamela.annotations.Setter;
 
 /**
- * Implementation of a Property value in XSD/XML technology
  * 
- * @author sylvain, xtof
+ * Represents an XML property with a single cardinality
+ * 
+ * @author sylvain
+ * 
+ * @param <TT>
+ *            {@link XMLType} reflected by this property
+ * @param <T>
+ *            actual run-time type beeing accessed though this property
  */
 @ModelEntity(isAbstract = true)
-public abstract interface XMLPropertyValue extends XMLObject<XMLModel> {
+public interface XMLSingleProperty<TT extends XMLType, T> extends XMLProperty<TT, T> {
 
-	final String PROPERTY = "property";
+	public static final String VALUE_KEY = "value";
+	public static final String IS_REQUIRED_KEY = "isRequired";
 
-	@Initializer
-	public void XMLPropertyValue(@Parameter(PROPERTY) XMLProperty<?, ?> prop);
+	@Getter(value = VALUE_KEY, ignoreType = true)
+	public T getValue();
 
-	@Getter(value = PROPERTY, ignoreType = true)
-	public XMLProperty<?, ?> getProperty();
+	@Setter(VALUE_KEY)
+	public void setValue(T aValue);
 
-	// @Setter(PROPERTY)
-	// public void setProperty(XMLProperty<?> prop);
+	@Getter(value = IS_REQUIRED_KEY, defaultValue = "false")
+	public boolean isRequired();
 
-	public String getStringValue();
-
-	@Override
-	public boolean equals(Object obj);
-
+	@Setter(IS_REQUIRED_KEY)
+	public void setIsRequired(boolean required);
 }
