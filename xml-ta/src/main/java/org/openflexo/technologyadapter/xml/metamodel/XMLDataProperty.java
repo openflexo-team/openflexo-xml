@@ -38,8 +38,16 @@
 
 package org.openflexo.technologyadapter.xml.metamodel;
 
+import java.lang.reflect.Type;
+import java.util.List;
+
+import org.openflexo.connie.type.ParameterizedTypeImpl;
+import org.openflexo.pamela.annotations.Getter;
 import org.openflexo.pamela.annotations.ImplementationClass;
+import org.openflexo.pamela.annotations.Initializer;
 import org.openflexo.pamela.annotations.ModelEntity;
+import org.openflexo.pamela.annotations.Parameter;
+import org.openflexo.pamela.annotations.Setter;
 
 /**
  * An {@link XMLProperty} with a simple type {@link XMLSimpleType}
@@ -47,14 +55,103 @@ import org.openflexo.pamela.annotations.ModelEntity;
  * @author sylvain, xtof
  *
  */
-@ModelEntity(isAbstract = true)
+@ModelEntity
 @ImplementationClass(XMLDataProperty.XMLDataPropertyImpl.class)
 public interface XMLDataProperty<T> extends XMLProperty<XMLSimpleType, T> {
+
+	@Initializer
+	public XMLDataProperty<T> init(@Parameter(NAME) String s, @Parameter(TYPE_KEY) XMLSimpleType type);
+
+	public static final String DEFAULT_VALUE_KEY = "defaultValue";
+	public static final String FIXED_VALUE_KEY = "fixedValue";
+
+	public boolean hasDefaultValue();
+
+	@Getter(value = DEFAULT_VALUE_KEY, ignoreType = true)
+	public T getDefaultValue();
+
+	@Setter(DEFAULT_VALUE_KEY)
+	public void setDefaultValue(T value);
+
+	public boolean hasFixedValue();
+
+	@Getter(value = FIXED_VALUE_KEY, ignoreType = true)
+	public T getFixedValue();
+
+	@Setter(FIXED_VALUE_KEY)
+	public void setFixedValue(T value);
 
 	/**
 	 * Default implementation for {@link XMLDataProperty}
 	 */
 	public static abstract class XMLDataPropertyImpl<T> extends XMLPropertyImpl<XMLSimpleType, T> implements XMLDataProperty<T> {
+
+		// TODO .... get anything from there
+		// private final XSAttributeUse attributeUse = null;
+
+		@Override
+		public boolean hasFixedValue() {
+			return getFixedValue() != null;
+		}
+
+		@Override
+		public boolean hasDefaultValue() {
+			return getDefaultValue() != null;
+		}
+
+		@Override
+		public T getDefaultValue() {
+			/*	if (attributeUse != null) {
+					if (attributeUse.getDefaultValue() != null) {
+						return attributeUse.getDefaultValue().toString();
+					}
+				}
+			 */
+			return null;
+		}
+
+		@Override
+		public T getFixedValue() {
+			/*
+			if (attributeUse != null) {
+				if (attributeUse.getFixedValue() != null) {
+					return attributeUse.getFixedValue().toString();
+				}
+			}*/
+			return null;
+		}
+
+		@Override
+		public String getDisplayableDescription() {
+			StringBuffer buffer = new StringBuffer("XMLDataProperty ");
+			buffer.append(getName());
+			buffer.append(" lowerBound=" + getLowerBound());
+			buffer.append(" upperBound" + getUpperBound());
+			if (hasDefaultValue()) {
+				buffer.append(", default: '").append(getDefaultValue()).append("'");
+			}
+			if (hasFixedValue()) {
+				buffer.append(", fixed: '").append(getFixedValue()).append("'");
+			}
+			return buffer.toString();
+		}
+
+		@Override
+		public Type getAccessedType() {
+			if (isMultiple()) {
+				if (getType() != null) {
+					return new ParameterizedTypeImpl(List.class, getType().getJavaType());
+				}
+				return new ParameterizedTypeImpl(List.class, Object.class);
+			}
+			else {
+				if (getType() != null) {
+					return getType().getJavaType();
+				}
+				return Object.class;
+
+			}
+		}
 
 	}
 

@@ -258,8 +258,8 @@ public interface XSDMetaModelResource
 						lowerBound = particle.getMinOccurs().intValue();
 					if (particle.getMaxOccurs() != null)
 						upperBound = particle.getMaxOccurs().intValue();
-					return resourceData.getModelFactory().makeMultipleObjectProperty(propertyName, (XMLComplexType) propertyType,
-							lowerBound, upperBound, element.getName(), owner);
+					return resourceData.getModelFactory().makeObjectProperty(propertyName, (XMLComplexType) propertyType, lowerBound,
+							upperBound, element.getName(), owner);
 				}
 				else {
 					return resourceData.getModelFactory().makeSingleObjectProperty(propertyName, (XMLComplexType) propertyType, false,
@@ -280,7 +280,7 @@ public interface XSDMetaModelResource
 						lowerBound = particle.getMinOccurs().intValue();
 					if (particle.getMaxOccurs() != null)
 						upperBound = particle.getMaxOccurs().intValue();
-					return resourceData.getModelFactory().makeMultipleDataProperty(propertyName, (XMLSimpleType) propertyType, lowerBound,
+					return resourceData.getModelFactory().makeDataProperty(propertyName, (XMLSimpleType) propertyType, lowerBound,
 							upperBound, XMLSupport.ELEMENT, element.getName(), owner);
 				}
 				else {

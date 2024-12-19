@@ -108,14 +108,14 @@ public class XSDMetaModelFactory extends AbstractXMLDocumentFactory<XSDMetaModel
 		return returned;
 	}
 
-	public XMLSingleObjectProperty makeSingleObjectProperty(String name, XMLComplexType aType, boolean isRequired, String elementName,
+	public XMLObjectProperty makeSingleObjectProperty(String name, XMLComplexType aType, boolean isRequired, String elementName,
 			XMLComplexType container) {
-		XMLSingleObjectProperty returned = newInstance(XMLSingleObjectProperty.class, name, aType);
-		container.addToProperties(returned);
-		returned.setIsRequired(isRequired);
-		returned.setXMLSupport(XMLSupport.ELEMENT);
-		returned.setXMLSupportName(elementName);
-		return returned;
+		if (isRequired) {
+			return makeObjectProperty(name, aType, 1, 1, elementName, container);
+		}
+		else {
+			return makeObjectProperty(name, aType, 0, 1, elementName, container);
+		}
 	}
 
 	/**
@@ -129,9 +129,9 @@ public class XSDMetaModelFactory extends AbstractXMLDocumentFactory<XSDMetaModel
 	 * @param container
 	 * @return
 	 */
-	public XMLMultipleObjectProperty makeMultipleObjectProperty(String name, XMLComplexType aType, Integer lowerBound, Integer upperBound,
+	public XMLObjectProperty makeObjectProperty(String name, XMLComplexType aType, Integer lowerBound, Integer upperBound,
 			String elementName, XMLComplexType container) {
-		XMLMultipleObjectProperty returned = newInstance(XMLMultipleObjectProperty.class, name, aType);
+		XMLObjectProperty returned = newInstance(XMLObjectProperty.class, name, aType);
 		returned.setLowerBound(lowerBound);
 		returned.setUpperBound(upperBound);
 		container.addToProperties(returned);
@@ -140,19 +140,19 @@ public class XSDMetaModelFactory extends AbstractXMLDocumentFactory<XSDMetaModel
 		return returned;
 	}
 
-	public XMLSingleDataProperty<?> makeSingleDataProperty(String name, XMLSimpleType aType, boolean isRequired, XMLSupport xmlSupport,
+	public XMLDataProperty<?> makeSingleDataProperty(String name, XMLSimpleType aType, boolean isRequired, XMLSupport xmlSupport,
 			String xmlSupportName, XMLComplexType container) {
-		XMLSingleDataProperty<?> returned = newInstance(XMLSingleDataProperty.class, name, aType);
-		container.addToProperties(returned);
-		returned.setIsRequired(isRequired);
-		returned.setXMLSupport(xmlSupport);
-		returned.setXMLSupportName(xmlSupportName);
-		return returned;
+		if (isRequired) {
+			return makeDataProperty(name, aType, 1, 1, xmlSupport, xmlSupportName, container);
+		}
+		else {
+			return makeDataProperty(name, aType, 0, 1, xmlSupport, xmlSupportName, container);
+		}
 	}
 
-	public XMLMultipleDataProperty<?> makeMultipleDataProperty(String name, XMLSimpleType aType, Integer lowerBound, Integer upperBound,
+	public XMLDataProperty<?> makeDataProperty(String name, XMLSimpleType aType, Integer lowerBound, Integer upperBound,
 			XMLSupport xmlSupport, String xmlSupportName, XMLComplexType container) {
-		XMLMultipleDataProperty<?> returned = newInstance(XMLMultipleDataProperty.class, name, aType);
+		XMLDataProperty<?> returned = newInstance(XMLDataProperty.class, name, aType);
 		returned.setLowerBound(lowerBound);
 		returned.setUpperBound(upperBound);
 		container.addToProperties(returned);

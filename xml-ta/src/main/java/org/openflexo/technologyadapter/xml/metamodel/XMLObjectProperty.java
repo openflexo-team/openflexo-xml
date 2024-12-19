@@ -38,8 +38,15 @@
 
 package org.openflexo.technologyadapter.xml.metamodel;
 
+import java.lang.reflect.Type;
+import java.util.List;
+
+import org.openflexo.connie.type.ParameterizedTypeImpl;
 import org.openflexo.pamela.annotations.ImplementationClass;
+import org.openflexo.pamela.annotations.Initializer;
 import org.openflexo.pamela.annotations.ModelEntity;
+import org.openflexo.pamela.annotations.Parameter;
+import org.openflexo.technologyadapter.xml.XMLIndividualType;
 import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
 
 /**
@@ -48,11 +55,45 @@ import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
  * @author sylvain
  *
  */
-@ModelEntity(isAbstract = true)
+@ModelEntity
 @ImplementationClass(XMLObjectProperty.XMLObjectPropertyImpl.class)
 public interface XMLObjectProperty extends XMLProperty<XMLComplexType, XMLIndividual> {
 
+	@Initializer
+	public XMLObjectProperty init(@Parameter(NAME) String s, @Parameter(TYPE_KEY) XMLComplexType type);
+
 	public static abstract class XMLObjectPropertyImpl extends XMLPropertyImpl<XMLComplexType, XMLIndividual> implements XMLObjectProperty {
+
+		@Override
+		public String getDisplayableDescription() {
+			StringBuffer buffer = new StringBuffer("XMLObjectProperty ");
+			buffer.append(getName());
+			buffer.append(" lowerBound=" + getLowerBound());
+			buffer.append(" upperBound" + getUpperBound());
+			if (isRequired()) {
+				buffer.append(" required");
+			}
+			else {
+				buffer.append(" optional");
+			}
+			return buffer.toString();
+		}
+
+		@Override
+		public Type getAccessedType() {
+			if (isMultiple()) {
+				if (getType() != null) {
+					return new ParameterizedTypeImpl(List.class, XMLIndividualType.getXMLIndividualOfType(getType()));
+				}
+				return new ParameterizedTypeImpl(List.class, XMLIndividual.class);
+			}
+			else {
+				if (getType() != null) {
+					return XMLIndividualType.getXMLIndividualOfType(getType());
+				}
+				return XMLIndividual.class;
+			}
+		}
 
 	}
 

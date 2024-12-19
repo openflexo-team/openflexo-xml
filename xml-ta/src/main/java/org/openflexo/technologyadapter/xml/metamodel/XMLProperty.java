@@ -64,13 +64,15 @@ import org.openflexo.technologyadapter.xml.XMLObject;
  */
 @ModelEntity(isAbstract = true)
 @ImplementationClass(XMLProperty.XMLPropertyImpl.class)
-@Imports({ @Import(XMLSingleDataProperty.class), @Import(XMLMultipleDataProperty.class), @Import(XMLSingleObjectProperty.class),
-		@Import(XMLMultipleObjectProperty.class) })
+@Imports({ @Import(XMLDataProperty.class), @Import(XMLObjectProperty.class) })
 public interface XMLProperty<TT extends XMLType, T>
 		extends XMLObject<XSDMetaModel>, Comparable<XMLProperty<TT, T>>, InnerResourceData<XSDMetaModel> {
 
 	public static final String TYPE_KEY = "type";
 	public static final String CONTAINER_KEY = "container";
+
+	public static final String LOWER_BOUND_KEY = "lowerBound";
+	public static final String UPPER_BOUND_KEY = "upperBound";
 
 	public static final String XML_SUPPORT_KEY = "xmlSupport";
 	public static final String XML_SUPPORT_NAME_KEY = "xmlSupportName";
@@ -101,9 +103,17 @@ public interface XMLProperty<TT extends XMLType, T>
 	 */
 	public Type getAccessedType();
 
+	@Getter(value = LOWER_BOUND_KEY, ignoreType = true)
 	public Integer getLowerBound();
 
+	@Setter(LOWER_BOUND_KEY)
+	public void setLowerBound(Integer b);
+
+	@Getter(value = UPPER_BOUND_KEY, ignoreType = true)
 	public Integer getUpperBound();
+
+	@Setter(UPPER_BOUND_KEY)
+	public void setUpperBound(Integer b);
 
 	/**
 	 * Returns true if this property was created from an XML element and false if from an XMLAttribute
@@ -131,6 +141,10 @@ public interface XMLProperty<TT extends XMLType, T>
 	@Setter(XML_SUPPORT_NAME_KEY)
 	public void setXMLSupportName(String aName);
 
+	public boolean isRequired();
+
+	public boolean isMultiple();
+
 	/**
 	 * Default implementation for {@link XMLProperty}
 	 */
@@ -149,6 +163,21 @@ public interface XMLProperty<TT extends XMLType, T>
 			return null;
 		}
 
+		@Override
+		public boolean isRequired() {
+			if (getLowerBound() != null && getLowerBound() >= 1) {
+				return true;
+			}
+			return false;
+		}
+
+		@Override
+		public boolean isMultiple() {
+			if (getUpperBound() != null && (getUpperBound() > 1 || getUpperBound() == -1)) {
+				return true;
+			}
+			return false;
+		}
 	}
 
 }
