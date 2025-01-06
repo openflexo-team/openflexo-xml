@@ -58,7 +58,6 @@ import org.openflexo.foundation.test.OpenflexoProjectAtRunTimeTestCase;
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
-import org.openflexo.technologyadapter.xml.model.typed.XMLObjectPropertyValue;
 import org.openflexo.technologyadapter.xml.rm.TypedXMLResource;
 import org.openflexo.technologyadapter.xml.rm.XMLModelRepository;
 import org.openflexo.technologyadapter.xml.rm.XSDMetaModelRepository;
@@ -148,6 +147,12 @@ public class TestPurchaseOrderXMLModel extends OpenflexoProjectAtRunTimeTestCase
 		Helpers.dumpIndividual(library1Resource.getModelData().getRoot(), "");
 
 		XMLIndividual po = library1Resource.getModelData().getRoot();
+
+		/*System.out.println("Hop le root: " + po);
+		System.out.println("po.getType()=" + po.getType());
+		System.out.println("poType=" + poType);
+		System.exit(-1);*/
+
 		assertSame(poType, po.getType());
 
 		XMLIndividual shippingAddress = po.getChildren().get(0);
@@ -156,8 +161,8 @@ public class TestPurchaseOrderXMLModel extends OpenflexoProjectAtRunTimeTestCase
 		assertSame(addressType, billingAddress.getType());
 
 		// assertEquals(billingAddress, ((XMLObjectPropertyValue) po.getPropertyValue("billTo")).getValues().get(0));
-		assertEquals(billingAddress, ((XMLObjectPropertyValue) po.getPropertyValue("billTo")).getValues().get(0));
-		assertEquals(shippingAddress, ((XMLObjectPropertyValue) po.getPropertyValue("shipTos")).getValues().get(1));
+		assertEquals(billingAddress, po.getPropertyValues("billTo").get(0));
+		assertEquals(shippingAddress, po.getPropertyValues("shipTos").get(0));
 		// assertEquals(shippingAddress, po.getPropertyValue("shipTos"));
 
 	}

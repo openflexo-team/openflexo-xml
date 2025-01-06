@@ -38,53 +38,47 @@
 
 package org.openflexo.technologyadapter.xml.model.typed;
 
-import org.openflexo.pamela.annotations.Getter;
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
-import org.openflexo.pamela.annotations.Setter;
+import org.openflexo.technologyadapter.xml.metamodel.XMLDataProperty;
 
 /**
- * Implementation of an Data Property values in XSD/XML technology.<br>
+ * Implementation of data property value in XSD/XML technology.<br>
  * 
  * @author sylvain, xtof
  */
 @ModelEntity
 @ImplementationClass(XMLDataPropertyValue.XMLDataPropertyValueImpl.class)
-public interface XMLDataPropertyValue extends XMLPropertyValue {
+public interface XMLDataPropertyValue<T> extends XMLPropertyValue<XMLDataProperty<T>, T> {
 
-	final String VALUE = "value";
-
+	/*final String VALUE = "value";
+	
 	@Getter(value = VALUE, ignoreType = true)
 	public Object getValue();
-
+	
 	@Setter(VALUE)
-	public void setValue(Object value);
+	public void setValue(Object value);*/
 
-	/**
-	 * Implementation of an Data Property values in XSD/XML technology.<br>
-	 * 
-	 * @author sylvain, xtof
-	 */
-	public static abstract class XMLDataPropertyValueImpl implements XMLDataPropertyValue {
+	public static abstract class XMLDataPropertyValueImpl<T> implements XMLDataPropertyValue<T> {
 
-		@Override
+		/*@Override
 		public boolean equals(Object obj) {
 			// One Single Value per DataProperty in XML
 			return getValue().equals(obj);
-
+		
 		}
-
+		
 		@Override
 		public String toString() {
-
+		
 			return getValue().toString();
 		}
-
+		
 		@Override
 		public String getStringValue() {
 			// TODO manage this better.
 			return getValue().toString();
-		}
+		}*/
 
 	}
 

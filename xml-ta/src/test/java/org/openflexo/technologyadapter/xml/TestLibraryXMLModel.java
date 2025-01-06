@@ -167,7 +167,7 @@ public class TestLibraryXMLModel extends OpenflexoProjectAtRunTimeTestCase {
 		assertEquals("Hector", writer1.getPropertyValue("name"));
 		assertEquals("Simeon Le Papillon", writer2.getPropertyValue("name"));
 		assertEquals("Hector", book1.getPropertyValue("title"));
-		assertEquals(35, book1.getPropertyValue("pages"));
+		assertEquals(35, (int) book1.getPropertyValue("pages"));
 		assertEquals("Mystery", book1.getPropertyValue("category"));
 		assertEquals("Le Lapin Rose des Alpes", book1.getPropertyValue("author"));
 

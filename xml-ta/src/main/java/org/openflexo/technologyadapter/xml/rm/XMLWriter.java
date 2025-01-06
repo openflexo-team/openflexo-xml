@@ -202,7 +202,7 @@ public class XMLWriter<R extends TechnologyAdapterResource<RD, ?>, RD extends Re
 					}
 				}
 				else {
-					String value = indiv.getPropertyStringValue(prop);
+					String value = indiv.getPropertyValue(prop).toString();
 					if (value != null && !prop.getName().equals(XMLCst.CDATA_ATTR_NAME)) {
 						myWriter.writeAttribute(prop.getName(), value);
 					}

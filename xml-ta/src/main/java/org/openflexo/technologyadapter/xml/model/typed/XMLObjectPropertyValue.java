@@ -38,11 +38,9 @@
 
 package org.openflexo.technologyadapter.xml.model.typed;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
+import org.openflexo.technologyadapter.xml.metamodel.XMLObjectProperty;
 
 /**
  * Implementation of an Object Property values in XSD/XML technology.<br>
@@ -52,13 +50,13 @@ import org.openflexo.pamela.annotations.ModelEntity;
  */
 @ModelEntity
 @ImplementationClass(XMLObjectPropertyValue.XMLObjectPropertyValueImpl.class)
-public interface XMLObjectPropertyValue extends XMLPropertyValue {
+public interface XMLObjectPropertyValue extends XMLPropertyValue<XMLObjectProperty, XMLIndividual> {
 
-	public List<XMLIndividual> getValues();
-
+	/*public List<XMLIndividual> getValues();
+	
 	public void addToValues(XMLIndividual value);
-
-	public void removeFromValues(XMLIndividual value);
+	
+	public void removeFromValues(XMLIndividual value);*/
 
 	/**
 	 * Default implementation for {@link XMLObjectPropertyValue}
@@ -67,26 +65,26 @@ public interface XMLObjectPropertyValue extends XMLPropertyValue {
 	 */
 	public static abstract class XMLObjectPropertyValueImpl implements XMLObjectPropertyValue {
 
-		private List<XMLIndividual> values = null;
-
+		/*private List<XMLIndividual> values = null;
+		
 		XMLObjectPropertyValueImpl() {
 			values = new ArrayList<>();
 		}
-
+		
 		@Override
 		public List<XMLIndividual> getValues() {
 			return values;
 		}
-
+		
 		@Override
 		public void addToValues(XMLIndividual value) {
 			values.add(value);
 		}
-
+		
 		@Override
 		public void removeFromValues(XMLIndividual value) {
 			values.remove(value);
-		}
+		}*/
 	}
 
 }

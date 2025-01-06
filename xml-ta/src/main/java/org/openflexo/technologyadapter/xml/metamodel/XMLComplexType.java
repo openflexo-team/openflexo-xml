@@ -78,10 +78,10 @@ public interface XMLComplexType extends XMLType {
 	public void removeFromProperties(XMLProperty aProperty);
 
 	@Finder(attribute = XMLProperty.URI, collection = PROPERTIES_KEY, isMultiValued = true)
-	public XMLProperty getPropertyByURI(String name);
+	public XMLProperty<?, ?> getPropertyByURI(String name);
 
 	@Finder(attribute = XMLProperty.NAME, collection = PROPERTIES_KEY, isMultiValued = true)
-	public XMLProperty getPropertyByName(String name);
+	public XMLProperty<?, ?> getPropertyByName(String name);
 
 	// @Deprecated
 	// public XMLProperty createProperty(String name, Type t, XMLSupport xmlSupport, String xmlSupportName);

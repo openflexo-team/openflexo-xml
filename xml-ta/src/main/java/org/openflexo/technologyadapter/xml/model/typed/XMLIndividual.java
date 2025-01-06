@@ -39,6 +39,7 @@
 package org.openflexo.technologyadapter.xml.model.typed;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -59,12 +60,7 @@ import org.openflexo.pamela.annotations.Remover;
 import org.openflexo.pamela.annotations.Setter;
 import org.openflexo.technologyadapter.xml.XMLObject;
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
-import org.openflexo.technologyadapter.xml.metamodel.XMLDataProperty;
-import org.openflexo.technologyadapter.xml.metamodel.XMLObjectProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
-import org.openflexo.technologyadapter.xml.metamodel.XMLProperty.XMLSupport;
-import org.openflexo.technologyadapter.xml.metamodel.XMLSimpleType;
-import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.xml.XMLCst;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -136,36 +132,58 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 	@PastingPoint
 	public void addChild(XMLIndividual ind);
 
+	/*
 	@Getter(value = PROPERTIES_VALUES, cardinality = Cardinality.LIST)
-	public List<? extends XMLPropertyValue> getPropertiesValues();
-
-	public XMLPropertyValue getPropertyValue(String pname);
-
-	public XMLPropertyValue getPropertyValue(XMLProperty prop);
-
-	public String getPropertyStringValue(XMLProperty prop);
-
+	public List<? extends XMLPropertyValue<?, ?>> getPropertiesValues();
+	
 	@Adder(value = PROPERTIES_VALUES)
-	public void addPropertyValue(/*XMLProperty prop,*/ XMLPropertyValue value);
-
-	public void addPropertyValue(String name, Object value);
-
-	public void addPropertyValue(XMLProperty prop, Object value);
-
+	public void addPropertyValue(XMLPropertyValue<?, ?> value);
+	
 	@Remover(value = PROPERTIES_VALUES)
-	// public void deletePropertyValues(XMLProperty attr);
-	public void deletePropertyValues(XMLPropertyValue value);
+	public void deletePropertyValue(XMLPropertyValue<?, ?> value);
+	
+	public XMLPropertyValue<?, ?> getPropertyValue(String propertyName);
+	
+	public <T> XMLPropertyValue<?, T> getSinglePropertyValue(XMLProperty<?, T> property);
+	
+	public <T> List<? extends XMLPropertyValue<?, T>> getMultiplePropertyValues(XMLProperty<?, T> property);*/
+
+	public <T> T getPropertyValue(String propertyName);
+
+	public <T> T getPropertyValue(XMLProperty<?, T> prop);
+
+	public <T> List<T> getPropertyValues(String propertyName);
+
+	public <T> List<T> getPropertyValues(XMLProperty<?, T> prop);
+
+	public <T> void setPropertyValue(String propertyName, T value);
+
+	public <T> void setPropertyValue(XMLProperty<?, T> prop, T value);
+
+	public <T> void addPropertyValue(String propertyName, T value);
+
+	public <T> void addPropertyValue(XMLProperty<?, T> prop, T value);
+
+	public <T> void removePropertyValue(String propertyName, T value);
+
+	public <T> void removePropertyValue(XMLProperty<?, T> prop, T value);
+
+	// public String getPropertyStringValue(XMLProperty prop);
 
 	@Getter(TEXT)
+	@Deprecated // Not sure if this is a good idea
 	public String getText();
 
 	@Setter(TEXT)
+	@Deprecated // Not sure if this is a good idea
 	public void setText(String value);
 
 	@Getter(CONTENT)
+	@Deprecated // Not sure if this is a good idea
 	public String getContentDATA();
 
 	@Setter(CONTENT)
+	@Deprecated // Not sure if this is a good idea
 	public void setContentDATA(String value);
 
 	// TODO : refactor to get rid of any JDOM reference
@@ -187,8 +205,11 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 
 		private List<XMLIndividual> children;
 		private Map<XMLComplexType, Set<XMLIndividualImpl>> childrenByTypes = null;
-		private Map<XMLProperty, XMLPropertyValue> propertiesValues = null;
+		// private Map<XMLProperty, XMLPropertyValue> propertiesValues = null;
 		private final String uuid;
+
+		private Map<XMLProperty<?, ?>, Object> singlePropertyValues;
+		private Map<XMLProperty<?, ?>, List> multiplePropertyValues;
 
 		/**
 		 * Default Constructor
@@ -199,8 +220,11 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 			super();
 			uuid = UUID.randomUUID().toString();
 			children = new ArrayList();
-			propertiesValues = new HashMap<>();
 			childrenByTypes = new HashMap<>();
+
+			singlePropertyValues = new HashMap<>();
+			multiplePropertyValues = new HashMap<>();
+
 		}
 
 		@Override
@@ -215,9 +239,9 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 
 		@Override
 		public String getContentDATA() {
-			XMLProperty attr = this.getType().getPropertyByName(XMLCst.CDATA_ATTR_NAME);
+			XMLProperty<?, String> attr = (XMLProperty<?, String>) this.getType().getPropertyByName(XMLCst.CDATA_ATTR_NAME);
 			if (attr != null) {
-				return this.getPropertyStringValue(attr);
+				return getPropertyValue(attr);
 			}
 			return "";
 		}
@@ -226,7 +250,7 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 		public void setContentDATA(String value) {
 			XMLProperty attr = this.getType().getPropertyByName(XMLCst.CDATA_ATTR_NAME);
 			if (attr != null) {
-				addPropertyValue(XMLCst.CDATA_ATTR_NAME, value);
+				setPropertyValue(XMLCst.CDATA_ATTR_NAME, value);
 			}
 		}
 
@@ -266,63 +290,205 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 			return children;
 		}
 
-		@Override
+		/*@Override
 		public String getPropertyStringValue(XMLProperty prop) {
 			XMLPropertyValue pv = propertiesValues.get(prop);
 			if (pv != null) {
 				return propertiesValues.get(prop).getStringValue();
 			}
 			return "";
+		}*/
+
+		@Override
+		public <T> T getPropertyValue(String propertyName) {
+			XMLProperty<?, T> property = (XMLProperty<?, T>) getType().getPropertyByName(propertyName);
+			if (property == null) {
+				logger.warning("Not found property: " + propertyName);
+				return null;
+			}
+			return getPropertyValue(property);
 		}
 
 		@Override
+		public <T> T getPropertyValue(XMLProperty<?, T> property) {
+			if (property == null) {
+				logger.warning("Null property");
+				return null;
+			}
+			if (!property.isMultiple()) {
+				return (T) singlePropertyValues.get(property);
+			}
+			else {
+				logger.warning("Inconsistent data : called GET for a MULTIPLE property: " + property.getName());
+				List<T> l = getPropertyValues(property);
+				if (l.size() > 0) {
+					return l.get(0);
+				}
+				return null;
+			}
+		}
+
+		@Override
+		public <T> List<T> getPropertyValues(String propertyName) {
+			XMLProperty<?, T> property = (XMLProperty<?, T>) getType().getPropertyByName(propertyName);
+			if (property == null) {
+				logger.warning("Not found property: " + propertyName);
+				return null;
+			}
+			return getPropertyValues(property);
+		}
+
+		@Override
+		public <T> List<T> getPropertyValues(XMLProperty<?, T> property) {
+			if (property == null) {
+				logger.warning("Null property");
+				return null;
+			}
+			if (property.isMultiple()) {
+				return multiplePropertyValues.get(property);
+			}
+			else {
+				logger.warning("Inconsistent data : called GET for a SINGLE property: " + property.getName());
+				T item = getPropertyValue(property);
+				if (item != null) {
+					return Collections.singletonList(item);
+				}
+				return null;
+			}
+		}
+
+		@Override
+		public <T> void setPropertyValue(String propertyName, T value) {
+			XMLProperty<?, T> property = (XMLProperty<?, T>) getType().getPropertyByName(propertyName);
+			if (property == null) {
+				logger.warning("Not found property: " + propertyName);
+				return;
+			}
+			setPropertyValue(property, value);
+		}
+
+		@Override
+		public <T> void setPropertyValue(XMLProperty<?, T> property, T value) {
+			if (property == null) {
+				logger.warning("Null property for value " + value);
+				return;
+			}
+			if (!property.isMultiple()) {
+				singlePropertyValues.put(property, value);
+			}
+			else {
+				logger.warning("Inconsistent data : called SET for a MULTIPLE property: " + property.getName());
+			}
+		}
+
+		@Override
+		public <T> void addPropertyValue(String propertyName, T value) {
+			XMLProperty<?, T> property = (XMLProperty<?, T>) getType().getPropertyByName(propertyName);
+			if (property == null) {
+				logger.warning("Not found property: " + propertyName);
+				return;
+			}
+			addPropertyValue(property, value);
+		}
+
+		@Override
+		public <T> void addPropertyValue(XMLProperty<?, T> property, T value) {
+			if (property == null) {
+				logger.warning("Null property for value " + value);
+				return;
+			}
+			if (property.isMultiple()) {
+				List<T> l = multiplePropertyValues.get(property);
+				if (l == null) {
+					l = new ArrayList<T>();
+					multiplePropertyValues.put(property, l);
+				}
+				l.add(value);
+			}
+			else {
+				logger.warning("Inconsistent data : called ADD for a SINGLE property: " + property.getName());
+				setPropertyValue(property, value);
+			}
+
+		}
+
+		@Override
+		public <T> void removePropertyValue(String propertyName, T value) {
+			XMLProperty<?, T> property = (XMLProperty<?, T>) getType().getPropertyByName(propertyName);
+			if (property == null) {
+				logger.warning("Not found property: " + propertyName);
+				return;
+			}
+			removePropertyValue(property, value);
+		}
+
+		@Override
+		public <T> void removePropertyValue(XMLProperty<?, T> property, T value) {
+			if (property == null) {
+				logger.warning("Null property for value " + value);
+				return;
+			}
+			if (property.isMultiple()) {
+				List<T> l = multiplePropertyValues.get(property);
+				if (l != null) {
+					l.remove(value);
+				}
+			}
+			else {
+				logger.warning("Inconsistent data : called ADD for a SINGLE property: " + property.getName());
+				setPropertyValue(property, null);
+			}
+
+		}
+
+		/*@Override
 		public List<? extends XMLPropertyValue> getPropertiesValues() {
 			return new ArrayList<XMLPropertyValue>(propertiesValues.values());
 		}
-
+		
 		@Override
 		public XMLPropertyValue getPropertyValue(String attributeName) {
-
+		
 			XMLProperty attr = getType().getPropertyByName(attributeName);
-
+		
 			if (attr != null) {
 				return propertiesValues.get(attr);
 			}
 			return null;
 		}
-
+		
 		@Override
 		public XMLPropertyValue getPropertyValue(XMLProperty prop) {
-
+		
 			if (prop != null) {
 				return propertiesValues.get(prop);
 			}
 			return null;
-
+		
 		}
-
+		
 		@Override
-		public void addPropertyValue(/*XMLProperty attr,*/ XMLPropertyValue value) {
+		public void addPropertyValue(XMLPropertyValue value) {
 			// TODO
 		}
-
+		
 		@Override
 		public void deletePropertyValues(XMLPropertyValue value) {
 			// TODO
 		}
-
+		
 		@Override
 		public void addPropertyValue(String name, Object value) {
-
+		
 			XMLProperty prop = getType().getPropertyByName(name);
-
+		
 			if (prop == null) {
 				XSDMetaModel mm = getContainerModel().getMetaModel();
 				if (!mm.isReadOnly()) {
 					// TODO Manage complex typesForURI and actual typesForURI for objects.
 					prop = mm.getModelFactory().makeSingleDataProperty(name, (XMLSimpleType) mm.getTypeFromURI(XSDMetaModel.STRING_URI),
 							false, XMLSupport.ELEMENT, name, getType());
-
+		
 				}
 				else {
 					logger.warning("CANNOT give a value  for a non existant attribute :" + name);
@@ -330,9 +496,9 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 			}
 			if (prop != null) {
 				XMLPropertyValue vals = propertiesValues.get(prop);
-
+		
 				if (vals == null) {
-
+		
 					if (prop instanceof XMLDataProperty) {
 						vals = getContainerModel().getModelFactory().makeXMLDataPropertyValue((XMLDataProperty) prop, value);
 						propertiesValues.put(prop, vals);
@@ -341,20 +507,20 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 						// TODO..... complex attributes, collections
 					}
 				}
-
+		
 				else {
 					// TODO..... manage this case also
 				}
 			}
+		
+		}*/
 
-		}
-
-		@Override
-		public void addPropertyValue(XMLProperty prop, Object value) {
+		/*@Override
+		public <T> void addPropertyValue(XMLProperty<?, T> prop, T value) {
 			XMLPropertyValue val = propertiesValues.get(prop);
-
+		
 			if (val == null) {
-
+		
 				if (prop instanceof XMLDataProperty) {
 					val = getContainerModel().getModelFactory().makeXMLDataPropertyValue((XMLDataProperty) prop, value);
 					propertiesValues.put(prop, val);
@@ -364,7 +530,7 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 					propertiesValues.put(prop, val);
 				}
 			}
-
+		
 			if (val != null) {
 				if (prop instanceof XMLDataProperty) {
 					((XMLDataPropertyValue) val).setValue(value);
@@ -373,8 +539,8 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 					((XMLObjectPropertyValue) val).addToValues((XMLIndividual) value);
 				}
 			}
-
-		}
+		
+		}*/
 
 		/* (non-Javadoc)
 		 * @see org.openflexo.technologyadapter.xml.model.IXMLIndividual#toXML(org.w3c.dom.Document)

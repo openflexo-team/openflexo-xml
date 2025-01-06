@@ -57,7 +57,6 @@ import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
 import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
-import org.openflexo.technologyadapter.xml.model.typed.XMLPropertyValue;
 import org.openflexo.technologyadapter.xml.rm.XSDMetaModelResource;
 
 /* Correct processing of XML Objects URIs needs to add an internal class to store
@@ -196,7 +195,7 @@ public interface XMLURIProcessor extends AbstractXMLURIProcessor {
 			if (getMappingStyle() == MappingStyle.ATTRIBUTE_VALUE && attrName != null && getMappedXMLType() != null) {
 
 				XMLProperty aProperty = ((XMLComplexType) getMappedXMLType()).getPropertyByName(attrName);
-				XMLPropertyValue value = ((XMLIndividual) xsO).getPropertyValue(aProperty);
+				Object value = ((XMLIndividual) xsO).getPropertyValue(aProperty);
 				try {
 					// NPE protection
 					if (value != null) {
@@ -260,7 +259,7 @@ public interface XMLURIProcessor extends AbstractXMLURIProcessor {
 
 					for (XMLIndividual obj : model.getIndividualsOfType(getMappedXMLType())) {
 
-						XMLPropertyValue value = obj.getPropertyValue(aProperty);
+						Object value = obj.getPropertyValue(aProperty);
 						try {
 							if (value.equals(URLDecoder.decode(attrValue, "UTF-8"))) {
 								return obj;

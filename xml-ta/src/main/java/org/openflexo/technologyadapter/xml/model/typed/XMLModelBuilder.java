@@ -151,6 +151,9 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory<XMLModel, XMLInd
 
 	@Override
 	public void addToRootNodes(XMLIndividual anObject) {
+
+		// System.out.println("-------> addToRootNodes " + anObject);
+
 		model.setRoot(anObject);
 	}
 
@@ -205,10 +208,23 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory<XMLModel, XMLInd
 
 		if (object instanceof XMLIndividual) {
 
-			XMLProperty<?, ?> prop = getProperty(object, propertyName);
+			XMLProperty prop = getProperty(object, propertyName);
 
-			if (prop == null) {
-				/*if (!mm.isReadOnly() || name.equals(XMLCst.CDATA_ATTR_NAME)) {
+			/*if (prop == null) {
+				System.out.println("Zut pas de propriete " + propertyName + " pour " + object);
+				Thread.dumpStack();
+				System.exit(-1);
+			}*/
+
+			if (prop.isMultiple()) {
+				object.addPropertyValue(prop, value);
+			}
+			else {
+				object.setPropertyValue(prop, value);
+			}
+
+			/*if (prop == null) {
+				if (!mm.isReadOnly() || name.equals(XMLCst.CDATA_ATTR_NAME)) {
 				
 					prop = mm.getModelFactory().makeProperty(name, value.getClass(), XMLSupport.CDATA, null, t);
 				
@@ -222,16 +238,16 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory<XMLModel, XMLInd
 				else {
 					LOGGER.warning(
 							"TRYING to give a value to a non existant property: " + name + " -- " + name.equals(XMLCst.CDATA_ATTR_NAME));
-				}*/
+				}
 				LOGGER.warning("Not found : property " + propertyName + " for " + object); // When still required ??? not sure (sylvain)
 			}
 			else {
-
+			
 				// System.out.println("On ajoute " + propertyName + "=" + value + " pour " + object);
-
+			
 				object.addPropertyValue(prop, value);
-
-			}
+			
+			}*/
 		}
 	}
 

@@ -79,17 +79,18 @@ public class XMLModelFactory extends AbstractXMLDocumentFactory<TypedXMLResource
 		return returned;
 	}
 
-	public XMLObjectPropertyValue makeXMLObjectPropertyValue(XMLObjectProperty property, XMLIndividual... values) {
+	public XMLObjectPropertyValue makeXMLObjectPropertyValue(XMLObjectProperty property, XMLIndividual value) {
 		XMLObjectPropertyValue returned = newInstance(XMLObjectPropertyValue.class, property);
 		// returned.setProperty(property);
-		for (XMLIndividual v : values) {
+		/*for (XMLIndividual v : values) {
 			returned.addToValues(v);
-		}
+		}*/
+		returned.setValue(value);
 		return returned;
 	}
 
-	public XMLDataPropertyValue makeXMLDataPropertyValue(XMLDataProperty property, Object value) {
-		XMLDataPropertyValue returned = newInstance(XMLDataPropertyValue.class, property);
+	public <T> XMLDataPropertyValue<T> makeXMLDataPropertyValue(XMLDataProperty<T> property, T value) {
+		XMLDataPropertyValue<T> returned = newInstance(XMLDataPropertyValue.class, property);
 		// returned.setProperty(property);
 		returned.setValue(value);
 		return returned;

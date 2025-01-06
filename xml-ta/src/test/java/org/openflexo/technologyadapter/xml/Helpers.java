@@ -38,6 +38,8 @@
 
 package org.openflexo.technologyadapter.xml;
 
+import java.util.List;
+
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLDataProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLEnumValue;
@@ -48,8 +50,6 @@ import org.openflexo.technologyadapter.xml.metamodel.XMLSimpleType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
-import org.openflexo.technologyadapter.xml.model.typed.XMLObjectPropertyValue;
-import org.openflexo.technologyadapter.xml.model.typed.XMLPropertyValue;
 
 public class Helpers {
 
@@ -67,7 +67,7 @@ public class Helpers {
 			if (t instanceof XMLComplexType) {
 				System.out.println(" - " + t.getName() + (t.getSuperType() != null ? " extends " + t.getSuperType().getName() : "") + " ["
 						+ t.getURI() + "]" + (t.isAbstract() ? "[Abstract]" : ""));
-				for (XMLProperty x : ((XMLComplexType) t).getProperties()) {
+				for (XMLProperty<?, ?> x : ((XMLComplexType) t).getProperties()) {
 					XMLType pt = x.getType();
 					if (pt instanceof XMLSimpleType) {
 						System.out.println("    -- data: " + x.getName() + " :: " + pt.getName() + " [" + pt.getURI() + "]" + " ["
@@ -114,9 +114,9 @@ public class Helpers {
 		}
 		else {
 			if (aType instanceof XMLComplexType) {
-				for (XMLProperty prop : ((XMLComplexType) aType).getProperties()) {
+				for (XMLProperty<?, ?> prop : ((XMLComplexType) aType).getProperties()) {
 					if (prop instanceof XMLDataProperty) {
-						XMLPropertyValue val = indiv.getPropertyValue(prop);
+						Object val = indiv.getPropertyValue(prop);
 						if (val != null) {
 							System.out.println(prefix + "    * attr: " + prop.getName() + " = " + indiv.getPropertyValue(prop).toString());
 						}
@@ -126,9 +126,9 @@ public class Helpers {
 					}
 					else if (prop instanceof XMLObjectProperty) {
 						System.out.println(prefix + "    * obj: " + prop.getName());
-						XMLObjectPropertyValue vals = (XMLObjectPropertyValue) indiv.getPropertyValue(prop);
+						List<XMLIndividual> vals = indiv.getPropertyValues((XMLObjectProperty) prop);
 						if (vals != null) {
-							for (XMLIndividual v : vals.getValues()) {
+							for (XMLIndividual v : vals) {
 								dumpIndividual(v, prefix + "          + ");
 							}
 						}

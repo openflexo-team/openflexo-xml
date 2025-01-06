@@ -42,6 +42,7 @@ import org.openflexo.pamela.annotations.Getter;
 import org.openflexo.pamela.annotations.Initializer;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.Parameter;
+import org.openflexo.pamela.annotations.Setter;
 import org.openflexo.technologyadapter.xml.XMLObject;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
 
@@ -51,22 +52,29 @@ import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
  * @author sylvain, xtof
  */
 @ModelEntity(isAbstract = true)
-public abstract interface XMLPropertyValue extends XMLObject<XMLModel> {
+public abstract interface XMLPropertyValue<P extends XMLProperty<?, T>, T> extends XMLObject<XMLModel> {
 
-	final String PROPERTY = "property";
+	final String PROPERTY_KEY = "property";
+	final String VALUE_KEY = "value";
 
 	@Initializer
-	public void XMLPropertyValue(@Parameter(PROPERTY) XMLProperty<?, ?> prop);
+	public XMLPropertyValue<P, T> init(@Parameter(PROPERTY_KEY) P prop);
 
-	@Getter(value = PROPERTY, ignoreType = true)
-	public XMLProperty<?, ?> getProperty();
+	@Getter(value = PROPERTY_KEY, ignoreType = true)
+	public P getProperty();
 
-	// @Setter(PROPERTY)
+	@Getter(value = VALUE_KEY, ignoreType = true)
+	public T getValue();
+
+	@Setter(VALUE_KEY)
+	public void setValue(T value);
+
+	// @Setter(PROPERTY_KEY)
 	// public void setProperty(XMLProperty<?> prop);
 
-	public String getStringValue();
+	// public String getStringValue();
 
-	@Override
-	public boolean equals(Object obj);
+	// @Override
+	// public boolean equals(Object obj);
 
 }

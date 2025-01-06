@@ -67,7 +67,7 @@ public class TestEditXMLModel extends OpenflexoTestCase {
 
 		System.out.println(prefix + "Indiv : " + indiv.getName() + "  [" + indiv.getUUID() + "]");
 		for (XMLProperty a : indiv.getType().getProperties()) {
-			System.out.println(prefix + "    * attr: " + a.getName() + " = " + indiv.getPropertyStringValue(a));
+			System.out.println(prefix + "    * attr: " + a.getName() + " = " + indiv.getPropertyValue(a));
 		}
 		for (XMLIndividual x : indiv.getChildren())
 			dumpIndividual(x, prefix + "    ");
