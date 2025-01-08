@@ -47,6 +47,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.logging.Logger;
 
 import org.junit.Test;
@@ -56,6 +58,7 @@ import org.openflexo.foundation.resource.FlexoResourceCenter;
 import org.openflexo.foundation.resource.ResourceLoadingCancelledException;
 import org.openflexo.foundation.test.OpenflexoProjectAtRunTimeTestCase;
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
+import org.openflexo.technologyadapter.xml.metamodel.XMLEnumerationType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
 import org.openflexo.technologyadapter.xml.rm.TypedXMLResource;
@@ -121,7 +124,7 @@ public class TestLibraryXMLModel extends OpenflexoProjectAtRunTimeTestCase {
 
 	@Test
 	@TestOrder(3)
-	public void testExampleLibrary1() throws FileNotFoundException, ResourceLoadingCancelledException, FlexoException {
+	public void testExampleLibrary1() throws FileNotFoundException, ResourceLoadingCancelledException, FlexoException, URISyntaxException {
 
 		log("testExampleLibrary1()");
 
@@ -148,11 +151,14 @@ public class TestLibraryXMLModel extends OpenflexoProjectAtRunTimeTestCase {
 		XMLComplexType bookType = metaModel.getComplexTypeFromURI("http://www.example.org/Library#Book");
 		XMLComplexType libraryType = metaModel.getComplexTypeFromURI("http://www.example.org/Library#LibraryType");
 
+		XMLEnumerationType categoryType = metaModel.getEnumerationTypeFromURI("http://www.example.org/Library#BookCategory");
+
 		// assertNotNull(modelRes.getModel().getMetaModel().getTypeFromURI("http://www.example.org/Library#Library"));
 
 		Helpers.dumpIndividual(library1Resource.getModelData().getRoot(), "");
 
 		XMLIndividual library = library1Resource.getModelData().getRoot();
+
 		XMLIndividual writer1 = library.getChildren().get(0);
 		XMLIndividual writer2 = library.getChildren().get(1);
 		XMLIndividual book1 = library.getChildren().get(2);
@@ -164,26 +170,18 @@ public class TestLibraryXMLModel extends OpenflexoProjectAtRunTimeTestCase {
 		assertSame(bookType, book1.getType());
 		assertSame(bookType, book2.getType());
 
-		assertEquals("Hector", writer1.getPropertyValue("name"));
-		assertEquals("Simeon Le Papillon", writer2.getPropertyValue("name"));
-		assertEquals("Hector", book1.getPropertyValue("title"));
-		assertEquals(35, (int) book1.getPropertyValue("pages"));
-		assertEquals("Mystery", book1.getPropertyValue("category"));
-		assertEquals("Le Lapin Rose des Alpes", book1.getPropertyValue("author"));
+		System.out.println("library: " + library);
+		System.out.println("writer1: " + writer1);
+		System.out.println("writer2: " + writer2);
+		System.out.println("book1: " + book1);
+		System.out.println("book2: " + book2);
 
-		/*
-		 <p:Book>
-		   <p:title>toto</p:title>
-		   <p:pages>35</p:pages>
-		   <p:category>Mystery</p:category>
-		   <p:author>Le Lapin Rose des Alpes</p:author>
-		  </p:Book>
-		  <p:Book>
-		   <p:title>tutu</p:title>
-		   <p:pages>37</p:pages>
-		   <p:category>Biography</p:category>
-		   <p:author>La Poule</p:author>
-		  </p:Book>*/
+		assertEquals("Hector", writer1.getPropertyValue("name"));
+		assertEquals("Simeon", writer2.getPropertyValue("name"));
+		assertEquals("toto", book1.getPropertyValue("title"));
+		assertEquals(35, (int) book1.getPropertyValue("pages"));
+		assertEquals(categoryType.getEnumValues().get(0), book1.getPropertyValue("category"));
+		assertEquals(new URI("http://www.example.org/example_library_1.xml#Hector"), book1.getPropertyValue("author"));
 
 	}
 

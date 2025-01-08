@@ -42,10 +42,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.logging.Logger;
 
+import org.openflexo.pamela.exceptions.InvalidDataException;
 import org.openflexo.technologyadapter.xml.XMLObject;
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
+import org.openflexo.technologyadapter.xml.metamodel.XMLEnumValue;
+import org.openflexo.technologyadapter.xml.metamodel.XMLEnumerationType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
+import org.openflexo.technologyadapter.xml.metamodel.XMLSimpleType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.xml.SaxBasedObjectGraphFactory;
@@ -56,6 +61,8 @@ import org.xml.sax.SAXException;
  * A builder for a {@link XMLModel} (sax-based)
  */
 public class XMLModelBuilder extends SaxBasedObjectGraphFactory<XMLModel, XMLIndividual, XMLObject<XMLModel>> {
+
+	private static final Logger logger = Logger.getLogger(XMLModelBuilder.class.getPackage().getName());
 
 	private XMLModel model = null;
 
@@ -201,6 +208,44 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory<XMLModel, XMLInd
 		return null;
 	}
 
+	private <T> T valueForProperty(XMLProperty<?, T> property, Object value) {
+		if (property.getType() instanceof XMLEnumerationType) {
+			XMLEnumerationType enumeration = (XMLEnumerationType) property.getType();
+			for (XMLEnumValue enumValue : enumeration.getEnumValues()) {
+				if (enumValue.getName().equals(value)) {
+					return (T) enumValue;
+				}
+			}
+			logger.warning("Unexpected enum value " + value + " for " + property);
+			return null;
+		}
+		else if (property.getType() instanceof XMLSimpleType) {
+			XMLSimpleType t = (XMLSimpleType) property.getType();
+			if (value instanceof String) {
+				if (t.getPrimitiveType() != null) {
+					try {
+						return (T) t.getPrimitiveType().valueFromString((String) value);
+					} catch (InvalidDataException e) {
+						logger.warning("InvalidDataException : unexpected value " + value + " for " + property);
+						return null;
+					} catch (ClassCastException e) {
+						logger.warning("ClassCastException : unexpected value " + value + " for " + property);
+						return null;
+					}
+				}
+				else {
+					logger.warning("Not supported : type " + t.getURI() + " for value " + value + " for " + property);
+					return null;
+				}
+			}
+			else {
+				logger.warning("Unexpected value " + value + " for " + property);
+				return null;
+			}
+		}
+		return (T) value;
+	}
+
 	@Override
 	public void addPropertyValueForObject(XMLIndividual object, String propertyName, Object value) {
 
@@ -210,24 +255,23 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory<XMLModel, XMLInd
 
 			XMLProperty prop = getProperty(object, propertyName);
 
-			/*if (prop == null) {
-				System.out.println("Zut pas de propriete " + propertyName + " pour " + object);
-				Thread.dumpStack();
-				System.exit(-1);
-			}*/
+			if (prop == null) {
+				logger.warning("Unsupported " + propertyName + " for " + object);
+				return;
+			}
 
 			if (prop.isMultiple()) {
-				object.addPropertyValue(prop, value);
+				object.addPropertyValue(prop, valueForProperty(prop, value));
 			}
 			else {
-				object.setPropertyValue(prop, value);
+				object.setPropertyValue(prop, valueForProperty(prop, value));
 			}
 
 			/*if (prop == null) {
 				if (!mm.isReadOnly() || name.equals(XMLCst.CDATA_ATTR_NAME)) {
-				
+			
 					prop = mm.getModelFactory().makeProperty(name, value.getClass(), XMLSupport.CDATA, null, t);
-				
+			
 					if (prop != null) {
 						((XMLIndividual) object).addPropertyValue(prop, value);
 					}

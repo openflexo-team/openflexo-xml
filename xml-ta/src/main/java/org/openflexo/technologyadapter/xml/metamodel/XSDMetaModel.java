@@ -84,20 +84,7 @@ public interface XSDMetaModel extends AbstractXMLDocument<XSDMetaModel>, FlexoMe
 	public static String READ_ONLY = "readOnly";
 
 	public static String XML_SCHEMA_URI = "http://www.w3.org/2001/XMLSchema";
-
-	// static simple Types URI
 	public static String ANY_TYPE_URI = "xs:anyType";
-	public static String STRING_URI = "xs:string";
-	public static String BOOLEAN_URI = "xs:boolean";
-	public static String BYTE_URI = "xs:byte";
-	public static String DATE_URI = "xs:date";
-	public static String DECIMAL_URI = "xs:decimal";
-	public static String DOUBLE_URI = "xs:double";
-	public static String FLOAT_URI = "xs:float";
-	public static String INT_URI = "xs:int";
-	public static String INTEGER_URI = "xs:integer";
-	public static String LONG_URI = "xs:long";
-	public static String SHORT_URI = "xs:short";
 
 	@Getter(value = TYPES, cardinality = Cardinality.LIST, inverse = XMLType.MM)
 	@CloningStrategy(StrategyType.IGNORE)

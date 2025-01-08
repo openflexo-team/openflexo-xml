@@ -45,6 +45,7 @@ import org.openflexo.pamela.exceptions.ModelDefinitionException;
 import org.openflexo.pamela.factory.EditingContext;
 import org.openflexo.pamela.factory.PamelaModelFactory;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty.XMLSupport;
+import org.openflexo.technologyadapter.xml.metamodel.XMLSimpleType.XMLSchemaPrimitiveType;
 import org.openflexo.technologyadapter.xml.model.AbstractXMLDocumentFactory;
 import org.openflexo.technologyadapter.xml.model.free.FreeXMLDocument;
 import org.openflexo.technologyadapter.xml.rm.FreeXMLResource;
@@ -82,10 +83,18 @@ public class XSDMetaModelFactory extends AbstractXMLDocumentFactory<XSDMetaModel
 	}
 
 	public XMLSimpleType makeSimpleType(String uri, String localName, XSDMetaModel metaModel) {
-		// System.out.println("Creating a XMLSimpleType " + localName + " " + uri);
+		System.out.println("Creating a XMLSimpleType " + localName + " " + uri);
 		XMLSimpleType returned = newInstance(XMLSimpleType.class);
 		returned.setIsAbstract(false);
-		returned.setURI(uri);
+		XMLSchemaPrimitiveType primitiveType = XMLSimpleType.getPrimitiveFromURI(uri);
+		if (primitiveType != null) {
+			returned.setPrimitiveType(primitiveType);
+		}
+		else {
+			// In this case, conversion operations will not work
+			logger.warning("Cannot find type " + uri);
+			returned.setURI(uri);
+		}
 		returned.setName(localName);
 		metaModel.addToTypes(returned);
 		return returned;

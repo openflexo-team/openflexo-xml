@@ -6,11 +6,11 @@
   <p:name><![CDATA[My Library]]></p:name>
   <p:Writer>
    <p:name>Hector</p:name>
-   <p:Book>tutu</p:Book>
-   <p:Book>tonton</p:Book> 
+   <p:Book>http://www.example.org/example_library_1.xml#tutu</p:Book>
+   <p:Book>http://www.example.org/example_library_1.xml#toto</p:Book> 
   </p:Writer>
   <p:Writer>
-   <p:name>Simeon Le Papillon</p:name>
+   <p:name>Simeon</p:name>
    <p:Book>tutu</p:Book>
    <p:Book>toto</p:Book> 
   </p:Writer>
@@ -18,12 +18,12 @@
    <p:title>toto</p:title>
    <p:pages>35</p:pages>
    <p:category>Mystery</p:category>
-   <p:author>Le Lapin Rose des Alpes</p:author>
+   <p:author>http://www.example.org/example_library_1.xml#Hector</p:author>
   </p:Book>
   <p:Book>
    <p:title>tutu</p:title>
    <p:pages>37</p:pages>
    <p:category>Biography</p:category>
-   <p:author>La Poule</p:author>
+   <p:author>http://www.example.org/example_library_1.xml#Simeon</p:author>
   </p:Book>
 </p:Library>

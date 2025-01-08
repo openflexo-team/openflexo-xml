@@ -39,6 +39,7 @@
 package org.openflexo.technologyadapter.xml.metamodel;
 
 import java.lang.reflect.Type;
+import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.logging.Logger;
 
@@ -46,6 +47,8 @@ import org.openflexo.pamela.annotations.Getter;
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.Setter;
+import org.openflexo.pamela.exceptions.InvalidDataException;
+import org.openflexo.pamela.model.StringConverterLibrary;
 
 /**
  * Represents a simple XML type, reflected by a base java type
@@ -54,16 +57,268 @@ import org.openflexo.pamela.annotations.Setter;
 @ImplementationClass(XMLSimpleType.XMLSimpleTypeImpl.class)
 public interface XMLSimpleType extends XMLType {
 
+	// static simple Types URI
+	public static String STRING_URI = "string"; // xs:string
+	public static String BOOLEAN_URI = "boolean";
+	public static String BYTE_URI = "byte";
+	public static String DATE_URI = "date";
+	public static String DECIMAL_URI = "decimal";
+	public static String DOUBLE_URI = "double";
+	public static String FLOAT_URI = "float";
+	public static String INT_URI = "int";
+	public static String INTEGER_URI = "integer";
+	public static String LONG_URI = "long";
+	public static String SHORT_URI = "short";
+	public static String ANY_URI = "anyURI";
+
+	public static XMLSchemaPrimitiveType getPrimitiveFromURI(String uri) {
+		for (XMLSchemaPrimitiveType primitiveType : XMLSchemaPrimitiveType.values()) {
+			if (primitiveType.getFullQualifiedURI().equals(uri)) {
+				return primitiveType;
+			}
+			if (primitiveType.getAbbreviatedURI().equals(uri)) {
+				return primitiveType;
+			}
+		}
+		XMLSimpleTypeImpl.logger.warning("Unexpected type " + uri);
+		return null;
+	}
+
+	public enum XMLSchemaPrimitiveType {
+
+		STRING {
+			@Override
+			public String getLocalURI() {
+				return STRING_URI;
+			}
+
+			@Override
+			public Type getJavaType() {
+				return String.class;
+			}
+
+			@Override
+			public String valueFromString(String stringValue) {
+				return stringValue;
+			}
+
+		},
+		BOOLEAN {
+			@Override
+			public String getLocalURI() {
+				return BOOLEAN_URI;
+			}
+
+			@Override
+			public Type getJavaType() {
+				return Boolean.class;
+			}
+
+			@Override
+			public Boolean valueFromString(String stringValue) throws InvalidDataException {
+				return StringConverterLibrary.getInstance().getConverter(Boolean.class).convertFromString(stringValue, null);
+			}
+		},
+		BYTE {
+			@Override
+			public String getLocalURI() {
+				return BYTE_URI;
+			}
+
+			@Override
+			public Type getJavaType() {
+				return Byte.class;
+			}
+
+			@Override
+			public Byte valueFromString(String stringValue) throws InvalidDataException {
+				return StringConverterLibrary.getInstance().getConverter(Byte.class).convertFromString(stringValue, null);
+			}
+		},
+		DATE {
+			@Override
+			public String getLocalURI() {
+				return DATE_URI;
+			}
+
+			@Override
+			public Type getJavaType() {
+				return Date.class;
+			}
+
+			@Override
+			public Date valueFromString(String stringValue) throws InvalidDataException {
+				return StringConverterLibrary.getInstance().getConverter(Date.class).convertFromString(stringValue, null);
+			}
+		},
+		DECIMAL {
+			@Override
+			public String getLocalURI() {
+				return DECIMAL_URI;
+			}
+
+			@Override
+			public Type getJavaType() {
+				return Number.class;
+			}
+
+			@Override
+			public Number valueFromString(String stringValue) throws InvalidDataException {
+				return StringConverterLibrary.getInstance().getConverter(Number.class).convertFromString(stringValue, null);
+			}
+		},
+		DOUBLE {
+			@Override
+			public String getLocalURI() {
+				return DOUBLE_URI;
+			}
+
+			@Override
+			public Type getJavaType() {
+				return Double.class;
+			}
+
+			@Override
+			public Double valueFromString(String stringValue) throws InvalidDataException {
+				return StringConverterLibrary.getInstance().getConverter(Double.class).convertFromString(stringValue, null);
+			}
+		},
+		FLOAT {
+			@Override
+			public String getLocalURI() {
+				return FLOAT_URI;
+			}
+
+			@Override
+			public Type getJavaType() {
+				return Float.class;
+			}
+
+			@Override
+			public Float valueFromString(String stringValue) throws InvalidDataException {
+				return StringConverterLibrary.getInstance().getConverter(Float.class).convertFromString(stringValue, null);
+			}
+		},
+		INT {
+			@Override
+			public String getLocalURI() {
+				return INT_URI;
+			}
+
+			@Override
+			public Type getJavaType() {
+				return Integer.TYPE;
+			}
+
+			@Override
+			public Integer valueFromString(String stringValue) throws InvalidDataException {
+				return StringConverterLibrary.getInstance().getConverter(Integer.class).convertFromString(stringValue, null);
+			}
+		},
+		INTEGER {
+			@Override
+			public String getLocalURI() {
+				return INTEGER_URI;
+			}
+
+			@Override
+			public Type getJavaType() {
+				return Integer.class;
+			}
+
+			@Override
+			public Integer valueFromString(String stringValue) throws InvalidDataException {
+				return StringConverterLibrary.getInstance().getConverter(Integer.class).convertFromString(stringValue, null);
+			}
+		},
+		LONG {
+			@Override
+			public String getLocalURI() {
+				return LONG_URI;
+			}
+
+			@Override
+			public Type getJavaType() {
+				return Long.class;
+			}
+
+			@Override
+			public Long valueFromString(String stringValue) throws InvalidDataException {
+				return StringConverterLibrary.getInstance().getConverter(Long.class).convertFromString(stringValue, null);
+			}
+		},
+		SHORT {
+			@Override
+			public String getLocalURI() {
+				return SHORT_URI;
+			}
+
+			@Override
+			public Type getJavaType() {
+				return Short.class;
+			}
+
+			@Override
+			public Short valueFromString(String stringValue) throws InvalidDataException {
+				return StringConverterLibrary.getInstance().getConverter(Short.class).convertFromString(stringValue, null);
+			}
+		},
+		ANY {
+			@Override
+			public String getLocalURI() {
+				return ANY_URI;
+			}
+
+			@Override
+			public Type getJavaType() {
+				return java.net.URI.class;
+			}
+
+			@Override
+			public Object valueFromString(String stringValue) throws InvalidDataException {
+				try {
+					return new java.net.URI(stringValue);
+				} catch (URISyntaxException e) {
+					throw new InvalidDataException("Invalid URI : " + stringValue);
+				}
+			}
+		};
+
+		public abstract String getLocalURI();
+
+		public String getFullQualifiedURI() {
+			return XSDMetaModel.XML_SCHEMA_URI + "#" + getLocalURI();
+		}
+
+		public String getAbbreviatedURI() {
+			return "xs:" + getLocalURI();
+		}
+
+		public abstract Type getJavaType();
+
+		public abstract Object valueFromString(String stringValue) throws InvalidDataException;
+	}
+
+	public final String PRIMITIVE_TYPE = "primitiveType";
+
+	@Getter(PRIMITIVE_TYPE)
+	public XMLSchemaPrimitiveType getPrimitiveType();
+
+	@Setter(PRIMITIVE_TYPE)
+	public void setPrimitiveType(XMLSchemaPrimitiveType primitiveType);
+
 	/*
 	 * Property that indicates that this particular simpleType is extracted from an Element or an Attribute
 	 */
-	final String MAPSTOELEMENT = "mapsToElement";
-
+	/*final String MAPSTOELEMENT = "mapsToElement";
+	
+	@Deprecated
 	@Getter(value = MAPSTOELEMENT, defaultValue = "false")
 	public boolean mapsToElement();
-
+	
+	@Deprecated
 	@Setter(value = MAPSTOELEMENT)
-	public void setMapsToElement(boolean val);
+	public void setMapsToElement(boolean val);*/
 
 	public Type getJavaType();
 
@@ -83,39 +338,17 @@ public interface XMLSimpleType extends XMLType {
 		}
 
 		@Override
+		public String getURI() {
+			if (getPrimitiveType() != null) {
+				return getPrimitiveType().getFullQualifiedURI();
+			}
+			return (String) performSuperGetter(URI);
+		}
+
+		@Override
 		public Type getJavaType() {
-			if (getURI().equals(XSDMetaModel.STRING_URI)) {
-				return String.class;
-			}
-			if (getURI().equals(XSDMetaModel.BOOLEAN_URI)) {
-				return Boolean.class;
-			}
-			if (getURI().equals(XSDMetaModel.BYTE_URI)) {
-				return Byte.class;
-			}
-			if (getURI().equals(XSDMetaModel.DATE_URI)) {
-				return Date.class;
-			}
-			if (getURI().equals(XSDMetaModel.DECIMAL_URI)) {
-				return Number.class;
-			}
-			if (getURI().equals(XSDMetaModel.DOUBLE_URI)) {
-				return Double.class;
-			}
-			if (getURI().equals(XSDMetaModel.FLOAT_URI)) {
-				return Float.class;
-			}
-			if (getURI().equals(XSDMetaModel.INT_URI)) {
-				return Integer.class;
-			}
-			if (getURI().equals(XSDMetaModel.INTEGER_URI)) {
-				return Integer.class;
-			}
-			if (getURI().equals(XSDMetaModel.LONG_URI)) {
-				return Long.class;
-			}
-			if (getURI().equals(XSDMetaModel.SHORT_URI)) {
-				return Short.class;
+			if (getPrimitiveType() != null) {
+				return getPrimitiveType().getJavaType();
 			}
 			logger.warning("Unexpected " + getURI());
 			return Object.class;

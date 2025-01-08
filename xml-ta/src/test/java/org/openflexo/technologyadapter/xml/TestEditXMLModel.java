@@ -105,7 +105,7 @@ public class TestEditXMLModel extends OpenflexoTestCase {
 
 		model.setMetaModel(metamodel);
 
-		XMLSimpleType ts = metamodel.getModelFactory().makeSimpleType(XSDMetaModel.STRING_URI, "BASIC_STRING", metamodel);
+		XMLSimpleType ts = metamodel.getModelFactory().makeSimpleType(XMLSimpleType.STRING_URI, "BASIC_STRING", metamodel);
 
 		XMLComplexType t = metamodel.getModelFactory().makeComplexType("http://www.openflexo.org/aTestModel#Fleumeu", "Fleumeu", metamodel);
 		metamodel.getModelFactory().makeSingleDataProperty("TOTO", ts, false, XMLSupport.ELEMENT, "TOTO", t);
