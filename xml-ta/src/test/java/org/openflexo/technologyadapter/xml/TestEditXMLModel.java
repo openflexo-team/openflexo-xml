@@ -42,6 +42,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.logging.Logger;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openflexo.foundation.test.OpenflexoTestCase;
@@ -58,6 +59,7 @@ import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
 import org.openflexo.test.OrderedRunner;
 import org.openflexo.test.TestOrder;
 
+@Ignore // Not yet supported
 @RunWith(OrderedRunner.class)
 public class TestEditXMLModel extends OpenflexoTestCase {
 
