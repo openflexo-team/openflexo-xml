@@ -57,8 +57,10 @@ import org.openflexo.foundation.test.OpenflexoTestCase;
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLDataProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLObjectProperty;
+import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty.XMLSupport;
 import org.openflexo.technologyadapter.xml.metamodel.XMLSimpleType;
+import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.rm.TypedXMLResource;
 import org.openflexo.technologyadapter.xml.rm.XMLModelRepository;
@@ -214,6 +216,163 @@ public class TestOtawaXSD extends OpenflexoTestCase {
 		assertEquals(XMLSupport.ELEMENT, iCacheProperty.getXMLSupport());
 		assertEquals("icache", iCacheProperty.getXMLSupportName());
 		assertSame(iCacheType, iCacheProperty.getType());
+
+	}
+
+	private XMLProperty<?, ?> assertProperty(String propertyName, XMLType propertyType, XMLComplexType ownerType) {
+		XMLProperty<?, ?> p = ownerType.getPropertyByName(propertyName);
+		assertNotNull(p);
+		assertSame(propertyType, p.getType());
+		return p;
+	}
+
+	/**
+	 * Test Otawa memory XSD (http://mem4csd.telecom-paris.fr/OtawaMemory)
+	 * 
+	 * @throws FlexoException
+	 * @throws ResourceLoadingCancelledException
+	 * @throws FileNotFoundException
+	 * 
+	 */
+	@Test
+	@TestOrder(5)
+	public void testOtawaMemory() throws FileNotFoundException, ResourceLoadingCancelledException, FlexoException {
+
+		XSDMetaModelResource mmRes = mmRepository.getResource("http://mem4csd.telecom-paris.fr/OtawaMemory");
+
+		/*for (XSDMetaModelResource r : mmRepository.getAllResources()) {
+			System.out.println("> Resource: " + r.getURI());
+		}*/
+
+		assertNotNull(mmRes);
+		assertFalse(mmRes.isLoaded());
+		mmRes.loadResourceData();
+		assertTrue(mmRes.isLoaded());
+
+		XSDMetaModel metaModel = mmRes.getMetaModelData();
+
+		Helpers.dumpTypes(metaModel);
+
+		assertEquals(8, metaModel.getTypes().size());
+
+		XMLSimpleType byteType = metaModel.getSimpleTypeFromURI("http://www.w3.org/2001/XMLSchema#byte");
+		assertNotNull(byteType);
+
+		XMLSimpleType booleanType = metaModel.getSimpleTypeFromURI("http://www.w3.org/2001/XMLSchema#boolean");
+		assertNotNull(booleanType);
+
+		XMLSimpleType stringType = metaModel.getSimpleTypeFromURI("http://www.w3.org/2001/XMLSchema#string");
+		assertNotNull(stringType);
+
+		XMLComplexType anyType = metaModel.getComplexTypeFromURI("http://www.w3.org/2001/XMLSchema#anyType");
+		assertNotNull(anyType);
+
+		XMLComplexType addressType = metaModel.getComplexTypeFromURI("http://mem4csd.telecom-paris.fr/OtawaMemory#address");
+		assertNotNull(addressType);
+		XMLDataProperty offsetProperty = (XMLDataProperty) assertProperty("offset", stringType, addressType);
+
+		XMLComplexType bankType = metaModel.getComplexTypeFromURI("http://mem4csd.telecom-paris.fr/OtawaMemory#bank");
+		assertNotNull(bankType);
+		XMLObjectProperty addressProperty = (XMLObjectProperty) assertProperty("address", addressType, bankType);
+		XMLDataProperty cachableProperty = (XMLDataProperty) assertProperty("cachable", booleanType, bankType);
+		XMLDataProperty latencyProperty = (XMLDataProperty) assertProperty("latency", byteType, bankType);
+		XMLDataProperty nameProperty = (XMLDataProperty) assertProperty("name", stringType, bankType);
+		XMLDataProperty sizeProperty = (XMLDataProperty) assertProperty("size", stringType, bankType);
+		XMLDataProperty typeProperty = (XMLDataProperty) assertProperty("type", stringType, bankType);
+		XMLDataProperty writableProperty = (XMLDataProperty) assertProperty("writable", booleanType, bankType);
+
+		XMLComplexType banksType = metaModel.getComplexTypeFromURI("http://mem4csd.telecom-paris.fr/OtawaMemory#banks");
+		assertNotNull(banksType);
+		XMLObjectProperty banksProperty = (XMLObjectProperty) assertProperty("banks", bankType, banksType);
+
+		XMLComplexType memoryType = metaModel.getComplexTypeFromURI("http://mem4csd.telecom-paris.fr/OtawaMemory#memory");
+		assertNotNull(memoryType);
+		XMLObjectProperty banks2Property = (XMLObjectProperty) assertProperty("banks", banksType, memoryType);
+
+	}
+
+	/**
+	 * Test Otawa pipeline XSD (http://mem4csd.telecom-paris.fr/OtawaPipeline)
+	 * 
+	 * @throws FlexoException
+	 * @throws ResourceLoadingCancelledException
+	 * @throws FileNotFoundException
+	 * 
+	 */
+	@Test
+	@TestOrder(5)
+	public void testOtawaPipeline() throws FileNotFoundException, ResourceLoadingCancelledException, FlexoException {
+
+		XSDMetaModelResource mmRes = mmRepository.getResource("http://mem4csd.telecom-paris.fr/OtawaPipeline");
+
+		/*for (XSDMetaModelResource r : mmRepository.getAllResources()) {
+			System.out.println("> Resource: " + r.getURI());
+		}*/
+
+		assertNotNull(mmRes);
+		assertFalse(mmRes.isLoaded());
+		mmRes.loadResourceData();
+		assertTrue(mmRes.isLoaded());
+
+		XSDMetaModel metaModel = mmRes.getMetaModelData();
+
+		Helpers.dumpTypes(metaModel);
+
+		assertEquals(11, metaModel.getTypes().size());
+
+		XMLSimpleType byteType = metaModel.getSimpleTypeFromURI("http://www.w3.org/2001/XMLSchema#byte");
+		assertNotNull(byteType);
+
+		XMLSimpleType booleanType = metaModel.getSimpleTypeFromURI("http://www.w3.org/2001/XMLSchema#boolean");
+		assertNotNull(booleanType);
+
+		XMLSimpleType stringType = metaModel.getSimpleTypeFromURI("http://www.w3.org/2001/XMLSchema#string");
+		assertNotNull(stringType);
+
+		XMLComplexType anyType = metaModel.getComplexTypeFromURI("http://www.w3.org/2001/XMLSchema#anyType");
+		assertNotNull(anyType);
+
+		XMLComplexType fuType = metaModel.getComplexTypeFromURI("http://mem4csd.telecom-paris.fr/OtawaPipeline#fu");
+		assertNotNull(fuType);
+		XMLDataProperty idProperty = (XMLDataProperty) assertProperty("id", stringType, fuType);
+		XMLDataProperty latencyProperty = (XMLDataProperty) assertProperty("latency", byteType, fuType);
+		XMLDataProperty nameProperty = (XMLDataProperty) assertProperty("name", stringType, fuType);
+		XMLDataProperty refProperty = (XMLDataProperty) assertProperty("ref", stringType, fuType);
+		XMLDataProperty widthProperty = (XMLDataProperty) assertProperty("width", byteType, fuType);
+
+		XMLComplexType fusType = metaModel.getComplexTypeFromURI("http://mem4csd.telecom-paris.fr/OtawaPipeline#fus");
+		assertNotNull(fusType);
+		XMLObjectProperty fuProperty = (XMLObjectProperty) assertProperty("fus", fuType, fusType);
+
+		XMLComplexType instType = metaModel.getComplexTypeFromURI("http://mem4csd.telecom-paris.fr/OtawaPipeline#inst");
+		assertNotNull(instType);
+		XMLObjectProperty fuProperty2 = (XMLObjectProperty) assertProperty("fus", fuType, instType);
+		XMLDataProperty typeProperty = (XMLDataProperty) assertProperty("type", stringType, instType);
+
+		XMLComplexType dispatchType = metaModel.getComplexTypeFromURI("http://mem4csd.telecom-paris.fr/OtawaPipeline#dispatch");
+		assertNotNull(dispatchType);
+		XMLObjectProperty instProperty = (XMLObjectProperty) assertProperty("inst", instType, dispatchType);
+
+		XMLComplexType stageType = metaModel.getComplexTypeFromURI("http://mem4csd.telecom-paris.fr/OtawaPipeline#stage");
+		assertNotNull(stageType);
+		XMLObjectProperty dispatchProperty = (XMLObjectProperty) assertProperty("dispatch", dispatchType, stageType);
+		XMLObjectProperty fusProperty = (XMLObjectProperty) assertProperty("fus", fusType, stageType);
+		XMLDataProperty idProperty2 = (XMLDataProperty) assertProperty("id", stringType, stageType);
+		XMLDataProperty nameProperty2 = (XMLDataProperty) assertProperty("name", stringType, stageType);
+		XMLDataProperty orderedProperty = (XMLDataProperty) assertProperty("ordered", booleanType, stageType);
+		XMLDataProperty typeProperty2 = (XMLDataProperty) assertProperty("type", stringType, stageType);
+		XMLDataProperty writableProperty = (XMLDataProperty) assertProperty("width", byteType, stageType);
+
+		XMLComplexType stagesType = metaModel.getComplexTypeFromURI("http://mem4csd.telecom-paris.fr/OtawaPipeline#stages");
+		assertNotNull(stagesType);
+		XMLObjectProperty stagesProperty = (XMLObjectProperty) assertProperty("stages", stageType, stagesType);
+
+		XMLComplexType processorType = metaModel.getComplexTypeFromURI("http://mem4csd.telecom-paris.fr/OtawaPipeline#processor");
+		assertNotNull(processorType);
+		XMLDataProperty archProperty = (XMLDataProperty) assertProperty("arch", stringType, processorType);
+		XMLDataProperty classProperty = (XMLDataProperty) assertProperty("class", stringType, processorType);
+		XMLDataProperty modelProperty = (XMLDataProperty) assertProperty("model", stringType, processorType);
+		XMLObjectProperty stagesProperty2 = (XMLObjectProperty) assertProperty("stages", stagesType, processorType);
 
 	}
 

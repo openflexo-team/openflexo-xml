@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<cache-config>
+<cache-config 
+    xmlns="http://mem4csd.telecom-paris.fr/OtawaCache" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://mem4csd.telecom-paris.fr/OtawaCache OtawaCache.xsd">
 	<dcache>
 		<block_bits>5</block_bits>
 		<way_bits>2</way_bits>

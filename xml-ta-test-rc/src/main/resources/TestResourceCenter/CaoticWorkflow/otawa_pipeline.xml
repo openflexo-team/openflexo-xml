@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<processor class="otawa::hard::Processor">
+<processor  
+    xmlns="http://mem4csd.telecom-paris.fr/OtawaPipeline" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://mem4csd.telecom-paris.fr/OtawaPipeline OtawaPipeline.xsd"
+    class="otawa::hard::Processor">
 	<arch>patmos</arch>
 	<model>patmos</model>
 	

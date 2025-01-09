@@ -16,8 +16,8 @@
   <xs:element name="size" type="xs:string"/>
   <xs:element name="type" type="xs:string"/>
   <xs:element name="latency" type="xs:byte"/>
-  <xs:element name="writable" type="xs:string"/>
-  <xs:element name="cachable" type="xs:string"/>
+  <xs:element name="writable" type="xs:boolean"/>
+  <xs:element name="cachable" type="xs:boolean"/>
   <xs:element name="bank">
     <xs:complexType>
       <xs:sequence>
@@ -34,7 +34,7 @@
   <xs:element name="banks">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="bank"/>
+        <xs:element ref="bank" maxOccurs="unbounded" minOccurs="1"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>

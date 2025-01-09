@@ -26,11 +26,11 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <xs:element name="ordered" type="xs:string"/>
+  <xs:element name="ordered" type="xs:boolean"/>
   <xs:element name="fus">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="fu"/>
+        <xs:element ref="fu" maxOccurs="unbounded" minOccurs="1"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
