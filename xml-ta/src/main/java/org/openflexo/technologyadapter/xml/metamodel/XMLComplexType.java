@@ -174,8 +174,10 @@ public interface XMLComplexType extends XMLType {
 
 		@Override
 		public void addToProperties(XMLProperty prop) {
-			if (prop != null)
+			if (prop != null) {
 				properties.put(prop.getName(), prop);
+				prop.setContainer(this);
+			}
 		}
 
 		@Override
@@ -206,10 +208,10 @@ public interface XMLComplexType extends XMLType {
 			return null;
 		}
 
-		@Override
+		/*@Override
 		public Class<?> getImplementedInterface() {
 			return XMLComplexType.class;
-		}
+		}*/
 
 		@Override
 		public String getDisplayableDescription() {
