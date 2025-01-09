@@ -104,13 +104,26 @@ public class Helpers {
 		return sb.toString();
 	}
 
-	/**
-	 * Prints all the property values of an individual
-	 */
+	public static final void dumpIndividual(XMLIndividual indiv, String prefix) {
 
-	public static final void dumpProperties(XMLIndividual indiv, XMLType aType, String prefix) {
+		StringBuffer sb = new StringBuffer();
+		appendIndividual(indiv, prefix, sb);
+		System.out.println(sb.toString());
+		System.out.flush();
+	}
+
+	private static void appendIndividual(XMLIndividual indiv, String prefix, StringBuffer sb) {
+
+		sb.append(indiv.getType().getURI() + "::{\n");
+		appendProperties(indiv, null, prefix, sb);
+		sb.append(prefix + "}");
+	}
+
+	private static final String INDENT = "    ";
+
+	private static void appendProperties(XMLIndividual indiv, XMLType aType, String prefix, StringBuffer sb) {
 		if (aType == null) {
-			dumpProperties(indiv, indiv.getType(), prefix);
+			appendProperties(indiv, indiv.getType(), prefix, sb);
 		}
 		else {
 			if (aType instanceof XMLComplexType) {
@@ -118,48 +131,45 @@ public class Helpers {
 					if (prop instanceof XMLDataProperty) {
 						Object val = indiv.getPropertyValue(prop);
 						if (val != null) {
-							System.out.println(prefix + "    * attr: " + prop.getName() + " = " + indiv.getPropertyValue(prop).toString());
-						}
-						else {
-							System.out.println(prefix + "    ! attr: " + prop.getName() + " n'est pas valuée");
+							sb.append(prefix + INDENT + prop.getName() + " = " + val + "\n");
 						}
 					}
 					else if (prop instanceof XMLObjectProperty) {
-						System.out.println(prefix + "    * obj: " + prop.getName());
-						List<XMLIndividual> vals = indiv.getPropertyValues((XMLObjectProperty) prop);
-						if (vals != null) {
-							for (XMLIndividual v : vals) {
-								dumpIndividual(v, prefix + "          + ");
+						if (prop.isMultiple()) {
+							sb.append(prefix + INDENT + prop.getName() + " = (" + "\n");
+							List<XMLIndividual> vals = indiv.getPropertyValues((XMLObjectProperty) prop);
+							if (vals != null) {
+								boolean isFirst = true;
+								for (XMLIndividual v : vals) {
+									if (!isFirst)
+										sb.append("," + "\n");
+									isFirst = false;
+									sb.append(prefix + INDENT + INDENT);
+									appendIndividual(v, prefix + INDENT + INDENT, sb);
+								}
 							}
+							sb.append("\n" + prefix + INDENT + ")" + "\n");
 						}
 						else {
-							System.out.println(" !! Etrange, la propriete " + prop.getName() + " ne contient rien ?!?");
+							XMLIndividual val = indiv.getPropertyValue((XMLObjectProperty) prop);
+							if (val != null) {
+								sb.append(prefix + INDENT + prop.getName() + " = ");
+								appendIndividual(val, prefix + INDENT, sb);
+								sb.append("\n");
+							}
+							else {
+								// Do not print null property values
+								// sb.append(prefix + INDENT + prop.getName() + " = null" + "\n");
+							}
 						}
 					}
 				}
 
 			}
 			if (aType.getSuperType() != null) {
-				dumpProperties(indiv, aType.getSuperType(), prefix);
+				appendProperties(indiv, aType.getSuperType(), prefix, sb);
 			}
 		}
-	}
-
-	/**
-	 * Prints all individuals
-	 * 
-	 */
-
-	public static final void dumpIndividual(XMLIndividual indiv, String prefix) {
-
-		System.out.println(prefix + "Indiv : " + indiv.getName());
-		dumpProperties(indiv, null, prefix);
-
-		for (XMLIndividual x : indiv.getChildren())
-			dumpIndividual(x, prefix + "    [C]");
-
-		System.out.flush();
-
 	}
 
 }
