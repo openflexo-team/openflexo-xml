@@ -307,30 +307,11 @@ public interface XMLSimpleType extends XMLType {
 	@Setter(PRIMITIVE_TYPE)
 	public void setPrimitiveType(XMLSchemaPrimitiveType primitiveType);
 
-	/*
-	 * Property that indicates that this particular simpleType is extracted from an Element or an Attribute
-	 */
-	/*final String MAPSTOELEMENT = "mapsToElement";
-	
-	@Deprecated
-	@Getter(value = MAPSTOELEMENT, defaultValue = "false")
-	public boolean mapsToElement();
-	
-	@Deprecated
-	@Setter(value = MAPSTOELEMENT)
-	public void setMapsToElement(boolean val);*/
-
 	public Type getJavaType();
 
 	public static abstract class XMLSimpleTypeImpl extends XMLTypeImpl implements XMLSimpleType {
 
 		private static final Logger logger = Logger.getLogger(XMLSimpleTypeImpl.class.getPackage().getName());
-
-		/*public XMLSimpleTypeImpl() {
-			System.out.println("Hop un XMLSimpleTypeImpl");
-			Thread.dumpStack();
-			System.exit(-1);
-		}*/
 
 		@Override
 		public String getDisplayableDescription() {
