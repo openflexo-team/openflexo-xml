@@ -13,39 +13,18 @@
 			<Label label="default_value" index="9"
 				constraints="twocols(expandHorizontally=false;expandVertically=false;index=0;location=left)"
 				name="DefaultValueLabel" localize="true" />
-			<TextField index="10" data="data.defaultValue"
+			<TextField index="10" data="data.defaultValue.toString"
 				constraints="twocols(expandHorizontally=true;expandVertically=false;index=1;location=right)"
 				name="DefaultValue" localize="true" validateOnReturn="true"
 				columns="10" readOnly="true" />
 			<Label label="fixed_value" index="11"
 				constraints="twocols(expandHorizontally=false;expandVertically=false;index=0;location=left)"
 				name="FixedValueLabel" localize="true" />
-			<TextField index="12" data="data.fixedValue"
+			<TextField index="12" data="data.fixedValue.toString"
 				constraints="twocols(expandHorizontally=true;expandVertically=false;index=1;location=right)"
 				name="FixedValue" localize="true" validateOnReturn="true"
 				columns="10" readOnly="true" />
-			<Label label="is_required" index="13"
-				constraints="twocols(expandHorizontally=false;expandVertically=false;index=0;location=left)"
-				localize="true" />
-			<CheckBox index="14" data="data.isRequired"
-				constraints="twocols(expandHorizontally=false;expandVertically=false;index=1;location=right)"
-				name="isRequired" localize="true" />
 
-			<Label label="lower_bound" index="15"
-				constraints="twocols(expandHorizontally=false;expandVertically=false;index=0;location=left)"
-				name="LowerBoundLabel" localize="true" />
-			<Number numberType="IntegerType" index="16"
-				data="data.lowerBound"
-				constraints="twocols(expandHorizontally=false;expandVertically=false;index=1;location=right)"
-				name="LowerBound" localize="true" />
-
-			<Label label="upper_bound" index="17"
-				constraints="twocols(expandHorizontally=false;expandVertically=false;index=0;location=left)"
-				name="UpperBoundLabel" localize="true" />
-			<Number numberType="IntegerType" index="18"
-				data="data.upperBound"
-				constraints="twocols(expandHorizontally=false;expandVertically=false;index=1;location=right)"
-				name="UpperBound" localize="true" />
 
 		</Tab>
 	</TabPanel>

@@ -22,13 +22,30 @@
 			<TextField index="6" data="data.type.name"
 				constraints="twocols(expandHorizontally=true;expandVertically=false;index=1;location=right)"
 				name="Type" localize="true" validateOnReturn="true" columns="10" readOnly="true"/>
-			<Label label="is_from_XML_element" index="7"
+
+			<Label label="is_required" index="13"
 				constraints="twocols(expandHorizontally=false;expandVertically=false;index=0;location=left)"
 				localize="true" />
-			<CheckBox index="8"
-				data="data.isFromXMLElement"
+			<CheckBox index="14" data="data.isRequired"
 				constraints="twocols(expandHorizontally=false;expandVertically=false;index=1;location=right)"
-				name="isFromXMLElement" localize="true" />
+				name="isRequired" localize="true" />
+
+			<Label label="lower_bound" index="15"
+				constraints="twocols(expandHorizontally=false;expandVertically=false;index=0;location=left)"
+				name="LowerBoundLabel" localize="true" />
+			<Number numberType="IntegerType" index="16"
+				data="data.lowerBound"
+				constraints="twocols(expandHorizontally=false;expandVertically=false;index=1;location=right)"
+				name="LowerBound" localize="true" />
+
+			<Label label="upper_bound" index="17"
+				constraints="twocols(expandHorizontally=false;expandVertically=false;index=0;location=left)"
+				name="UpperBoundLabel" localize="true" />
+			<Number numberType="IntegerType" index="18"
+				data="data.upperBound"
+				constraints="twocols(expandHorizontally=false;expandVertically=false;index=1;location=right)"
+				name="UpperBound" localize="true" />
+
 		</Tab>
 	</TabPanel>
 	<LocalizedDictionary/>

@@ -56,13 +56,23 @@ public class TestXMLInspectors extends GenericFIBInspectorTestCase {
 	}
 
 	@Test
-	public void testAddXMLIndividualInspector() {
-		validateFIB("Inspectors/XML/EditionAction/AddXMLIndividual.inspector");
+	public void testXMLModelInspector() {
+		validateFIB("Inspectors/XML/XMLModel.inspector");
 	}
 
 	@Test
-	public void testGetXMLDocumentRootInspector() {
-		validateFIB("Inspectors/XML/EditionAction/GetXMLDocumentRoot.inspector");
+	public void testXSDMetaModelInspector() {
+		validateFIB("Inspectors/XML/XSDMetaModel.inspector");
+	}
+
+	@Test
+	public void testXSDMetaModelResourceInspector() {
+		validateFIB("Inspectors/XML/XSDMetaModelResource.inspector");
+	}
+
+	@Test
+	public void testXMLObjectPropertyInspector() {
+		validateFIB("Inspectors/XML/XMLObjectProperty.inspector");
 	}
 
 	@Test
@@ -71,13 +81,18 @@ public class TestXMLInspectors extends GenericFIBInspectorTestCase {
 	}
 
 	@Test
-	public void testFreeXMLModelSlotInspector() {
-		validateFIB("Inspectors/XML/ModelSlot/FreeXMLModelSlot.inspector");
+	public void testGetXMLDocumentRootInspector() {
+		validateFIB("Inspectors/XML/EditionAction/GetXMLDocumentRoot.inspector");
 	}
 
 	@Test
-	public void testXMLModelSlotInspector() {
-		validateFIB("Inspectors/XML/ModelSlot/XMLModelSlot.inspector");
+	public void testAddXMLIndividualInspector() {
+		validateFIB("Inspectors/XML/EditionAction/AddXMLIndividual.inspector");
+	}
+
+	@Test
+	public void testXMLTypeInspector() {
+		validateFIB("Inspectors/XML/XMLType.inspector");
 	}
 
 	@Test
@@ -86,18 +101,28 @@ public class TestXMLInspectors extends GenericFIBInspectorTestCase {
 	}
 
 	@Test
-	public void testXMLMetaModelInspector() {
-		validateFIB("Inspectors/XML/XSDMetaModel.inspector");
+	public void testXMLObjectInspector() {
+		validateFIB("Inspectors/XML/XMLObject.inspector");
 	}
 
 	@Test
-	public void testXMLModelInspector() {
-		validateFIB("Inspectors/XML/XMLModel.inspector");
+	public void testXMLDataPropertyInspector() {
+		validateFIB("Inspectors/XML/XMLDataProperty.inspector");
 	}
 
 	@Test
-	public void testXSDMetaModelResourceInspector() {
-		validateFIB("Inspectors/XML/XSDMetaModelResource.inspector");
+	public void testXMLPropertyInspector() {
+		validateFIB("Inspectors/XML/XMLProperty.inspector");
+	}
+
+	@Test
+	public void testXMLModelSlotInspector() {
+		validateFIB("Inspectors/XML/ModelSlot/XMLModelSlot.inspector");
+	}
+
+	@Test
+	public void testFreeXMLModelSlotInspector() {
+		validateFIB("Inspectors/XML/ModelSlot/FreeXMLModelSlot.inspector");
 	}
 
 }
