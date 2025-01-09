@@ -1,0 +1,14 @@
+use org.openflexo.technologyadapter.xml.XMLModelSlot as XML;
+
+import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
+
+import ["http://mem4csd.telecom-paris.fr/OtawaCache"] as OTAWA_CACHE;
+import ["http://mem4csd.telecom-paris.fr/OtawaMemory"] as OTAWA_MEMORY;
+import ["http://mem4csd.telecom-paris.fr/OtawaPipeline"] as OTAWA_PIPELINE;
+
+@URI("http://mem4csd.telecom-paris.fr/OtawaPipeline/TestOtawa.fml")
+public model TestOtawa {
+	XMLModel caches with XMLModelSlot(metaModel=OTAWA_CACHE);
+	XMLModel memory with XMLModelSlot(metaModel=OTAWA_MEMORY);
+	XMLModel pipeline with XMLModelSlot(metaModel=OTAWA_PIPELINE);
+}
