@@ -90,6 +90,11 @@ public interface AbstractXMLDocument<RD extends AbstractXMLDocument<RD>> extends
 			return (RD) this;
 		}
 
+		@Override
+		public String getDisplayableDescription() {
+			return null;
+		}
+
 	}
 
 }

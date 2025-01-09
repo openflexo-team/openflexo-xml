@@ -49,6 +49,7 @@ import org.openflexo.technologyadapter.xml.metamodel.XMLDataProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLObjectProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
+import org.openflexo.technologyadapter.xml.model.free.FreeXMLDocument;
 import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
 import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
 
@@ -78,6 +79,9 @@ public class XMLIconLibrary {
 			return XSD_FILE_ICON;
 		}
 		else if (XMLModel.class.isAssignableFrom(objectClass)) {
+			return XML_FILE_ICON;
+		}
+		else if (FreeXMLDocument.class.isAssignableFrom(objectClass)) {
 			return XML_FILE_ICON;
 		}
 		else if (XMLType.class.isAssignableFrom(objectClass)) {

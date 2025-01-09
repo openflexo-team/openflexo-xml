@@ -48,7 +48,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.openflexo.foundation.resource.FlexoResource;
 import org.openflexo.foundation.technologyadapter.FlexoModel;
 import org.openflexo.pamela.annotations.Adder;
 import org.openflexo.pamela.annotations.CloningStrategy;
@@ -172,29 +171,11 @@ public interface XMLModel extends AbstractXMLDocument<XMLModel>, FlexoModel<XMLM
 
 	public static abstract class XMLModelImpl extends AbstractXMLDocumentImpl<XMLModel> implements XMLModel {
 
-		// Attributes
-
 		protected static final Logger logger = Logger.getLogger(XMLModelImpl.class.getPackage().getName());
-		private FlexoResource<?> xmlResource;
 
 		private final Map<String, XMLIndividual> individuals;
 
 		private final List<String> namespace = new ArrayList<>();
-
-		/*private static PamelaModelFactory MF;
-		
-		static {
-			try {
-				MF = new PamelaModelFactory(PamelaMetaModelLibrary.retrieveMetaModel(XMLModel.class, XMLIndividual.class,
-						XMLPropertyValue.class, XMLDataPropertyValue.class, XMLObjectPropertyValue.class));
-			} catch (ModelDefinitionException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		public static PamelaModelFactory getModelFactory() {
-			return MF;
-		}*/
 
 		public XMLModelImpl() {
 			super();
@@ -214,8 +195,8 @@ public interface XMLModel extends AbstractXMLDocument<XMLModel>, FlexoModel<XMLM
 
 		@Override
 		public String getName() {
-			if (xmlResource != null) {
-				return xmlResource.getName();
+			if (getResource() != null) {
+				return getResource().getName();
 			}
 			else
 				return "";
@@ -239,19 +220,12 @@ public interface XMLModel extends AbstractXMLDocument<XMLModel>, FlexoModel<XMLM
 
 		}
 
-		/*@Override
-		public TypedXMLResource getResource() {
-			return (TypedXMLResource) xmlResource;
-		}
-		
-		@Override
-		public void setResource(FlexoResource<XMLModel> resource) {
-			this.xmlResource = resource;
-		}*/
-
 		@Override
 		public String getURI() {
-			return xmlResource.getURI();
+			if (getResource() != null) {
+				return getResource().getURI();
+			}
+			return null;
 		}
 
 		@Override
