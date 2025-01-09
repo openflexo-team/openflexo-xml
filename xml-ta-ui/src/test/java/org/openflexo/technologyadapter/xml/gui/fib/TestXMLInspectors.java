@@ -87,7 +87,7 @@ public class TestXMLInspectors extends GenericFIBInspectorTestCase {
 
 	@Test
 	public void testXMLMetaModelInspector() {
-		validateFIB("Inspectors/XML/XMLMetaModel.inspector");
+		validateFIB("Inspectors/XML/XSDMetaModel.inspector");
 	}
 
 	@Test
