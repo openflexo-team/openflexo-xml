@@ -66,6 +66,11 @@ public interface FreeXMLResource extends XMLResource<FreeXMLDocument, FreeXMLDoc
 		protected static final Logger logger = Logger.getLogger(FreeXMLResourceImpl.class.getPackage().getName());
 
 		@Override
+		public Class<FreeXMLDocument> getResourceDataClass() {
+			return FreeXMLDocument.class;
+		}
+
+		@Override
 		protected FreeXMLDocument performLoad() throws IOException, Exception {
 
 			resourceData = getFactory().makeFreeXMLDocument();
