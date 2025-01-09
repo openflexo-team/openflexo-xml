@@ -75,76 +75,17 @@ import org.openflexo.toolbox.FileUtils;
 public interface TypedXMLResource extends XMLResource<XMLModel, XMLModelFactory>,
 		FlexoModelResource<XMLModel, XSDMetaModel, XMLTechnologyAdapter, XMLTechnologyAdapter> {
 
-	// public static final String TARGET_NAMESPACE = "targetNamespace";
-
-	// @Getter(value = TARGET_NAMESPACE)
-	// public String getTargetNamespace() throws IOException;
-
-	// initializes the Metamodel property of XMLModel, given the reference provided by metamodelResource property
-	// public void attachMetamodel();
-
 	/**
 	 * Default implementation for TypedXMLResource
 	 */
 	public static abstract class TypedXMLResourceImpl extends XMLResourceImpl<XMLModel, XMLModelFactory> implements TypedXMLResource {
 
 		protected static final Logger logger = Logger.getLogger(TypedXMLResourceImpl.class.getPackage().getName());
-		// protected static XMLRootElementReader REreader = new XMLRootElementReader();
 
-		// Properties
-
-		// @Deprecated
-		// private boolean isLoaded = false;
-
-		/**
-		 * Save the &quot;real&quot; resource data of this resource.
-		 * 
-		 * @throws SaveResourceException
-		 */
-		// TODO : refactor !!!!!!!!!!!!!
-		/*@Override
-		public final void save() throws SaveResourceException {
-			if (!isLoaded()) {
-				return;
-			}
-			if (!isDeleted()) {
-				saveResourceData(true);
-				resourceData.clearIsModified(false);
-			}
-		
-		}*/
-
-		/**
-		 * Retrieves the target Namespace from the file when not loaded or from MetamModel when it is loaded and exists
-		 * 
-		 * @throws IOException
-		 * 
-		 */
-		/*@Override
-		public String getTargetNamespace() throws IOException {
-		
-			if (!isLoaded()) {
-				XMLRootElementInfo rootInfo;
-				rootInfo = REreader.readRootElement(getIODelegate().getSerializationArtefactAsResource());
-				return rootInfo.getURI();
-			}
-			return this.getModel().getMetaModel().getURI();
+		@Override
+		public Class<XMLModel> getResourceDataClass() {
+			return XMLModel.class;
 		}
-		
-		public static final String getTargetNamespace(File f) throws IOException {
-			if (f != null && f.exists()) {
-				XMLRootElementInfo rootInfo;
-				rootInfo = REreader.readRootElement(f);
-				return rootInfo.getURI();
-			}
-			throw new IOException("File Not Found ");
-		}*/
-
-		/*@Override
-		public void setFactory(XMLModelFactory factory) {
-			System.out.println("Yes avec " + factory);
-			System.exit(-1);
-		}*/
 
 		@Override
 		protected XMLModel performLoad() throws IOException, Exception {
@@ -169,54 +110,6 @@ public interface TypedXMLResource extends XMLResource<XMLModel, XMLModelFactory>
 
 		}
 
-		// @Override
-		// TODO : refactor !!!!!!!!!!!!!
-		/*public XMLModel loadResourceData() throws ResourceLoadingCancelledException, FileNotFoundException, FlexoException {
-		
-			if (getFlexoIOStreamDelegate() == null) {
-				throw new FlexoException("Cannot load XML document with this IO/delegate: " + getIODelegate());
-			}
-		
-			if (resourceData == null) {
-				resourceData = getFactory().makeXMLModel();
-				resourceData.setResource(this);
-		
-				attachMetamodel();
-		
-			}
-		
-			if (!isLoaded()) {
-		
-				try {
-		
-					FlexoMetaModelResource<XMLModel, XSDMetaModel, XMLTechnologyAdapter> mmRes = getMetaModelResource();
-		
-					FreeXMLDocumentBuilder factory = getTechnologyAdapter().getXMLModelFactory();
-		
-					factory.setContext(resourceData);
-		
-					factory.deserialize(getInputStream());
-		
-					factory.resetContext();
-		
-					if (mmRes != null) {
-						resourceData.setMetaModel(mmRes.getMetaModelData());
-					}
-		
-					isLoaded = true;
-		
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-		
-			}
-		
-			return resourceData;
-		}*/
-
-		// TODO: Ask Sylvain if this could no be tractable with Pamela => Code
-		// duplication ?!?
-
 		@Override
 		public XMLModel getModel() {
 			return getModelData();
@@ -236,177 +129,7 @@ public interface TypedXMLResource extends XMLResource<XMLModel, XMLModelFactory>
 			}
 			return null;
 
-			/*
-			 * if (resourceData == null) { resourceData =
-			 * XMLModelImpl.getModelFactory().newInstance(XMLModel.class);
-			 * resourceData.setResource(this); }
-			 */
-			// TODO : check lifecycle for Resource.... should it be loaded on
-			// getModelData?
-			/*
-			 * if (!isLoaded()) { try { resourceData = loadResourceData(null); }
-			 * catch (FileNotFoundException e) { e.printStackTrace(); } catch
-			 * (ResourceLoadingCancelledException e) { e.printStackTrace(); } catch
-			 * (FlexoException e) { e.printStackTrace(); } }
-			 */
-			// return resourceData;
 		}
-
-		/*@Override
-		public XMLModel getModelData() {
-		
-			if (resourceData == null) {
-				resourceData = XMLModelImpl.getModelFactory().newInstance(XMLModel.class);
-				// , getTechnologyAdapter());
-				// new XMLModel(this.getTechnologyAdapter());
-				resourceData.setResource(this);
-			}
-		
-			if (!isLoaded()) {
-				try {
-					resourceData = loadResourceData();
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				} catch (ResourceLoadingCancelledException e) {
-					e.printStackTrace();
-				} catch (FlexoException e) {
-					e.printStackTrace();
-				}
-			}
-		
-			return resourceData;
-		}*/
-
-		/*@Override
-		public void attachMetamodel() {
-		
-			FlexoMetaModelResource<XMLModel, XSDMetaModel, XMLTechnologyAdapter> mmRes = getMetaModelResource();
-			if (mmRes != null) {
-				resourceData.setMetaModel(mmRes.getMetaModelData());
-			}
-			else {
-				// Create default meta-model, on the fly
-		
-				// XSDMetaModel mm = XMLMetaModelImpl.getModelFactory().newInstance(XSDMetaModel.class);
-				// mm.setURI(getURI() + "/Metamodel");
-				// mm.setReadOnly(false);
-		
-				// resourceData.setMetaModel(mm);
-		
-				logger.warning("Not implemented: Create default meta-model, on the fly");
-			}
-		
-			if (resourceData.getMetaModel() == null) {
-				logger.warning("Setting a null Metamodel for Model " + this.getURI());
-			}
-		}*/
-
-		/*
-		@Override
-		public void attachMetamodel() {
-			FlexoMetaModelResource<XMLModel, XSDMetaModel, XMLTechnologyAdapter> mmRes = this.getMetaModelResource();
-			if (mmRes != null) {
-				resourceData.setMetaModel(mmRes.getMetaModelData());
-			}
-			if (resourceData.getMetaModel() == null) {
-				logger.warning("Setting a null Metamodel for Model " + this.getURI());
-			}
-		}*/
-
-		@Override
-		public Class<XMLModel> getResourceDataClass() {
-			return XMLModel.class;
-
-		}
-
-		/*@Override
-		public XMLModel getResourceData()
-				throws ResourceLoadingCancelledException, ResourceLoadingCancelledException, FileNotFoundException, FlexoException {
-		
-			if (isLoading()) {
-				logger.warning("trying to load a resource data from itself, please investigate");
-				return null;
-			}
-			if (isLoadable() && !isLoaded()) {
-				setLoading(true);
-				resourceData = loadResourceData();
-				setLoading(false);
-				// That's fine, resource is loaded, now let's notify the loading of
-				// the resources
-				notifyResourceLoaded();
-			}
-			return resourceData;
-		}*/
-
-		// Lifecycle Management
-
-		/*@Override
-		public boolean isLoaded() {
-			return isLoaded;
-		}*/
-
-		/**
-		 * Return a FlexoIOStreamDelegate associated to this flexo resource
-		 * 
-		 * @return
-		 */
-		// TODO : refactor !!!!!!!!!!!!!
-		/*@Override
-		public StreamIODelegate<?> getFlexoIOStreamDelegate() {
-			if (getIODelegate() instanceof StreamIODelegate) {
-				return (StreamIODelegate<?>) getIODelegate();
-			}
-			return null;
-		}
-		
-		@Override
-		public InputStream getInputStream() {
-			if (getFlexoIOStreamDelegate() != null) {
-				return getFlexoIOStreamDelegate().getInputStream();
-			}
-			return null;
-		}
-		
-		@Override
-		public OutputStream getOutputStream() {
-			if (getFlexoIOStreamDelegate() != null) {
-				return getFlexoIOStreamDelegate().getOutputStream();
-			}
-			return null;
-		}*/
-
-		/**
-		 * Save current resource data to current XML resource file.<br>
-		 * Forces XML version to be the latest one.
-		 * 
-		 * @return
-		 */
-		// TODO : refactor !!!!!!!!!!!!!
-		/*@Override
-		protected final void saveResourceData(boolean clearIsModified) throws SaveResourceException, SaveResourcePermissionDeniedException {
-			// System.out.println("PamelaResourceImpl Saving " + getFile());
-			if (!getIODelegate().hasWritePermission()) {
-				if (logger.isLoggable(Level.WARNING)) {
-					logger.warning("Permission denied : " + getIODelegate().toString());
-				}
-				throw new SaveResourcePermissionDeniedException(getIODelegate());
-			}
-			if (resourceData != null) {
-				_saveResourceData(clearIsModified);
-				if (logger.isLoggable(Level.FINE)) {
-					logger.fine("Succeeding to save Resource " + this + " : " + getIODelegate().getSerializationArtefact());
-				}
-			}
-			if (clearIsModified) {
-				try {
-					getResourceData().clearIsModified(false);
-					// No need to reset the last memory update since it is valid
-					notifyResourceSaved();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}*/
 
 		protected void _saveResourceData(boolean clearIsModified) throws SaveResourceException {
 
