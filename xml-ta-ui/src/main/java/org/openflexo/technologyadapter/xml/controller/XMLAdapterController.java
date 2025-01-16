@@ -171,7 +171,7 @@ public class XMLAdapterController extends FlexoOntologyTechnologyAdapterControll
 	public ImageIcon getIconForFlexoRole(Class<? extends FlexoRole<?>> flexoRoleClass) {
 
 		if (XMLIndividualRole.class.isAssignableFrom(flexoRoleClass)) {
-			return getIconForTechnologyObject(XMLIndividualRole.class);
+			return getIconForTechnologyObject(XMLIndividual.class);
 		}
 		return null;
 	}
