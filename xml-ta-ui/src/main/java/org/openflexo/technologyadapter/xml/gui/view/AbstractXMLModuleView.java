@@ -36,7 +36,7 @@
  * 
  */
 
-package org.openflexo.technologyadapter.xml.gui;
+package org.openflexo.technologyadapter.xml.gui.view;
 
 import java.util.ArrayList;
 import java.util.Iterator;

@@ -36,54 +36,67 @@
  * 
  */
 
-package org.openflexo.technologyadapter.xml.gui;
+package org.openflexo.technologyadapter.xml.gui.view;
 
-import org.openflexo.rm.Resource;
-import org.openflexo.rm.ResourceLocator;
-import org.openflexo.technologyadapter.xml.XMLObject;
-import org.openflexo.technologyadapter.xml.metamodel.XMLType;
-import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
+import javax.swing.ImageIcon;
+
+import org.openflexo.foundation.FlexoObject;
+import org.openflexo.foundation.ontology.IFlexoOntology;
+import org.openflexo.ontology.components.widget.OntologyView;
+import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
+import org.openflexo.technologyadapter.xml.gui.XMLIconLibrary;
 import org.openflexo.view.controller.FlexoController;
 import org.openflexo.view.controller.model.FlexoPerspective;
 
 /**
- * This class represent the module view for an XML model conform to an XSD.<br>
+ * This class represent the module view for an OWL ontology.<br>
  * Underlying representation is supported by OntologyView implementation.
  * 
- * @author xtof
+ * @author sylvain
  * 
  */
-
 @SuppressWarnings("serial")
-public class XMLModelView extends AbstractXMLModuleView<XMLModel> {
-	
-	public static final Resource FIB_FILE = ResourceLocator.locateResource("Fib/FIBXMLModelView.fib");
-	public static final Resource XMLIndividual_FIB_FILE = ResourceLocator.locateResource("Fib/FIBPanelXMLIndividual.fib");
+public abstract class AbstractXMLOntologyView<T extends FlexoObject & IFlexoOntology<XMLTechnologyAdapter>>
+		extends OntologyView<T, XMLTechnologyAdapter> {
 
-	public XMLModelView(XMLModel object, FlexoController controller, FlexoPerspective perspective) {
-		super(controller, object, perspective, FIB_FILE);
-	}
-	
-
-	public XMLModel getModel() {
-		return representedObject;
+	public AbstractXMLOntologyView(T object, FlexoController controller, FlexoPerspective perspective) {
+		super(object, controller, perspective, controller.getTechnologyAdapter(XMLTechnologyAdapter.class).getLocales());
 	}
 
-
-
-
-	/**
-	 * Selects the FIB Panel to display depending of selected Object type
-	 * @param object
-	 * @return
-	 */
-	public Resource getFibForXMLObject(XMLObject object){
-		if (object instanceof XMLType) {
-			return XMLIndividual_FIB_FILE;
-		}
-		else return null;
+	@Override
+	public ImageIcon getOntologyClassIcon() {
+		return XMLIconLibrary.XML_TYPE_ICON;
 	}
-	
-	
+
+	@Override
+	public ImageIcon getOntologyIndividualIcon() {
+		return XMLIconLibrary.XML_INDIVIDUAL_ICON;
+	}
+
+	@Override
+	public ImageIcon getOntologyDataPropertyIcon() {
+		return XMLIconLibrary.XSD_DATAPROPERTY_ICON;
+	}
+
+	@Override
+	public ImageIcon getOntologyObjectPropertyIcon() {
+		return XMLIconLibrary.XSD_OBJECTPROPERTY_ICON;
+	}
+
+	@Override
+	public ImageIcon getOntologyAnnotationIcon() {
+		return XMLIconLibrary.XSD_DATAPROPERTY_ICON;
+	}
+
+	@Override
+	public boolean supportTechnologySpecificHiddenConcepts() {
+		return false;
+	}
+
+	@Override
+	public String technologySpecificHiddenConceptsLabel() {
+		// Not applicable
+		return null;
+	}
 
 }

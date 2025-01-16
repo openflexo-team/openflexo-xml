@@ -36,77 +36,54 @@
  * 
  */
 
-package org.openflexo.technologyadapter.xml.gui;
+package org.openflexo.technologyadapter.xml.gui.view;
 
-import org.openflexo.gina.model.container.FIBTab;
-import org.openflexo.gina.utils.FIBInspector;
 import org.openflexo.rm.Resource;
 import org.openflexo.rm.ResourceLocator;
 import org.openflexo.technologyadapter.xml.XMLObject;
-import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
-import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
+import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
 import org.openflexo.view.controller.FlexoController;
 import org.openflexo.view.controller.model.FlexoPerspective;
 
 /**
- * This class represent the module view for an XSD meta model<br>
+ * This class represent the module view for an XML model conform to an XSD.<br>
  * Underlying representation is supported by OntologyView implementation.
  * 
- * @author sylvain
+ * @author xtof
  * 
  */
+
 @SuppressWarnings("serial")
-public class XMLMetaModelView extends AbstractXMLModuleView<XSDMetaModel> {
+public class XMLModelView extends AbstractXMLModuleView<XMLModel> {
+	
+	public static final Resource FIB_FILE = ResourceLocator.locateResource("Fib/FIBXMLModelView.fib");
+	public static final Resource XMLIndividual_FIB_FILE = ResourceLocator.locateResource("Fib/FIBPanelXMLIndividual.fib");
 
-	public static final Resource FIB_FILE = ResourceLocator.locateResource("Fib/FIBXMLMetaModelView.fib");
-	public static final Resource XMLType_FIB_FILE = ResourceLocator.locateResource("Fib/FIBPanelXMLType.fib");
-	public static final Resource XMLProperty_FIB_FILE = ResourceLocator.locateResource("Fib/FIBPanelXMLProperty.fib");
-
-	public XMLMetaModelView(XSDMetaModel object, FlexoController controller, FlexoPerspective perspective) {
+	public XMLModelView(XMLModel object, FlexoController controller, FlexoPerspective perspective) {
 		super(controller, object, perspective, FIB_FILE);
 	}
+	
 
-	public XSDMetaModel getMetamodel() {
+	public XMLModel getModel() {
 		return representedObject;
 	}
 
+
+
+
 	/**
 	 * Selects the FIB Panel to display depending of selected Object type
-	 * 
 	 * @param object
 	 * @return
 	 */
-	public Resource getFibForXMLObject(XMLObject object) {
+	public Resource getFibForXMLObject(XMLObject object){
 		if (object instanceof XMLType) {
-			return XMLType_FIB_FILE;
+			return XMLIndividual_FIB_FILE;
 		}
-		else if (object instanceof XMLProperty) {
-			return XMLProperty_FIB_FILE;
-		}
-		else
-			return null;
+		else return null;
 	}
-
-	public FIBInspector inspectorForObject(Object object) {
-
-		System.out.println("Pour l'objet " + object);
-		System.out.println("flexoController: " + getFlexoController());
-		if (getFlexoController() == null) {
-			return null;
-		}
-
-		System.out.println("On retourne: " + getFlexoController().getModuleInspectorController().inspectorForObject(object));
-
-		return getFlexoController().getModuleInspectorController().inspectorForObject(object);
-	}
-
-	public FIBTab basicInspectorTabForObject(Object object) {
-		FIBInspector inspector = inspectorForObject(object);
-		if (inspector != null && inspector.getTabPanel() != null) {
-			return (FIBTab) inspector.getTabPanel().getSubComponentNamed("BasicTab");
-		}
-		return null;
-	}
+	
+	
 
 }
