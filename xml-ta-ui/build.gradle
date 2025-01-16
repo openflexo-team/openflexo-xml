@@ -8,6 +8,8 @@ dependencies {
   runtimeOnly fmlTechnologyAdapterUi()
   // external dep
   // testing dep
+  testImplementation project(":xml-ta-test-rc")
+  testImplementation ginaTest()
   testImplementation flexoUiTest()
 }
 
