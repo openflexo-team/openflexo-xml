@@ -56,6 +56,11 @@ public class TestXMLInspectors extends GenericFIBInspectorTestCase {
 	}
 
 	@Test
+	public void testXMLIndividualRoleInspector() {
+		validateFIB("Inspectors/XML/FlexoRole/XMLIndividualRole.inspector");
+	}
+
+	@Test
 	public void testXMLModelInspector() {
 		validateFIB("Inspectors/XML/XMLModel.inspector");
 	}
