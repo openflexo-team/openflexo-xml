@@ -42,6 +42,7 @@ import java.lang.reflect.Type;
 
 import org.openflexo.foundation.fml.FlexoRole;
 import org.openflexo.foundation.fml.annotations.FML;
+import org.openflexo.foundation.fml.annotations.FMLAttribute;
 import org.openflexo.foundation.fml.rt.AbstractVirtualModelInstanceModelFactory;
 import org.openflexo.foundation.fml.rt.ActorReference;
 import org.openflexo.foundation.fml.rt.FlexoConceptInstance;
@@ -51,9 +52,10 @@ import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.PropertyIdentifier;
 import org.openflexo.pamela.annotations.Setter;
-import org.openflexo.pamela.annotations.XMLAttribute;
 import org.openflexo.pamela.annotations.XMLElement;
+import org.openflexo.technologyadapter.xml.XMLModelSlot;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
+import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
 
 /**
@@ -66,30 +68,36 @@ import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
 @FML("XMLIndividualRole")
 public interface XMLIndividualRole extends FlexoRole<XMLIndividual> {
 
-	@PropertyIdentifier(type = String.class)
-	public static final String INDIVIDUAL_URI_KEY = "individualURI";
+	@PropertyIdentifier(type = XMLComplexType.class)
+	public static final String COMPLEX_TYPE_KEY = "xsdType";
 
-	@Getter(value = INDIVIDUAL_URI_KEY)
-	@XMLAttribute
-	public String getIndividualURI();
+	@Getter(value = COMPLEX_TYPE_KEY, ignoreType = true)
+	@FMLAttribute(value = COMPLEX_TYPE_KEY, required = false, description = "<html>XSD complex type</html>")
+	public XMLComplexType getXSDType();
 
-	@Setter(INDIVIDUAL_URI_KEY)
-	public void setIndividualURI(String conceptURI);
+	@Setter(COMPLEX_TYPE_KEY)
+	public void setXSDType(XMLComplexType type);
+
+	@Override
+	public XMLModelSlot getModelSlot();
 
 	public XMLTechnologyAdapter getXMLTechnologyAdapter();
 
 	public static abstract class XMLIndividualRoleImpl extends FlexoRoleImpl<XMLIndividual> implements XMLIndividualRole {
 
-		private String individualURI;
-
 		@Override
 		public XMLTechnologyAdapter getXMLTechnologyAdapter() {
-			return (XMLTechnologyAdapter) getModelSlot().getModelSlotTechnologyAdapter();
+			return getModelSlot().getModelSlotTechnologyAdapter();
 		}
 
 		@Override
 		public Type getType() {
 			return XMLIndividual.class;
+		}
+
+		@Override
+		public XMLModelSlot getModelSlot() {
+			return (XMLModelSlot) super.getModelSlot();
 		}
 
 		@Override
@@ -120,16 +128,6 @@ public interface XMLIndividualRole extends FlexoRole<XMLIndividual> {
 			returned.setFlexoConceptInstance(fci);
 			returned.setModellingElement(object);
 			return returned;
-		}
-
-		@Override
-		public String getIndividualURI() {
-			return individualURI;
-		}
-
-		@Override
-		public void setIndividualURI(String conceptURI) {
-			this.individualURI = conceptURI;
 		}
 
 		@Override
