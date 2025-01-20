@@ -135,6 +135,17 @@ public interface XMLIndividualRole extends FlexoRole<XMLIndividual> {
 			return XMLTechnologyAdapter.class;
 		}
 
+		@Override
+		public void setXSDType(XMLComplexType type) {
+			XMLComplexType oldType = getXSDType();
+			performSuperSetter(COMPLEX_TYPE_KEY, type);
+			if (requireChange(oldType, type)) {
+				// When type change, call setModified() to update FML pretty-print
+				setModified(true);
+				getPropertyChangeSupport().firePropertyChange(COMPLEX_TYPE_KEY, oldType, type);
+			}
+		}
+
 	}
 
 }
