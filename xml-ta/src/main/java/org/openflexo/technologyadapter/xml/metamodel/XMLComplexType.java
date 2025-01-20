@@ -223,6 +223,22 @@ public interface XMLComplexType extends XMLType {
 			return "XMLComplexType[" + getName() + "]";
 		}
 
+		@Override
+		public String getLocalIdentifier() {
+			String resourceURI = getResource().getURI();
+			if (getURI().startsWith(resourceURI + "#")) {
+				// URI relative to resource URI
+				return getURI().substring(resourceURI.length() + 1);
+			}
+			// Otherwise return full qualified URI
+			return getURI();
+		}
+
+		@Override
+		public String defaultAbbrevName() {
+			return getName();
+		}
+
 	}
 
 }
