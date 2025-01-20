@@ -11,5 +11,6 @@ dependencies {
   testImplementation project(":xml-ta-test-rc")
   testImplementation ginaTest()
   testImplementation flexoUiTest()
+  testImplementation flexoOntologyUiTest()
 }
 
