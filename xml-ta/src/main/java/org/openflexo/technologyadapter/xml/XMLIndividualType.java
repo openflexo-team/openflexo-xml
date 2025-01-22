@@ -228,7 +228,7 @@ public class XMLIndividualType extends PropertyChangedSupportDefaultImplementati
 			return getSpecificTypeInfo().getSerializationForm();
 		}
 		// return getClass().getName() + "(" + getSerializationRepresentation() + ")";
-		return getClass().getName() + "(type=" + getXMLType().getName() + ")";
+		return getClass().getName() + "(" + XSD_TYPE + "=" + getXMLType().getName() + ")";
 	}
 
 	@Override

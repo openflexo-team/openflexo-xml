@@ -43,16 +43,19 @@ import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
 
+import org.openflexo.connie.type.CustomType;
 import org.openflexo.foundation.FlexoObject;
 import org.openflexo.foundation.fml.FlexoRole;
 import org.openflexo.foundation.fml.editionaction.EditionAction;
 import org.openflexo.foundation.ontology.IFlexoOntology;
 import org.openflexo.foundation.technologyadapter.TechnologyObject;
+import org.openflexo.gina.controller.CustomTypeEditor;
 import org.openflexo.gina.utils.InspectorGroup;
 import org.openflexo.icon.IconFactory;
 import org.openflexo.icon.IconLibrary;
 import org.openflexo.ontology.components.widget.OntologyBrowserModel;
 import org.openflexo.ontology.controller.FlexoOntologyTechnologyAdapterController;
+import org.openflexo.technologyadapter.xml.XMLIndividualType;
 import org.openflexo.technologyadapter.xml.XMLObject;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
 import org.openflexo.technologyadapter.xml.fml.XMLIndividualRole;
@@ -60,6 +63,7 @@ import org.openflexo.technologyadapter.xml.fml.editionaction.AddXMLIndividual;
 import org.openflexo.technologyadapter.xml.gui.XMLIconLibrary;
 import org.openflexo.technologyadapter.xml.gui.view.XMLMetaModelView;
 import org.openflexo.technologyadapter.xml.gui.view.XMLModelView;
+import org.openflexo.technologyadapter.xml.gui.widget.XMLIndividualTypeEditor;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
 import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
@@ -236,4 +240,15 @@ public class XMLAdapterController extends FlexoOntologyTechnologyAdapterControll
 	public OntologyBrowserModel<XMLTechnologyAdapter> makeOntologyBrowserModel(IFlexoOntology<XMLTechnologyAdapter> context) {
 		return new OntologyBrowserModel<>(context);
 	}
+
+	@Override
+	protected CustomTypeEditor<?> makeCustomTypeEditor(Class<? extends CustomType> typeClass) {
+		if (typeClass.equals(XMLIndividualType.class)) {
+			return new XMLIndividualTypeEditor(getServiceManager(), "XML instance");
+			// return new ObjectIndividualTypeEditor<EMFTechnologyAdapter, EMFObjectIndividual, EMFClassClass, EMFObjectIndividualType>(
+			// getServiceManager(), EMFTechnologyAdapter.class, EMFObjectIndividualType.class, EMFClassClass.class, "EMF instance");
+		}
+		return super.makeCustomTypeEditor(typeClass);
+	}
+
 }

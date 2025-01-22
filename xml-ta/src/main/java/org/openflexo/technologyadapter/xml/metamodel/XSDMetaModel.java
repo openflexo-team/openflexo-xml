@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openflexo.foundation.technologyadapter.FlexoMetaModel;
@@ -90,6 +91,10 @@ public interface XSDMetaModel extends AbstractXMLDocument<XSDMetaModel>, FlexoMe
 	@CloningStrategy(StrategyType.IGNORE)
 	@Embedded
 	public List<? extends XMLType> getTypes();
+
+	public List<XMLSimpleType> getSimpleTypes();
+
+	public List<XMLComplexType> getComplexTypes();
 
 	public XMLComplexType getComplexTypeFromURI(String uri);
 
@@ -259,6 +264,17 @@ public interface XSDMetaModel extends AbstractXMLDocument<XSDMetaModel>, FlexoMe
 		@Override
 		public List<? extends XMLType> getTypes() {
 			return types;
+		}
+
+		@Override
+		public List<XMLSimpleType> getSimpleTypes() {
+			return getTypes().stream().filter(XMLSimpleType.class::isInstance).map(XMLSimpleType.class::cast).collect(Collectors.toList());
+		}
+
+		@Override
+		public List<XMLComplexType> getComplexTypes() {
+			return getTypes().stream().filter(XMLComplexType.class::isInstance).map(XMLComplexType.class::cast)
+					.collect(Collectors.toList());
 		}
 
 		@Override
