@@ -120,8 +120,6 @@ public class XMLIndividualTypeEditor extends DefaultCustomTypeEditorImpl<XMLIndi
 
 	public void setSelectedType(XMLComplexType selectedType) {
 
-		System.out.println("   --> setSelectedType with " + selectedType);
-
 		if ((selectedType == null && this.selectedType != null) || (selectedType != null && !selectedType.equals(this.selectedType))) {
 			XMLComplexType oldValue = this.selectedType;
 			this.selectedType = selectedType;
