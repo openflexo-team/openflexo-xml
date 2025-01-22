@@ -43,7 +43,7 @@ import java.util.logging.Logger;
 
 import org.openflexo.foundation.resource.FlexoResourceCenterService;
 import org.openflexo.foundation.technologyadapter.TechnologyContextManager;
-import org.openflexo.technologyadapter.xml.metamodel.XMLType;
+import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 
 public class XMLTechnologyContextManager extends TechnologyContextManager<XMLTechnologyAdapter> {
 
@@ -54,9 +54,9 @@ public class XMLTechnologyContextManager extends TechnologyContextManager<XMLTec
 		individualsOfType = new Hashtable<>();
 	}
 
-	protected Hashtable<XMLType, XMLIndividualType> individualsOfType;
+	protected Hashtable<XMLComplexType, XMLIndividualType> individualsOfType;
 
-	public XMLIndividualType getIndividualOfType(XMLType aType) {
+	public XMLIndividualType getIndividualOfType(XMLComplexType aType) {
 		if (individualsOfType.get(aType) != null) {
 			return individualsOfType.get(aType);
 		}

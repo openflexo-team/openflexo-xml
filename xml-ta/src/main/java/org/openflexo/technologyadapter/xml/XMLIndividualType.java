@@ -48,28 +48,28 @@ import org.openflexo.foundation.fml.TechnologySpecificType;
 import org.openflexo.foundation.technologyadapter.SpecificTypeInfo;
 import org.openflexo.foundation.utils.FlexoObjectReference;
 import org.openflexo.foundation.utils.FlexoObjectReference.ReferenceOwner;
-import org.openflexo.technologyadapter.xml.metamodel.XMLType;
+import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
 import org.openflexo.toolbox.PropertyChangedSupportDefaultImplementation;
 import org.openflexo.toolbox.StringUtils;
 
 /**
- * An type defined as an {@link XMLIndividual} of a given {@link XMLType}
+ * An type defined as an {@link XMLIndividual} of a given {@link XMLComplexType}
  *
  * @author sylvain
  *
  */
 public class XMLIndividualType extends PropertyChangedSupportDefaultImplementation implements TechnologySpecificType<XMLTechnologyAdapter> {
 
-	// extends IndividualOfClass<XMLTechnologyAdapter, XMLIndividual, XMLType> {
+	private final XMLComplexType xmlType;
 
-	private final XMLType xmlType;
+	public static final String XSD_TYPE = "xsdType";
 
-	public XMLIndividualType(XMLType xmlType) {
+	public XMLIndividualType(XMLComplexType xmlType) {
 		this.xmlType = xmlType;
 	}
 
-	public XMLType getXMLType() {
+	public XMLComplexType getXMLType() {
 		return xmlType;
 	}
 
@@ -106,14 +106,14 @@ public class XMLIndividualType extends PropertyChangedSupportDefaultImplementati
 
 	private SpecificTypeInfo<XMLTechnologyAdapter> typeInfo;
 
-	public static XMLIndividualType getXMLIndividualOfType(XMLType aXMLType) {
+	public static XMLIndividualType getXMLIndividualOfType(XMLComplexType aXMLType) {
 		if (aXMLType == null) {
 			return null;
 		}
 		return aXMLType.getTechnologyAdapter().getTechnologyContextManager().getIndividualOfType(aXMLType);
 	}
 
-	public static XMLIndividualType UNDEFINED_XML_INDIVIDUAL_TYPE = new XMLIndividualType((XMLType) null);
+	public static XMLIndividualType UNDEFINED_XML_INDIVIDUAL_TYPE = new XMLIndividualType((XMLComplexType) null);
 
 	/**
 	 * Factory for {@link XMLIndividualType} instances
@@ -137,7 +137,7 @@ public class XMLIndividualType extends PropertyChangedSupportDefaultImplementati
 			return XMLIndividualType.class;
 		}
 
-		public XMLIndividualType getIndividualOfType(XMLType type) {
+		public XMLIndividualType getIndividualOfType(XMLComplexType type) {
 			if (type == null) {
 				return null;
 			}
@@ -147,9 +147,9 @@ public class XMLIndividualType extends PropertyChangedSupportDefaultImplementati
 		@Override
 		public XMLIndividualType makeCustomType(String configuration) {
 
-			FlexoObjectReference<XMLType> reference = new FlexoObjectReference<>(configuration, this);
+			FlexoObjectReference<XMLComplexType> reference = new FlexoObjectReference<>(configuration, this);
 
-			XMLType xmlType = reference.getObject();
+			XMLComplexType xmlType = reference.getObject();
 
 			if (xmlType != null) {
 				return getIndividualOfType(xmlType);

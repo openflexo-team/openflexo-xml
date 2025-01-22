@@ -40,7 +40,10 @@ package org.openflexo.technologyadapter.xml.fml;
 
 import java.lang.reflect.Type;
 
+import org.openflexo.connie.BindingVariable;
+import org.openflexo.connie.type.ProxyType;
 import org.openflexo.foundation.fml.FlexoRole;
+import org.openflexo.foundation.fml.TechnologySpecificType;
 import org.openflexo.foundation.fml.annotations.FML;
 import org.openflexo.foundation.fml.annotations.FMLAttribute;
 import org.openflexo.foundation.fml.rt.AbstractVirtualModelInstanceModelFactory;
@@ -53,6 +56,7 @@ import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.PropertyIdentifier;
 import org.openflexo.pamela.annotations.Setter;
 import org.openflexo.pamela.annotations.XMLElement;
+import org.openflexo.technologyadapter.xml.XMLIndividualType;
 import org.openflexo.technologyadapter.xml.XMLModelSlot;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
@@ -88,11 +92,6 @@ public interface XMLIndividualRole extends FlexoRole<XMLIndividual> {
 		@Override
 		public XMLTechnologyAdapter getXMLTechnologyAdapter() {
 			return getModelSlot().getModelSlotTechnologyAdapter();
-		}
-
-		@Override
-		public Type getType() {
-			return XMLIndividual.class;
 		}
 
 		@Override
@@ -144,6 +143,41 @@ public interface XMLIndividualRole extends FlexoRole<XMLIndividual> {
 				setModified(true);
 				getPropertyChangeSupport().firePropertyChange(COMPLEX_TYPE_KEY, oldType, type);
 			}
+		}
+
+		private Type lastKnownType = null;
+
+		@Override
+		public Type getType() {
+			Type returned;
+			if (getXSDType() == null) {
+				returned = XMLIndividual.class;
+			}
+			else {
+				returned = XMLIndividualType.getXMLIndividualOfType(getXSDType());
+			}
+			if (lastKnownType == null || (returned != null & !lastKnownType.equals(returned))) {
+				Type oldType = lastKnownType;
+				lastKnownType = returned;
+				getPropertyChangeSupport().firePropertyChange(BindingVariable.TYPE_PROPERTY, oldType, returned);
+			}
+
+			if (getDeclaringCompilationUnit() != null && returned instanceof TechnologySpecificType) {
+				// If resulting type was declared in a specific type declaration, use that ProxyType
+				return getDeclaringCompilationUnit().normalizeType((TechnologySpecificType) returned);
+			}
+			return returned;
+		}
+
+		@Override
+		public void setType(Type type) {
+			performSuperSetter(TYPE_KEY, type);
+			Type t = ProxyType.getEffectiveType(type);
+			// If declared type is typed, use that information to set ontologic type
+			if (t instanceof XMLIndividualType) {
+				setXSDType(((XMLIndividualType) t).getXMLType());
+			}
+
 		}
 
 	}

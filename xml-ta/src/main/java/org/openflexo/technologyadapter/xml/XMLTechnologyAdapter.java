@@ -39,7 +39,6 @@
 package org.openflexo.technologyadapter.xml;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.logging.Logger;
 
 import org.openflexo.foundation.fml.ElementImportDeclaration;
@@ -56,8 +55,7 @@ import org.openflexo.foundation.technologyadapter.TechnologyAdapter;
 import org.openflexo.foundation.technologyadapter.TechnologyAdapterService;
 import org.openflexo.technologyadapter.xml.XMLIndividualType.XMLIndividualTypeFactory;
 import org.openflexo.technologyadapter.xml.fml.binding.XMLBindingFactory;
-import org.openflexo.technologyadapter.xml.metamodel.XMLType;
-import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
+import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
 import org.openflexo.technologyadapter.xml.rm.FreeXMLDocumentRepository;
 import org.openflexo.technologyadapter.xml.rm.FreeXMLResourceFactory;
@@ -81,16 +79,10 @@ public class XMLTechnologyAdapter extends TechnologyAdapter<XMLTechnologyAdapter
 
 	private static final String TAName = "XML technology adapter";
 
-	// private XMLModelBuilder xmlModelFactory = null;
-
 	private static final XMLBindingFactory BINDING_FACTORY = new XMLBindingFactory();
-
-	protected HashMap<String, XSDMetaModel> privateMetamodels = null;
 
 	public XMLTechnologyAdapter() {
 		super();
-		// xmlModelFactory = new XMLModelBuilder();
-		privateMetamodels = new HashMap<>();
 	}
 
 	@Override
@@ -174,12 +166,12 @@ public class XMLTechnologyAdapter extends TechnologyAdapter<XMLTechnologyAdapter
 
 	@Override
 	public void initTechnologySpecificTypes(TechnologyAdapterService taService) {
-		taService.registerTypeClass(XMLIndividualType.class, getOWLIndividualTypeFactory());
+		taService.registerTypeClass(XMLIndividualType.class, getXMLIndividualTypeFactory());
 	}
 
 	private XMLIndividualTypeFactory xmlIndividualTypeFactory;
 
-	public XMLIndividualTypeFactory getOWLIndividualTypeFactory() {
+	public XMLIndividualTypeFactory getXMLIndividualTypeFactory() {
 		if (xmlIndividualTypeFactory == null) {
 			xmlIndividualTypeFactory = new XMLIndividualTypeFactory(this);
 		}
@@ -192,8 +184,8 @@ public class XMLTechnologyAdapter extends TechnologyAdapter<XMLTechnologyAdapter
 
 		T returned = null;
 		if (specificTypeInfo.getTechnologySpecificTypeClass().equals(XMLIndividualType.class)) {
-			if (specificTypeInfo.getParameter("type") != null) {
-				XMLType type = (XMLType) specificTypeInfo.getParameter("type");
+			if (specificTypeInfo.getParameter(XMLIndividualType.XSD_TYPE) != null) {
+				XMLComplexType type = (XMLComplexType) specificTypeInfo.getParameter(XMLIndividualType.XSD_TYPE);
 				returned = (T) XMLIndividualType.getXMLIndividualOfType(type);
 
 			}
@@ -219,9 +211,9 @@ public class XMLTechnologyAdapter extends TechnologyAdapter<XMLTechnologyAdapter
 				return compilationUnit.getTypeDeclaration(type).getAbbrev();
 			}
 			if (individualType.getXMLType() != null) {
-				XMLType xmlType = individualType.getXMLType();
+				XMLComplexType xmlType = individualType.getXMLType();
 				ElementImportDeclaration typeImport = compilationUnit.ensureElementImport(xmlType);
-				return "XMLIndividualType(type=" + typeImport.getAbbrev() + ")";
+				return "XMLIndividualType(" + XMLIndividualType.XSD_TYPE + "=" + typeImport.getAbbrev() + ")";
 			}
 			return "XMLIndividualType()";
 		}
