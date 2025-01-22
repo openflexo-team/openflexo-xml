@@ -16,8 +16,7 @@
 				localize="true" manageDynamicModel="true" index="9" data="data.xSDType" name="TypeSelector"
 				constraints="twocols(expandHorizontally=true;expandVertically=false;index=7;insetsBottom=0;insetsLeft=2;insetsRight=2;insetsTop=0;location=right)">
 				<Assignment variable="component.context"
-					value="data.modelSlot.metaModel"
-					value2="data.metaModel" />
+					value="data.modelSlot.metaModel"/>
 			</Custom>
 		</Tab>
 	</TabPanel>
