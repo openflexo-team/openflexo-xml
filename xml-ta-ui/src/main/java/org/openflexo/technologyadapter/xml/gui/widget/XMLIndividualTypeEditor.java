@@ -119,6 +119,9 @@ public class XMLIndividualTypeEditor extends DefaultCustomTypeEditorImpl<XMLIndi
 	}
 
 	public void setSelectedType(XMLComplexType selectedType) {
+
+		System.out.println("   --> setSelectedType with " + selectedType);
+
 		if ((selectedType == null && this.selectedType != null) || (selectedType != null && !selectedType.equals(this.selectedType))) {
 			XMLComplexType oldValue = this.selectedType;
 			this.selectedType = selectedType;
@@ -216,6 +219,15 @@ public class XMLIndividualTypeEditor extends DefaultCustomTypeEditorImpl<XMLIndi
 
 	protected boolean matches(XMLComplexType o, String filteredName) {
 		return o != null && StringUtils.isNotEmpty(o.getName()) && (o.getName()).toUpperCase().indexOf(filteredName.toUpperCase()) > -1;
+	}
+
+	@Override
+	public void updateEditedType(XMLIndividualType type) {
+		if (type != null && type.getXMLType() != null) {
+			XMLComplexType t = type.getXMLType();
+			setMetaModelResource((XSDMetaModelResource) t.getMetamodel().getResource());
+			setSelectedType(t);
+		}
 	}
 
 }
