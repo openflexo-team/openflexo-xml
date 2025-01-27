@@ -107,6 +107,7 @@ public class FIBXMLTypeSelector extends FIBFlexoObjectSelector<XMLType> {
 	@CustomComponentParameter(name = "context", type = CustomComponentParameter.Type.MANDATORY)
 	public void setContext(XSDMetaModel context) {
 		this.context = context;
+		getPropertyChangeSupport().firePropertyChange("context", null, context);
 	}
 
 }
