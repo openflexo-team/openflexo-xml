@@ -39,6 +39,7 @@
 package org.openflexo.technologyadapter.xml;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -46,6 +47,8 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.openflexo.foundation.FlexoException;
+import org.openflexo.foundation.fml.FMLCompilationUnit;
 import org.openflexo.foundation.fml.FlexoRole;
 import org.openflexo.foundation.fml.annotations.DeclareActorReferences;
 import org.openflexo.foundation.fml.annotations.DeclareEditionActions;
@@ -56,6 +59,7 @@ import org.openflexo.foundation.ontology.DuplicateURIException;
 import org.openflexo.foundation.resource.FileSystemBasedResourceCenter;
 import org.openflexo.foundation.resource.FlexoResourceCenter;
 import org.openflexo.foundation.resource.RepositoryFolder;
+import org.openflexo.foundation.resource.ResourceLoadingCancelledException;
 import org.openflexo.foundation.resource.SaveResourceException;
 import org.openflexo.foundation.technologyadapter.FlexoMetaModelResource;
 import org.openflexo.foundation.technologyadapter.TechnologyAdapter;
@@ -298,6 +302,33 @@ public interface XMLModelSlot extends TypeAwareModelSlot<XMLModel, XSDMetaModel>
 		@Override
 		public void setMetaModel(XSDMetaModel aMetaModel) {
 			setMetaModelResource(aMetaModel != null ? (FlexoMetaModelResource<XMLModel, XSDMetaModel, ?>) aMetaModel.getResource() : null);
+		}
+
+		@Override
+		public void setMetaModelResource(FlexoMetaModelResource<XMLModel, XSDMetaModel, ?> metaModelResource) {
+			super.setMetaModelResource(metaModelResource);
+			try {
+				if (metaModelResource != null) {
+					getPropertyChangeSupport().firePropertyChange(META_MODEL_KEY, null, metaModelResource.getResourceData());
+				}
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ResourceLoadingCancelledException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (FlexoException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		@Override
+		public void handleRequiredImports(FMLCompilationUnit compilationUnit) {
+			super.handleRequiredImports(compilationUnit);
+			if (compilationUnit != null && getMetaModel() != null) {
+				compilationUnit.ensureResourceImport(getMetaModel(), false);
+			}
 		}
 
 		@Override
