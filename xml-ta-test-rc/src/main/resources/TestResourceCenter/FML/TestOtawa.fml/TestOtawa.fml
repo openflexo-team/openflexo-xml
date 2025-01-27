@@ -2,10 +2,12 @@ use org.openflexo.technologyadapter.xml.XMLModelSlot as XML;
 
 import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
 import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
+import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 
-import ["http://mem4csd.telecom-paris.fr/OtawaCache"] as OTAWA_CACHE;
-import ["http://mem4csd.telecom-paris.fr/OtawaMemory"] as OTAWA_MEMORY;
-import ["http://mem4csd.telecom-paris.fr/OtawaPipeline"] as OTAWA_PIPELINE;
+import XSDMetaModel OTAWA_CACHE from ["http://mem4csd.telecom-paris.fr/OtawaCache"];
+import XSDMetaModel OTAWA_MEMORY from ["http://mem4csd.telecom-paris.fr/OtawaMemory"];
+import XSDMetaModel OTAWA_PIPELINE from ["http://mem4csd.telecom-paris.fr/OtawaPipeline"];
 
 @URI("http://mem4csd.telecom-paris.fr/OtawaPipeline/TestOtawa.fml")
 public model TestOtawa {
