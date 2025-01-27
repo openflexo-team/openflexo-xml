@@ -212,7 +212,7 @@ public class XMLTechnologyAdapter extends TechnologyAdapter<XMLTechnologyAdapter
 			}
 			if (individualType.getXMLType() != null) {
 				XMLComplexType xmlType = individualType.getXMLType();
-				ElementImportDeclaration typeImport = compilationUnit.ensureElementImport(xmlType);
+				ElementImportDeclaration typeImport = compilationUnit.ensureElementImport(xmlType, false);
 				return "XMLIndividualType(" + XMLIndividualType.XSD_TYPE + "=" + typeImport.getAbbrev() + ")";
 			}
 			return "XMLIndividualType()";
