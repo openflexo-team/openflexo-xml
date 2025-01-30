@@ -8,6 +8,9 @@ import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import XSDMetaModel OTAWA_CACHE from ["http://mem4csd.telecom-paris.fr/OtawaCache"];
 import XSDMetaModel OTAWA_MEMORY from ["http://mem4csd.telecom-paris.fr/OtawaMemory"];
 import XSDMetaModel OTAWA_PIPELINE from ["http://mem4csd.telecom-paris.fr/OtawaPipeline"];
+import XMLComplexType PROCESSOR from [OTAWA_PIPELINE:"processor"];
+
+typedef XMLIndividualType(xsdType=PROCESSOR) as Processor;
 
 @URI("http://mem4csd.telecom-paris.fr/OtawaPipeline/TestOtawa.fml")
 public model TestOtawa {
@@ -15,5 +18,6 @@ public model TestOtawa {
 	XMLModel memory with XMLModelSlot(metaModel=OTAWA_MEMORY);
 	XMLModel pipeline with XMLModelSlot(metaModel=OTAWA_PIPELINE);
 	
-	XMLIndividual processor with XMLIndividualRole(container=pipeline);
+	Processor processor with XMLIndividualRole(container=pipeline,xsdType=PROCESSOR);
+
 }
