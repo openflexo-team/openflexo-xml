@@ -69,17 +69,27 @@ public class XMLObjectPropertyPathElement extends SimplePathElementImpl {
 		return getPropertyName();
 	}
 
+	public XMLObjectProperty getObjectProperty() {
+		return property;
+	}
+
 	@Override
 	public String getTooltipText(Type resultingType) {
-		return "DataAttribute " + property.getDisplayableDescription();
+		return "ObjectAttribute " + property.getDisplayableDescription();
 	}
 
 	@Override
 	public Object getBindingValue(Object target, BindingEvaluationContext context)
 			throws TypeMismatchException, NullReferenceException, InvocationTargetTransformException {
-		if (property != null) {
-			// FIXME => check that this actually works with ObjectProperties
-			return ((XMLIndividual) target).getPropertyValue(property);
+
+		if (getObjectProperty() != null) {
+			if (getObjectProperty().isMultiple()) {
+				return ((XMLIndividual) target).getPropertyValues(getObjectProperty());
+			}
+			else {
+				return ((XMLIndividual) target).getPropertyValue(getObjectProperty());
+
+			}
 		}
 		return null;
 	}
@@ -88,8 +98,10 @@ public class XMLObjectPropertyPathElement extends SimplePathElementImpl {
 	public void setBindingValue(Object value, Object target, BindingEvaluationContext context)
 			throws TypeMismatchException, NullReferenceException {
 
-		XMLProperty prop = ((XMLIndividual) target).getType().getPropertyByName(getPropertyName());
-		((XMLIndividual) target).addPropertyValue(prop, value);
+		((XMLIndividual) target).setPropertyValue((XMLProperty) getObjectProperty(), value);
+
+		/*XMLProperty prop = ((XMLIndividual) target).getType().getPropertyByName(getPropertyName());
+		((XMLIndividual) target).addPropertyValue(prop, value);*/
 	}
 
 	@Override

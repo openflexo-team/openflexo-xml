@@ -48,8 +48,6 @@ import org.openflexo.connie.binding.SimplePathElementImpl;
 import org.openflexo.connie.exception.NullReferenceException;
 import org.openflexo.connie.exception.TypeMismatchException;
 import org.openflexo.technologyadapter.xml.metamodel.XMLDataProperty;
-import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
-import org.openflexo.technologyadapter.xml.model.typed.XMLDataPropertyValue;
 import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
 
 public class XMLDataPropertyPathElement extends SimplePathElementImpl {
@@ -79,19 +77,31 @@ public class XMLDataPropertyPathElement extends SimplePathElementImpl {
 
 	@Override
 	public Object getBindingValue(Object target, BindingEvaluationContext context) throws TypeMismatchException, NullReferenceException {
-		XMLDataPropertyValue xsdAnswer = (XMLDataPropertyValue) ((XMLIndividual) target).getPropertyValue(getDataProperty());
+		if (getDataProperty() != null) {
+			if (getDataProperty().isMultiple()) {
+				return ((XMLIndividual) target).getPropertyValues(getDataProperty());
+			}
+			else {
+				return ((XMLIndividual) target).getPropertyValue(getDataProperty());
 
+			}
+		}
+		return null;
+		/*XMLDataPropertyValue xsdAnswer = (XMLDataPropertyValue) ((XMLIndividual) target).getPropertyValue(getDataProperty());
+		
 		if (xsdAnswer != null) {
 			return xsdAnswer.getValue();
 		}
-		return null;
+		return null;*/
 	}
 
 	@Override
 	public void setBindingValue(Object value, Object target, BindingEvaluationContext context)
 			throws TypeMismatchException, NullReferenceException {
-		XMLProperty prop = ((XMLIndividual) target).getType().getPropertyByName(getPropertyName());
-		((XMLIndividual) target).addPropertyValue(prop, value);
+		((XMLIndividual) target).setPropertyValue(getDataProperty(), value);
+
+		/*XMLProperty prop = ((XMLIndividual) target).getType().getPropertyByName(getPropertyName());
+		((XMLIndividual) target).addPropertyValue(prop, value);*/
 	}
 
 	@Override
