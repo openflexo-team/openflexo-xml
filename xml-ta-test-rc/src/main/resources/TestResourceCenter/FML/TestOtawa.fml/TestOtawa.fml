@@ -9,8 +9,12 @@ import XSDMetaModel OTAWA_CACHE from ["http://mem4csd.telecom-paris.fr/OtawaCach
 import XSDMetaModel OTAWA_MEMORY from ["http://mem4csd.telecom-paris.fr/OtawaMemory"];
 import XSDMetaModel OTAWA_PIPELINE from ["http://mem4csd.telecom-paris.fr/OtawaPipeline"];
 import XMLComplexType PROCESSOR from [OTAWA_PIPELINE:"processor"];
+import XMLComplexType STAGES from [OTAWA_PIPELINE:"stages"];
+import XMLComplexType STAGE from [OTAWA_PIPELINE:"stage"];
 
 typedef XMLIndividualType(xsdType=PROCESSOR) as Processor;
+typedef XMLIndividualType(xsdType=STAGES) as Stages;
+typedef XMLIndividualType(xsdType=STAGE) as Stage;
 
 @URI("http://mem4csd.telecom-paris.fr/OtawaPipeline/TestOtawa.fml")
 public model TestOtawa {
@@ -19,5 +23,33 @@ public model TestOtawa {
 	XMLModel pipeline with XMLModelSlot(metaModel=OTAWA_PIPELINE);
 	
 	Processor processor with XMLIndividualRole(container=pipeline,xsdType=PROCESSOR);
+
+   create(Resource<XMLModel> cachesResource, Resource<XMLModel> memoryResource, Resource<XMLModel> pipelineResource) {
+      caches = parameters.cachesResource.resourceData;
+      memory = parameters.memoryResource.resourceData;
+      pipeline = parameters.pipelineResource.resourceData;
+      log "Caches: " + caches;
+      log "Memory: " + memory;
+      log "Pipeline: " + pipeline;
+   }
+
+   public debug() {
+      Processor processor = (Processor)pipeline.root;
+      log "Processor=" + processor;
+      Stages stages = processor.stages;
+      log "Stages:" + stages;
+      for (Stage stage : stages.stages) {
+         log "Stage:" + stage + " name=" + stage.name;
+      }
+   }
+
+   /*public List<XMLIndividual> listAllXMLIndividuals() {
+      List<XMLIndividual> returned = new ArrayList();
+      for (XMLIndividual anObject : select XMLIndividual from caches) {
+         log "XMLIndividual: " + anObject;
+         returned.add(anObject);
+      }
+      return returned;
+   }*/
 
 }
