@@ -10,6 +10,7 @@ dependencies {
   // testing dep
   testImplementation project(":xml-ta-test-rc")
   testImplementation ginaTest()
+  testImplementation flexoFoundationTest()
   testImplementation flexoUiTest()
   //testImplementation flexoOntologyUiTest()
 }
