@@ -5,9 +5,5 @@ dependencies {
   // external dep
   //implementation 'com.sun.xsom:xsom:20140925'
   implementation group: 'org.glassfish.jaxb', name: 'xsom', version: '4.0.0-M1' // cannot upgrade because compiled for Java11
-  // testing dep
-  testImplementation flexoFoundationTest()
 
-  // Test resource center
-  testRuntimeOnly project(':xml-ta-test-rc')
 }

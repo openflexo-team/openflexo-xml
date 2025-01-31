@@ -1,0 +1,40 @@
+// Perform some initialization, display resources and the context
+service ResourceCenterService status;
+resources;
+context;
+
+// Load Otawa virtual model
+virtualModel = load -r ["http://mem4csd.telecom-paris.fr/OtawaPipeline/TestOtawa.fml"];
+context;
+assert virtualModel != null;
+log "Pretty-print of "+virtualModel;
+log virtualModel.fMLPrettyPrint;
+//validate virtualModel;
+
+// Load resources beeing used in this use case
+caches = load -r ["http://openflexo.org/xml-test/TestResourceCenter/CaoticWorkflow/otawa_caches.xml"];
+log "caches="+caches;
+assert caches != null;
+memory = load -r ["http://openflexo.org/xml-test/TestResourceCenter/CaoticWorkflow/otawa_memory.xml"];
+log "memory="+memory;
+assert memory != null;
+pipeline = load -r ["http://openflexo.org/xml-test/TestResourceCenter/CaoticWorkflow/otawa_pipeline.xml"];
+log "pipeline="+pipeline;
+assert pipeline != null;
+
+log "caches="+caches+" of "+caches.class;
+log "resource="+caches.resource;
+
+// Instantiate TestOtawa
+service ResourceCenterService add_temp_rc;
+myVMI = new TestOtawa(caches.resource,memory.resource,pipeline.resource) with (name="test1");
+context;
+assert myVMI != null;
+
+processor = myVMI.processor;
+assert processor != null;
+assert processor.stages.stages.size == 5;
+
+assert myVMI.listAllXMLIndividuals().size == 3;
+
+assert myVMI.listAllStages().size == 5;

@@ -1,1 +1,1 @@
-include 'xml-ta', 'xml-ta-test-rc', 'xml-ta-ui'
+include 'xml-ta', 'xml-ta-test', 'xml-ta-test-rc', 'xml-ta-ui'

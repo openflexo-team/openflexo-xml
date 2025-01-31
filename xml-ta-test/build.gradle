@@ -1,0 +1,17 @@
+dependencies {
+
+  implementation project(":xml-ta")
+
+  // openflexo dep
+  implementation group: 'junit', name: 'junit', version: '4.13.2'
+
+  // testing dep
+  testImplementation flexoFoundation()
+  testImplementation flexoFoundationTest()
+  testImplementation fmlCli()
+  testImplementation fmlCliTest()
+
+  // Test resource center
+  testRuntimeOnly project(':xml-ta-test-rc')
+  
+}

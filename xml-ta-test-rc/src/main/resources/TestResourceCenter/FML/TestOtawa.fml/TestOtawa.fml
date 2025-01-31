@@ -31,10 +31,10 @@ public model TestOtawa {
       log "Caches: " + caches;
       log "Memory: " + memory;
       log "Pipeline: " + pipeline;
+      processor = (Processor)pipeline.root;
    }
 
    public debug() {
-      Processor processor = (Processor)pipeline.root;
       log "Processor=" + processor;
       Stages stages = processor.stages;
       log "Stages:" + stages;
@@ -42,7 +42,7 @@ public model TestOtawa {
          log "Stage:" + stage + " name=" + stage.name;
       }
    }
-
+   
    public List<XMLIndividual> listAllXMLIndividuals() {
       List<XMLIndividual> returned = new ArrayList();
       for (XMLIndividual anObject : select XMLIndividual from caches) {
