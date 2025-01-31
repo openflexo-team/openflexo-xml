@@ -210,8 +210,11 @@ public class XMLIndividualType extends PropertyChangedSupportDefaultImplementati
 		if (!(object instanceof XMLIndividual)) {
 			return false;
 		}
-		// TODO please implement me
-		return true;
+
+		XMLIndividual ind = (XMLIndividual) object;
+
+		// TODO inheritance ????
+		return ind.getType().equals(getXMLType());
 	}
 
 	@Override
