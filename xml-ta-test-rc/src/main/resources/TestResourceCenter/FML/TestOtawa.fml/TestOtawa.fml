@@ -43,13 +43,23 @@ public model TestOtawa {
       }
    }
 
-   /*public List<XMLIndividual> listAllXMLIndividuals() {
+   public List<XMLIndividual> listAllXMLIndividuals() {
       List<XMLIndividual> returned = new ArrayList();
       for (XMLIndividual anObject : select XMLIndividual from caches) {
          log "XMLIndividual: " + anObject;
          returned.add(anObject);
       }
       return returned;
-   }*/
+   }
+
+   public List<Stage> listAllStages() {
+      List<Stage> returned = new ArrayList();
+      for (Stage stage : select Stage from pipeline) {
+         log "Stage: " + stage;
+         returned.add(stage);
+      }
+      return returned;
+   }
+
 
 }
