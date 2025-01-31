@@ -4,14 +4,16 @@ dependencies {
 
   implementation flexoUi()
   implementation flexoOntologyUi()
+  implementation fmlTechnologyAdapterUi()
+  implementation fmlRtTechnologyAdapterUi()
 
   runtimeOnly fmlTechnologyAdapterUi()
   // external dep
   // testing dep
   testImplementation project(":xml-ta-test-rc")
-  testImplementation ginaTest()
   testImplementation flexoFoundationTest()
+  testImplementation ginaTest()
   testImplementation flexoUiTest()
-  //testImplementation flexoOntologyUiTest()
+    
 }
 
