@@ -55,14 +55,19 @@
 
 package org.openflexo.technologyadapter.xml;
 
+import org.openflexo.foundation.fml.FlexoRole;
 import org.openflexo.foundation.fml.VirtualModel;
+import org.openflexo.foundation.fml.annotations.FML;
 import org.openflexo.foundation.fml.rt.FlexoConceptInstance;
+import org.openflexo.foundation.fml.rt.ReflectedFMLRTModelSlot;
 import org.openflexo.foundation.fml.rt.VirtualModelInstance;
 import org.openflexo.foundation.technologyadapter.ModelSlot;
+import org.openflexo.pamela.annotations.ImplementationClass;
+import org.openflexo.pamela.annotations.ModelEntity;
+import org.openflexo.technologyadapter.xml.fml.reflect.XMLVirtualModelInstance;
 
 /**
- * An implementation of a {@link ModelSlot} providing basic access to a set of data stored in an excel workbook, and reflected as FML
- * instances objects<br>
+ * An implementation of a {@link ModelSlot} providing basic access to the content of an XML file and reflected as FML instances objects<br>
  * 
  * This {@link ModelSlot} is contract-based, as it is configured with a {@link VirtualModel} modelling data beeing accessed through this
  * {@link ModelSlot}. It means that data stored in database is locally reflected as {@link FlexoConceptInstance}s in a
@@ -72,51 +77,57 @@ import org.openflexo.foundation.technologyadapter.ModelSlot;
  * @author sylvain
  * 
  */
-/*@ModelEntity
-@XMLElement
-@ImplementationClass(FMLXMLModelSlot.SemanticsExcelModelSlotImpl.class)
-@DeclareFlexoRoles({ SEColumnRole.class, SEDataAreaRole.class, SEReferenceRole.class })
+@ModelEntity
+@ImplementationClass(FMLXMLModelSlot.FMLXMLModelSlotImpl.class)
+/*@DeclareFlexoRoles({ SEColumnRole.class, SEDataAreaRole.class, SEReferenceRole.class })
 @DeclareEditionActions({ CreateSEResource.class, InsertSEObject.class, RemoveSEObject.class })
 @DeclareFlexoBehaviours({ SEInitializer.class })
-@DeclareActorReferences({ SEObjectActorReference.class })*/
-public interface FMLXMLModelSlot { /*extends InferedFMLRTModelSlot<SEVirtualModelInstance, ExcelTechnologyAdapter> {
-									
-									abstract class SemanticsExcelModelSlotImpl extends InferedFMLRTModelSlotImpl<SEVirtualModelInstance, ExcelTechnologyAdapter>
-									implements FMLXMLModelSlot {
-									
-									private SEVirtualModelInstanceType type;
-									
-									@Override
-									public Class<ExcelTechnologyAdapter> getTechnologyAdapterClass() {
-									return ExcelTechnologyAdapter.class;
-									}
-									
-									@Override
-									public <PR extends FlexoRole<?>> String defaultFlexoRoleName(Class<PR> flexoRoleClass) {
-									return super.defaultFlexoRoleName(flexoRoleClass);
-									}
-									
-									@Override
-									public ExcelTechnologyAdapter getModelSlotTechnologyAdapter() {
-									return (ExcelTechnologyAdapter) super.getModelSlotTechnologyAdapter();
-									}
-									
-									@Override
-									public Type getType() {
-									if (type == null || type.getVirtualModel() != getAccessedVirtualModel()) {
-									type = SEVirtualModelInstanceType.getVirtualModelInstanceType(getAccessedVirtualModel());
-									}
-									return type;
-									}
-									
-									@Override
-									public void setAccessedVirtualModel(VirtualModel aVirtualModel) {
-									if (aVirtualModel != getAccessedVirtualModel()) {
-									super.setAccessedVirtualModel(aVirtualModel);
-									type = SEVirtualModelInstanceType.getVirtualModelInstanceType(getAccessedVirtualModel());
-									}
-									}
-									
-									}*/
+@DeclareActorReferences({ XMLObjectActorReference.class })*/
+@FML("FMLXMLModelSlot")
+public interface FMLXMLModelSlot extends ReflectedFMLRTModelSlot<XMLVirtualModelInstance, XMLTechnologyAdapter> {
+
+	abstract class FMLXMLModelSlotImpl extends ReflectedFMLRTModelSlotImpl<XMLVirtualModelInstance, XMLTechnologyAdapter>
+			implements FMLXMLModelSlot {
+
+		// private VirtualModelInstanceType type;
+
+		@Override
+		public Class<XMLTechnologyAdapter> getTechnologyAdapterClass() {
+			return XMLTechnologyAdapter.class;
+		}
+
+		@Override
+		public <PR extends FlexoRole<?>> String defaultFlexoRoleName(Class<PR> flexoRoleClass) {
+			return super.defaultFlexoRoleName(flexoRoleClass);
+		}
+
+		@Override
+		public XMLTechnologyAdapter getModelSlotTechnologyAdapter() {
+			return (XMLTechnologyAdapter) super.getModelSlotTechnologyAdapter();
+		}
+
+		/*@Override
+		public VirtualModelInstanceType getType() {
+			//if (type == null || type.getVirtualModel() != getAccessedVirtualModel()) {
+			//	type = SEVirtualModelInstanceType.getVirtualModelInstanceType(getAccessedVirtualModel());
+			//}
+			return type;
+		}*/
+
+		/*@Override
+		public void setType(Type type) {
+			// TODO Auto-generated method stub
+			super.setType(type);
+		}*/
+
+		/*@Override
+		public void setAccessedVirtualModel(VirtualModel aVirtualModel) {
+			if (aVirtualModel != getAccessedVirtualModel()) {
+				super.setAccessedVirtualModel(aVirtualModel);
+				type = SEVirtualModelInstanceType.getVirtualModelInstanceType(getAccessedVirtualModel());
+			}
+		}*/
+
+	}
 
 }

@@ -70,7 +70,7 @@ import org.openflexo.technologyadapter.xml.rm.XSDMetaModelResourceFactory;
  * 
  */
 
-@DeclareModelSlots({ FreeXMLModelSlot.class, XMLModelSlot.class, XMLMetaModelSlot.class })
+@DeclareModelSlots({ FreeXMLModelSlot.class, XMLModelSlot.class, XMLMetaModelSlot.class, FMLXMLModelSlot.class })
 @DeclareTechnologySpecificTypes({ XMLIndividualType.class })
 @DeclareResourceFactories({ XSDMetaModelResourceFactory.class, TypedXMLResourceFactory.class, FreeXMLResourceFactory.class })
 public class XMLTechnologyAdapter extends TechnologyAdapter<XMLTechnologyAdapter> {
