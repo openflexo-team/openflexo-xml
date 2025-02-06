@@ -38,6 +38,7 @@ package org.openflexo.technologyadapter.xml.fml.reflect;
 import java.util.logging.Logger;
 
 import org.openflexo.foundation.fml.VirtualModel;
+import org.openflexo.foundation.fml.rt.ReflectedVirtualModelInstance;
 import org.openflexo.foundation.fml.rt.VirtualModelInstance;
 import org.openflexo.logging.FlexoLogger;
 import org.openflexo.pamela.annotations.ImplementationClass;
@@ -47,6 +48,7 @@ import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.XMLElement;
 import org.openflexo.technologyadapter.xml.FMLXMLModelSlot;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
+import org.openflexo.technologyadapter.xml.rm.XMLResource;
 
 /**
  * A XML-specific {@link VirtualModelInstance} reflecting XML resource accessible through a {@link FMLXMLModelSlot} configured with a
@@ -57,7 +59,8 @@ import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
 @ImplementationClass(XMLVirtualModelInstance.XMLVirtualModelInstanceImpl.class)
 @Imports(@Import(XMLFlexoConceptInstance.class))
 @XMLElement
-public interface XMLVirtualModelInstance extends VirtualModelInstance<XMLVirtualModelInstance, XMLTechnologyAdapter> {
+public interface XMLVirtualModelInstance
+		extends ReflectedVirtualModelInstance<XMLVirtualModelInstance, XMLResource<?, ?>, XMLTechnologyAdapter> {
 
 	abstract class XMLVirtualModelInstanceImpl extends VirtualModelInstanceImpl<XMLVirtualModelInstance, XMLTechnologyAdapter>
 			implements XMLVirtualModelInstance {

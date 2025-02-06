@@ -9,7 +9,6 @@ public model TestFMLReflect {
 	Library library with FMLXMLModelSlot();
 
    create(Resource<FreeXMLDocument> resource) {
-      // connect library using resource;
-      // library = resource.resourceData; -> ne compile pas
+      connect library using parameters.resource ;
    }
 }

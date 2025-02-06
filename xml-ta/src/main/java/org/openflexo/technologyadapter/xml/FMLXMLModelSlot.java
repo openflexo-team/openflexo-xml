@@ -65,6 +65,7 @@ import org.openflexo.foundation.technologyadapter.ModelSlot;
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.technologyadapter.xml.fml.reflect.XMLVirtualModelInstance;
+import org.openflexo.technologyadapter.xml.rm.XMLResource;
 
 /**
  * An implementation of a {@link ModelSlot} providing basic access to the content of an XML file and reflected as FML instances objects<br>
@@ -84,9 +85,9 @@ import org.openflexo.technologyadapter.xml.fml.reflect.XMLVirtualModelInstance;
 @DeclareFlexoBehaviours({ SEInitializer.class })
 @DeclareActorReferences({ XMLObjectActorReference.class })*/
 @FML("FMLXMLModelSlot")
-public interface FMLXMLModelSlot extends ReflectedFMLRTModelSlot<XMLVirtualModelInstance, XMLTechnologyAdapter> {
+public interface FMLXMLModelSlot extends ReflectedFMLRTModelSlot<XMLVirtualModelInstance, XMLResource<?, ?>, XMLTechnologyAdapter> {
 
-	abstract class FMLXMLModelSlotImpl extends ReflectedFMLRTModelSlotImpl<XMLVirtualModelInstance, XMLTechnologyAdapter>
+	abstract class FMLXMLModelSlotImpl extends ReflectedFMLRTModelSlotImpl<XMLVirtualModelInstance, XMLResource<?, ?>, XMLTechnologyAdapter>
 			implements FMLXMLModelSlot {
 
 		// private VirtualModelInstanceType type;
