@@ -187,6 +187,9 @@ public interface XMLModelSlot extends TypeAwareModelSlot<XMLModel, XSDMetaModel>
 		@Override
 		public Object retrieveObjectWithURI(XMLModel model, String objectURI) {
 
+			if (objectURI == null) {
+				return null;
+			}
 			String typeUri = XMLURIProcessorImpl.retrieveTypeURI(model, objectURI);
 			XMLURIProcessor mapParams = uriProcessorsMap.get(XMLURIProcessorImpl.retrieveTypeURI(model, objectURI));
 			if (mapParams == null) {
