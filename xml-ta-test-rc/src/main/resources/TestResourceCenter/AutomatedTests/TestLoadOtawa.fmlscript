@@ -1,0 +1,9 @@
+// Perform some initialization, display resources and the context
+service ResourceCenterService status;
+resources;
+context;
+
+// Load Otawa virtual model
+vmi = load -r ["http://openflexo.org/xml-test/testOtawa1.fml.rt"];
+context;
+assert vmi != null;

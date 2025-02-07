@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FMLRTVirtualModelInstance id="0" virtualModelURI="http://mem4csd.telecom-paris.fr/OtawaPipeline/TestOtawa.fml" modelVersion="1.0" title="testOtawa1" version="0.1" flexoConceptURI="http://mem4csd.telecom-paris.fr/OtawaPipeline/TestOtawa.fml" userID="SYL" flexoID="1">
+  <TypeAwareModelSlotInstance id="1" modelURI="file:/Users/sylvainguerin/GIT-2.99/openflexo-xml/xml-ta-test-rc/src/main/resources/TestResourceCenter/CaoticWorkflow/otawa_caches.xml" modelSlotName="caches" roleName="caches" userID="SYL" flexoID="2" />
+  <TypeAwareModelSlotInstance id="2" modelURI="file:/Users/sylvainguerin/GIT-2.99/openflexo-xml/xml-ta-test-rc/src/main/resources/TestResourceCenter/CaoticWorkflow/otawa_memory.xml" modelSlotName="memory" roleName="memory" userID="SYL" flexoID="3" />
+  <TypeAwareModelSlotInstance id="3" modelURI="file:/Users/sylvainguerin/GIT-2.99/openflexo-xml/xml-ta-test-rc/src/main/resources/TestResourceCenter/CaoticWorkflow/otawa_pipeline.xml" modelSlotName="pipeline" roleName="pipeline" userID="SYL" flexoID="4" />
+  <XMLActorReference id="4" roleName="processor" userID="SYL" flexoID="5" />
+</FMLRTVirtualModelInstance>

@@ -1,3 +1,6 @@
 cachesResource=CachesResource
+debug=Debug
+listAllStages=ListAllStages
+listAllXMLIndividuals=ListAllXMLIndividuals
 memoryResource=MemoryResource
 pipelineResource=PipelineResource
