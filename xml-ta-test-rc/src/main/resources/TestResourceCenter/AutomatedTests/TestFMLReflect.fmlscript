@@ -1,0 +1,23 @@
+// Perform some initialization, display resources and the context
+service ResourceCenterService status;
+resources;
+context;
+
+// Load TestFMLReflect virtual model
+virtualModel = load -r ["http://openflexo.org/xml-test/FML/reflect/TestFMLReflect.fml"];
+context;
+assert virtualModel != null;
+log "Pretty-print of "+virtualModel;
+log virtualModel.fMLPrettyPrint;
+//validate virtualModel;
+
+// Load resources beeing used in this use case
+libraryXML = load -r ["http://openflexo.org/xml-test/TestResourceCenter/XML/example_library_0.xml"];
+log "libraryXML="+libraryXML;
+assert libraryXML != null;
+
+// Instantiate TestFMLReflect
+service ResourceCenterService add_temp_rc;
+myVMI = new TestFMLReflect(libraryXML.resource) with (name="testReflect1");
+context;
+assert myVMI != null;

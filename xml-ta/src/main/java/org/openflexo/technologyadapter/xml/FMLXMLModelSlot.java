@@ -55,16 +55,24 @@
 
 package org.openflexo.technologyadapter.xml;
 
+import java.util.logging.Logger;
+
 import org.openflexo.foundation.fml.FlexoRole;
 import org.openflexo.foundation.fml.VirtualModel;
+import org.openflexo.foundation.fml.annotations.DeclareActorReferences;
 import org.openflexo.foundation.fml.annotations.FML;
 import org.openflexo.foundation.fml.rt.FlexoConceptInstance;
 import org.openflexo.foundation.fml.rt.ReflectedFMLRTModelSlot;
+import org.openflexo.foundation.fml.rt.ReflectedFMLRTModelSlotInstance;
 import org.openflexo.foundation.fml.rt.VirtualModelInstance;
+import org.openflexo.foundation.resource.FlexoResource;
 import org.openflexo.foundation.technologyadapter.ModelSlot;
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
+import org.openflexo.pamela.exceptions.ModelDefinitionException;
 import org.openflexo.technologyadapter.xml.fml.reflect.XMLVirtualModelInstance;
+import org.openflexo.technologyadapter.xml.fml.reflect.XMLVirtualModelInstanceModelFactory;
+import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument;
 import org.openflexo.technologyadapter.xml.rm.XMLResource;
 
 /**
@@ -80,15 +88,22 @@ import org.openflexo.technologyadapter.xml.rm.XMLResource;
  */
 @ModelEntity
 @ImplementationClass(FMLXMLModelSlot.FMLXMLModelSlotImpl.class)
+// TODO : it would be nice to inherits from super declaration
+@DeclareActorReferences({ ReflectedFMLRTModelSlotInstance.class })
 /*@DeclareFlexoRoles({ SEColumnRole.class, SEDataAreaRole.class, SEReferenceRole.class })
 @DeclareEditionActions({ CreateSEResource.class, InsertSEObject.class, RemoveSEObject.class })
 @DeclareFlexoBehaviours({ SEInitializer.class })
 @DeclareActorReferences({ XMLObjectActorReference.class })*/
 @FML("FMLXMLModelSlot")
-public interface FMLXMLModelSlot extends ReflectedFMLRTModelSlot<XMLVirtualModelInstance, XMLResource<?, ?>, XMLTechnologyAdapter> {
+public interface FMLXMLModelSlot<RD extends AbstractXMLDocument<RD>>
+		extends ReflectedFMLRTModelSlot<XMLVirtualModelInstance<RD>, XMLResource<RD, ?>, RD, XMLTechnologyAdapter> {
 
-	abstract class FMLXMLModelSlotImpl extends ReflectedFMLRTModelSlotImpl<XMLVirtualModelInstance, XMLResource<?, ?>, XMLTechnologyAdapter>
-			implements FMLXMLModelSlot {
+	abstract class FMLXMLModelSlotImpl<RD extends AbstractXMLDocument<RD>>
+			extends ReflectedFMLRTModelSlotImpl<XMLVirtualModelInstance<RD>, XMLResource<RD, ?>, RD, XMLTechnologyAdapter>
+			implements FMLXMLModelSlot<RD> {
+
+		@SuppressWarnings("unused")
+		private static final Logger logger = Logger.getLogger(FMLXMLModelSlotImpl.class.getPackage().getName());
 
 		// private VirtualModelInstanceType type;
 
@@ -128,6 +143,34 @@ public interface FMLXMLModelSlot extends ReflectedFMLRTModelSlot<XMLVirtualModel
 				type = SEVirtualModelInstanceType.getVirtualModelInstanceType(getAccessedVirtualModel());
 			}
 		}*/
+
+		@Override
+		public ReflectedFMLRTModelSlotInstance<XMLVirtualModelInstance<RD>, XMLResource<RD, ?>, RD, XMLTechnologyAdapter> connectTo(
+				FlexoResource<?> resource, FlexoConceptInstance context) {
+
+			try {
+				XMLVirtualModelInstanceModelFactory<RD> factory = new XMLVirtualModelInstanceModelFactory<RD>((XMLResource<RD, ?>) resource,
+						getServiceManager().getEditingContext(), getServiceManager().getTechnologyAdapterService());
+				XMLVirtualModelInstance<RD> xmlVmi = factory.newInstance(XMLVirtualModelInstance.class);
+				xmlVmi.setReflectedModelFactory(factory);
+
+				System.out.println("OK, j'ai ma VMI: " + xmlVmi);
+				System.out.println("Factory: " + xmlVmi.getReflectedModelFactory());
+				System.out.println("Resource: " + xmlVmi.getReflectedModelFactory().getResource());
+				System.exit(-1);
+
+				ReflectedFMLRTModelSlotInstance<XMLVirtualModelInstance<RD>, XMLResource<RD, ?>, RD, XMLTechnologyAdapter> modelSlotInstance;
+				modelSlotInstance = makeActorReference(xmlVmi, context);
+				context.addToActors(modelSlotInstance);
+				return modelSlotInstance;
+
+			} catch (ModelDefinitionException e) {
+				logger.warning("Unexpected exception: " + e);
+				e.printStackTrace();
+				return null;
+			}
+
+		}
 
 	}
 

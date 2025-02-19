@@ -48,6 +48,7 @@ import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.XMLElement;
 import org.openflexo.technologyadapter.xml.FMLXMLModelSlot;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
+import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument;
 import org.openflexo.technologyadapter.xml.rm.XMLResource;
 
 /**
@@ -59,13 +60,18 @@ import org.openflexo.technologyadapter.xml.rm.XMLResource;
 @ImplementationClass(XMLVirtualModelInstance.XMLVirtualModelInstanceImpl.class)
 @Imports(@Import(XMLFlexoConceptInstance.class))
 @XMLElement
-public interface XMLVirtualModelInstance
-		extends ReflectedVirtualModelInstance<XMLVirtualModelInstance, XMLResource<?, ?>, XMLTechnologyAdapter> {
+public interface XMLVirtualModelInstance<RD extends AbstractXMLDocument<RD>>
+		extends ReflectedVirtualModelInstance<XMLVirtualModelInstance<RD>, XMLResource<RD, ?>, RD, XMLTechnologyAdapter> {
 
-	abstract class XMLVirtualModelInstanceImpl extends VirtualModelInstanceImpl<XMLVirtualModelInstance, XMLTechnologyAdapter>
-			implements XMLVirtualModelInstance {
+	abstract class XMLVirtualModelInstanceImpl<RD extends AbstractXMLDocument<RD>>
+			extends ReflectedVirtualModelInstanceImpl<XMLVirtualModelInstance<RD>, XMLResource<RD, ?>, RD, XMLTechnologyAdapter>
+			implements XMLVirtualModelInstance<RD> {
 
 		private static final Logger logger = FlexoLogger.getLogger(XMLVirtualModelInstance.class.getPackage().toString());
 
+		@Override
+		public Class<XMLVirtualModelInstance<RD>> getInferedImplementedInterface() {
+			return (Class) XMLVirtualModelInstance.class;
+		}
 	}
 }
