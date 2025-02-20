@@ -125,7 +125,7 @@ public interface AbstractXMLURIProcessor extends FlexoConceptObject {
 	public void setMappedXMLType(XMLType mappedType);
 
 	@Setter(MODELSLOT)
-	public void setModelSlot(AbstractXMLModelSlot<?, ?> modelslot);
+	public void setModelSlot(AbstractXMLModelSlot<?, ?, ?> modelslot);
 
 	@Getter(MODELSLOT)
 	public AbstractXMLModelSlot getModelSlot();

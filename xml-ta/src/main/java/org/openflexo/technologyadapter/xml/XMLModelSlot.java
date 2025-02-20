@@ -108,7 +108,8 @@ import org.openflexo.technologyadapter.xml.rm.XSDMetaModelResource;
 @ImplementationClass(XMLModelSlot.XMLModelSlotImpl.class)
 @Imports({ @Import(XMLURIProcessor.class), })
 @FML("XMLModelSlot")
-public interface XMLModelSlot extends TypeAwareModelSlot<XMLModel, XSDMetaModel>, AbstractXMLModelSlot<XMLModel, XMLURIProcessor> {
+public interface XMLModelSlot extends TypeAwareModelSlot<XMLModel, XSDMetaModel, TypedXMLResource>,
+		AbstractXMLModelSlot<XMLModel, TypedXMLResource, XMLURIProcessor> {
 
 	@PropertyIdentifier(type = XSDMetaModel.class)
 	public static final String META_MODEL_KEY = "metaModel";
@@ -126,7 +127,8 @@ public interface XMLModelSlot extends TypeAwareModelSlot<XMLModel, XSDMetaModel>
 	// public static abstract class XMLModelSlotImpl extends AbstractXMLModelSlot.AbstractXMLModelSlotImpl<XMLURIProcessor> implements
 	// XMLModelSlot {
 	// TODO : check for multiple inheritance issues in PAMELA
-	public static abstract class XMLModelSlotImpl extends TypeAwareModelSlotImpl<XMLModel, XSDMetaModel> implements XMLModelSlot {
+	public static abstract class XMLModelSlotImpl extends TypeAwareModelSlotImpl<XMLModel, XSDMetaModel, TypedXMLResource>
+			implements XMLModelSlot {
 
 		private static final Logger logger = Logger.getLogger(XMLModelSlot.class.getPackage().getName());
 

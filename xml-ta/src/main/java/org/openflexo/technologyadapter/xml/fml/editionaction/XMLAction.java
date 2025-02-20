@@ -54,7 +54,7 @@ import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
  */
 
 @ModelEntity(isAbstract = true)
-public interface XMLAction<MS extends AbstractXMLModelSlot<?, ?>, T extends XMLObject>
+public interface XMLAction<MS extends AbstractXMLModelSlot<?, ?, ?>, T extends XMLObject>
 		extends TechnologySpecificActionDefiningReceiver<MS, XMLModel, T> {
 
 }

@@ -52,6 +52,7 @@ import org.openflexo.pamela.annotations.Setter;
 import org.openflexo.pamela.annotations.XMLElement;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument;
+import org.openflexo.technologyadapter.xml.rm.XMLResource;
 
 /**
  * 
@@ -62,7 +63,8 @@ import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument;
  */
 
 @ModelEntity(isAbstract = true)
-public interface AbstractXMLModelSlot<RD extends AbstractXMLDocument<RD>, T extends AbstractXMLURIProcessor> extends ModelSlot<RD> {
+public interface AbstractXMLModelSlot<RD extends AbstractXMLDocument<RD>, R extends XMLResource<RD, ?>, T extends AbstractXMLURIProcessor>
+		extends ModelSlot<RD, R> {
 
 	@PropertyIdentifier(type = List.class)
 	public static final String URI_PROCESSORS_LIST_KEY = "uriProcessorsList";

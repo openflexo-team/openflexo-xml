@@ -65,7 +65,6 @@ import org.openflexo.foundation.fml.rt.FlexoConceptInstance;
 import org.openflexo.foundation.fml.rt.ReflectedFMLRTModelSlot;
 import org.openflexo.foundation.fml.rt.ReflectedFMLRTModelSlotInstance;
 import org.openflexo.foundation.fml.rt.VirtualModelInstance;
-import org.openflexo.foundation.resource.FlexoResource;
 import org.openflexo.foundation.technologyadapter.ModelSlot;
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
@@ -146,10 +145,10 @@ public interface FMLXMLModelSlot<RD extends AbstractXMLDocument<RD>>
 
 		@Override
 		public ReflectedFMLRTModelSlotInstance<XMLVirtualModelInstance<RD>, XMLResource<RD, ?>, RD, XMLTechnologyAdapter> connectTo(
-				FlexoResource<?> resource, FlexoConceptInstance context) {
+				XMLResource<RD, ?> resource, FlexoConceptInstance context) {
 
 			try {
-				XMLVirtualModelInstanceModelFactory<RD> factory = new XMLVirtualModelInstanceModelFactory<RD>((XMLResource<RD, ?>) resource,
+				XMLVirtualModelInstanceModelFactory<RD> factory = new XMLVirtualModelInstanceModelFactory<RD>(resource,
 						getServiceManager().getEditingContext(), getServiceManager().getTechnologyAdapterService());
 				XMLVirtualModelInstance<RD> xmlVmi = factory.newInstance(XMLVirtualModelInstance.class);
 				xmlVmi.setReflectedModelFactory(factory);
@@ -157,7 +156,7 @@ public interface FMLXMLModelSlot<RD extends AbstractXMLDocument<RD>>
 				System.out.println("OK, j'ai ma VMI: " + xmlVmi);
 				System.out.println("Factory: " + xmlVmi.getReflectedModelFactory());
 				System.out.println("Resource: " + xmlVmi.getReflectedModelFactory().getResource());
-				System.exit(-1);
+				// System.exit(-1);
 
 				ReflectedFMLRTModelSlotInstance<XMLVirtualModelInstance<RD>, XMLResource<RD, ?>, RD, XMLTechnologyAdapter> modelSlotInstance;
 				modelSlotInstance = makeActorReference(xmlVmi, context);

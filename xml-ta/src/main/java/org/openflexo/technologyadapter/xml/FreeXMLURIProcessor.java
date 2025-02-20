@@ -154,7 +154,7 @@ public interface FreeXMLURIProcessor extends AbstractXMLURIProcessor {
 		}
 
 		public void bindtypeURIToMappedType() {
-			AbstractXMLModelSlot<?, ?> modelSlot = getModelSlot();
+			AbstractXMLModelSlot<?, ?, ?> modelSlot = getModelSlot();
 			if (modelSlot != null) {
 				// TODO adapt this to the FreeXML case
 				// FIXME

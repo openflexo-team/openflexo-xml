@@ -62,6 +62,7 @@ import org.openflexo.technologyadapter.xml.fml.editionaction.SetXMLDocumentRoot;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.model.free.FreeXMLDocument;
 import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
+import org.openflexo.technologyadapter.xml.rm.FreeXMLResource;
 
 /**
  * 
@@ -77,11 +78,13 @@ import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
 @ImplementationClass(FreeXMLModelSlot.FreeXMLModelSlotImpl.class)
 @Imports({ @Import(FreeXMLURIProcessor.class), })
 @FML("FreeXMLModelSlot")
-public interface FreeXMLModelSlot extends FreeModelSlot<FreeXMLDocument>, AbstractXMLModelSlot<FreeXMLDocument, FreeXMLURIProcessor> {
+public interface FreeXMLModelSlot extends FreeModelSlot<FreeXMLDocument, FreeXMLResource>,
+		AbstractXMLModelSlot<FreeXMLDocument, FreeXMLResource, FreeXMLURIProcessor> {
 
 	// public static abstract class FreeXMLModelSlotImpl extends AbstractXMLModelSlot.AbstractXMLModelSlotImpl<FreeXMLURIProcessor>
 	// implements FreeXMLModelSlot {
-	public static abstract class FreeXMLModelSlotImpl extends FreeModelSlotImpl<FreeXMLDocument> implements FreeXMLModelSlot {
+	public static abstract class FreeXMLModelSlotImpl extends FreeModelSlotImpl<FreeXMLDocument, FreeXMLResource>
+			implements FreeXMLModelSlot {
 
 		private static final Logger logger = Logger.getLogger(FreeXMLModelSlot.class.getPackage().getName());
 
