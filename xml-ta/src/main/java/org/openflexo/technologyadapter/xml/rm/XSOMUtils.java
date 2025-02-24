@@ -63,6 +63,7 @@ public class XSOMUtils {
 			@Override
 			public void error(SAXParseException exception) throws SAXException {
 				if (logger.isLoggable(Level.WARNING)) {
+					exception.printStackTrace();
 					logger.warning("XSOM-Error: " + exception.getMessage());
 				}
 			}
@@ -70,6 +71,7 @@ public class XSOMUtils {
 			@Override
 			public void fatalError(SAXParseException exception) throws SAXException {
 				if (logger.isLoggable(Level.WARNING)) {
+					exception.printStackTrace();
 					logger.warning("XSOM-Fatal: " + exception.getMessage());
 				}
 			}
@@ -77,6 +79,7 @@ public class XSOMUtils {
 			@Override
 			public void warning(SAXParseException exception) throws SAXException {
 				if (logger.isLoggable(Level.WARNING)) {
+					exception.printStackTrace();
 					logger.warning("XSOM-Warning: " + exception.getMessage());
 				}
 			}
