@@ -61,7 +61,8 @@ public class TypedXMLResourceFactory extends AbstractXMLResourceFactory<TypedXML
 
 	@Override
 	public <I> boolean isValidArtefact(I serializationArtefact, FlexoResourceCenter<I> resourceCenter) {
-		if (resourceCenter.retrieveName(serializationArtefact).endsWith(XML_EXTENSION)) {
+		if (isXMLArtefact(serializationArtefact, resourceCenter)
+				&& !resourceCenter.retrieveName(serializationArtefact).endsWith(XSDMetaModelResourceFactory.XSD_EXTENSION)) {
 			return getSchemaURI(serializationArtefact, resourceCenter) != null;
 		}
 		return false;

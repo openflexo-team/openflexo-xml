@@ -53,6 +53,7 @@ public abstract class AbstractXMLResourceFactory<R extends TechnologyAdapterReso
 	public static final String XML_EXTENSION = ".xml";
 	public static final String XSD_SCHEMA_URI = "XSD_SCHEMA_URI";
 	public static final String NONE_XSD_SCHEMA_URI = "none";
+	public static final String IS_XML = "IS_XML";
 
 	protected AbstractXMLResourceFactory(Class<R> resourceClass) throws ModelDefinitionException {
 		super(resourceClass);
@@ -121,6 +122,64 @@ public abstract class AbstractXMLResourceFactory<R extends TechnologyAdapterReso
 				// OK, in this case the metadata file is there and more recent than xml file
 				// Attempt to retrieve metadata from cache
 				return metaDataManager.getProperty(XSD_SCHEMA_URI, file);
+			}
+			else {
+				// No way, metadata are either not present or older than file version, we should parse XML file, continuing...
+				return null;
+			}
+
+		}
+
+		// Cannot access any cache since this is not a file-system based resource center
+		return null;
+	}
+
+	protected <I> boolean isXMLArtefact(I serializationArtefact, FlexoResourceCenter<I> resourceCenter) {
+		Boolean returned = getCachedIsXMLArtefact(serializationArtefact, resourceCenter);
+		if (returned != null) {
+			return returned;
+		}
+		// No value in cache, retrieve it now
+		return retrieveIsXMLArtefact(serializationArtefact, resourceCenter);
+	}
+
+	private <I> boolean retrieveIsXMLArtefact(I serializationArtefact, FlexoResourceCenter<I> resourceCenter) {
+		XMLRootElementInfo xmlRootElementInfo = resourceCenter.getXMLRootElementInfo(serializationArtefact);
+		boolean isXML = xmlRootElementInfo != null;
+		saveIsXMLArtefact(isXML, serializationArtefact, resourceCenter);
+		return isXML;
+	}
+
+	private <I> void saveIsXMLArtefact(boolean isXML, I serializationArtefact, FlexoResourceCenter<I> resourceCenter) {
+		if (resourceCenter instanceof FlexoProject) {
+			resourceCenter = ((FlexoProject<I>) resourceCenter).getDelegateResourceCenter();
+		}
+
+		if (resourceCenter instanceof FileSystemBasedResourceCenter) {
+			FileSystemMetaDataManager metaDataManager = ((FileSystemBasedResourceCenter) resourceCenter).getMetaDataManager();
+			// We can safely cast serialization artefact to File
+			File file = (File) serializationArtefact;
+			metaDataManager.setProperty(IS_XML, isXML ? "true" : "false", file, true);
+		}
+	}
+
+	private <I> Boolean getCachedIsXMLArtefact(I serializationArtefact, FlexoResourceCenter<I> resourceCenter) {
+		if (resourceCenter instanceof FlexoProject) {
+			resourceCenter = ((FlexoProject<I>) resourceCenter).getDelegateResourceCenter();
+		}
+
+		if (resourceCenter instanceof FileSystemBasedResourceCenter) {
+			FileSystemMetaDataManager metaDataManager = ((FileSystemBasedResourceCenter) resourceCenter).getMetaDataManager();
+			// We can safely cast serialization artefact to File
+			File file = (File) serializationArtefact;
+
+			if (file.lastModified() < metaDataManager.metaDataLastModified(file)) {
+				// OK, in this case the metadata file is there and more recent than xml file
+				// Attempt to retrieve metadata from cache
+				String isXMLAsString = metaDataManager.getProperty(IS_XML, file);
+				if (isXMLAsString != null) {
+					return isXMLAsString.equals("true");
+				}
 			}
 			else {
 				// No way, metadata are either not present or older than file version, we should parse XML file, continuing...
