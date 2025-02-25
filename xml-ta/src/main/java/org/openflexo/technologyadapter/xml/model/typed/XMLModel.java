@@ -156,6 +156,8 @@ public interface XMLModel extends AbstractXMLDocument<XMLModel>, FlexoModel<XMLM
 	@Finder(attribute = XMLIndividual.TYPE, collection = IND, isMultiValued = true)
 	public List<? extends XMLIndividual> getIndividualsOfType(XMLType aType);
 
+	public void changeUUID(XMLIndividual anIndividual, String oldUUID, String newUUID);
+
 	/*
 	 * Non-PAMELA-managed properties
 	 */
@@ -261,6 +263,14 @@ public interface XMLModel extends AbstractXMLDocument<XMLModel>, FlexoModel<XMLM
 		@Override
 		public void addIndividual(XMLIndividual anIndividual) {
 			individuals.put(anIndividual.getUUID(), anIndividual);
+			//System.out.println("On enregistre l'individual " + anIndividual.getUUID());
+		}
+
+		@Override
+		public void changeUUID(XMLIndividual anIndividual, String oldUUID, String newUUID) {
+			individuals.remove(oldUUID);
+			individuals.put(anIndividual.getUUID(), anIndividual);
+			//System.out.println("On change le UUID de l'individual de " + oldUUID + " a " + newUUID);
 		}
 
 		public Document toXML() throws ParserConfigurationException {

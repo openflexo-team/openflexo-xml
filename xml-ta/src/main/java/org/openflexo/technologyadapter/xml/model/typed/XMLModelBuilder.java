@@ -51,6 +51,7 @@ import org.openflexo.technologyadapter.xml.metamodel.XMLEnumValue;
 import org.openflexo.technologyadapter.xml.metamodel.XMLEnumerationType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLSimpleType;
+import org.openflexo.technologyadapter.xml.metamodel.XMLSimpleType.XMLSchemaPrimitiveType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.xml.SaxBasedObjectGraphFactory;
@@ -71,9 +72,9 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory<XMLModel, XMLInd
 
 		if (aType instanceof XMLComplexType) {
 
-			System.out.println("Make XMLIndividual for type" + aType);
-
 			XMLIndividual returned = model.addNewIndividual((XMLComplexType) aType);
+
+			System.out.println("Make XMLIndividual for type" + aType + " return " + returned);
 
 			return returned;
 		}
@@ -119,6 +120,10 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory<XMLModel, XMLInd
 
 		// System.out.println(
 		// "getTypeForObject() ??? " + typeURI + " container: " + container + " objectName=" + objectName + " returns " + returned);
+
+		if (returned == null) {
+			logger.warning("Cannot find type " + typeURI + " container: " + container + " objectName=" + objectName);
+		}
 
 		return returned;
 	}
@@ -265,6 +270,12 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory<XMLModel, XMLInd
 			}
 			else {
 				object.setPropertyValue(prop, valueForProperty(prop, value));
+				if (prop.getType() instanceof XMLSimpleType
+						&& ((XMLSimpleType) prop.getType()).getPrimitiveType() == XMLSchemaPrimitiveType.ID) {
+					//System.out.println("          ##### nouvel ID " + value + " of " + value.getClass() + " pour " + object);
+					object.setUUID((String) value);
+				}
+
 			}
 
 			/*if (prop == null) {

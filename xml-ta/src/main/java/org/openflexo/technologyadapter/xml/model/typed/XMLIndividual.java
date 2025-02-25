@@ -82,7 +82,7 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 
 	// TODO : manage the calculation of FQN
 
-	public static final String _UUID = "uuid";
+	public static final String UUID_KEY = "uuid";
 	public static final String TYPE = "myType";
 	public static final String MODEL = "containerModel";
 	public static final String CHILD = "childrenByTypes";
@@ -111,8 +111,11 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 	@Setter(TYPE)
 	public void setType(XMLComplexType aType);
 
-	@Getter(_UUID)
+	@Getter(UUID_KEY)
 	public String getUUID();
+
+	@Setter(UUID_KEY)
+	public void setUUID(String uuid);
 
 	@Getter(PARENT)
 	public XMLIndividual getParent();
@@ -234,7 +237,21 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 
 		@Override
 		public String getUUID() {
+			String returned = (String) performSuperGetter(UUID_KEY);
+			if (returned != null) {
+				return returned;
+			}
 			return uuid;
+		}
+
+		@Override
+		public void setUUID(String uuid) {
+			String oldUUID = getUUID();
+			performSuperSetter(UUID_KEY, uuid);
+			if (getContainerModel() != null) {
+				getContainerModel().changeUUID(this, oldUUID, uuid);
+			}
+
 		}
 
 		@Override
