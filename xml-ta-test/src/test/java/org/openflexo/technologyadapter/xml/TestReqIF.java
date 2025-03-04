@@ -40,16 +40,13 @@ package org.openflexo.technologyadapter.xml;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.URISyntaxException;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,7 +54,9 @@ import org.openflexo.foundation.FlexoException;
 import org.openflexo.foundation.resource.FlexoResourceCenter;
 import org.openflexo.foundation.resource.ResourceLoadingCancelledException;
 import org.openflexo.foundation.test.OpenflexoTestCase;
+import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
+import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
 import org.openflexo.technologyadapter.xml.rm.TypedXMLResource;
 import org.openflexo.technologyadapter.xml.rm.XMLModelRepository;
 import org.openflexo.technologyadapter.xml.rm.XSDMetaModelRepository;
@@ -142,56 +141,63 @@ public class TestReqIF extends OpenflexoTestCase {
 
 	}
 
-	public static void main(String[] args) {
+	@Test
+	@TestOrder(3)
+	public void testSample() throws FileNotFoundException, ResourceLoadingCancelledException, FlexoException, URISyntaxException {
 
-		String uri = "http://www.w3.org/2001/xml.xsd";
-		System.out.println("uri: " + uri + " absolute: " + isAbsolute(uri));
-		// System.exit(-1);
+		log("testSample()");
 
-		String url = "https://www.w3.org/2001/XMLSchema"; // Remplace par l'URL de ton choix
+		XSDMetaModelResource libraryXSDResource = mmRepository.getResource("http://www.omg.org/spec/ReqIF/20110401/reqif.xsd");
+		assertNotNull(libraryXSDResource);
+		assertTrue(libraryXSDResource.isLoaded());
 
-		try {
-			URL obj = new URL(url);
-			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+		TypedXMLResource sampleResource = modelRepository.getResource(baseUrl + "/TestResourceCenter/ReqIF/Sample.reqif");
+		assertNotNull(sampleResource);
+		assertFalse(sampleResource.isLoaded());
 
-			// Définition de la méthode de requête
-			con.setRequestMethod("GET");
+		assertSame(libraryXSDResource, sampleResource.getMetaModelResource());
+		assertTrue(sampleResource.getDependencies().contains(libraryXSDResource));
 
-			// Ajout d'en-têtes si nécessaire
-			con.setRequestProperty("User-Agent", "Mozilla/5.0");
+		sampleResource.loadResourceData();
+		assertTrue(sampleResource.isLoaded());
+		assertTrue(libraryXSDResource.isLoaded());
 
-			int responseCode = con.getResponseCode();
-			System.out.println("Response Code: " + responseCode);
+		XSDMetaModel metaModel = libraryXSDResource.getMetaModelData();
+		// Helpers.dumpTypes(metaModel);
 
-			if (responseCode == HttpURLConnection.HTTP_OK) { // Succès
-				BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-				String inputLine;
-				StringBuilder response = new StringBuilder();
+		Helpers.dumpIndividual(sampleResource.getModelData().getRoot(), "");
 
-				while ((inputLine = in.readLine()) != null) {
-					response.append(inputLine + "\n");
-				}
-				in.close();
+		XMLComplexType reqIfType = metaModel.getComplexTypeFromURI("http://www.omg.org/spec/ReqIF/20110401/reqif.xsd#REQ-IF");
+		assertNotNull(reqIfType);
+		XMLComplexType headerType = metaModel.getComplexTypeFromURI("http://www.omg.org/spec/ReqIF/20110401/reqif.xsd#REQ-IF#THE-HEADER");
+		assertNotNull(headerType);
+		XMLComplexType coreContentType = metaModel
+				.getComplexTypeFromURI("http://www.omg.org/spec/ReqIF/20110401/reqif.xsd#REQ-IF#CORE-CONTENT");
+		assertNotNull(coreContentType);
 
-				// Affichage de la réponse
-				System.out.println("Response: " + response.toString());
-			}
-			else {
-				System.out.println("Échec de la requête");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+		XMLIndividual reqIf = sampleResource.getModelData().getRoot();
+		XMLIndividual header = reqIf.getChildren().get(0);
+		XMLIndividual coreContent = reqIf.getChildren().get(1);
 
-	private static final Pattern P = Pattern.compile(".*[/#?].*");
+		assertSame(reqIfType, reqIf.getType());
+		assertSame(headerType, header.getType());
+		assertSame(coreContentType, coreContent.getType());
 
-	private static boolean isAbsolute(String uri) {
-		int i = uri.indexOf(':');
-		if (i < 0) {
-			return false;
-		}
-		return !P.matcher(uri.substring(0, i)).matches();
+		assertSame(header, reqIf.getPropertyValue("theheader"));
+		assertSame(coreContent, reqIf.getPropertyValue("corecontent"));
+
+		// Check references ok
+
+		XMLIndividual reqIfContent = coreContent.getPropertyValue("reqifcontent");
+		XMLIndividual specifications = reqIfContent.getPropertyValue("specifications");
+		XMLIndividual specification = specifications.getPropertyValue("specification");
+		XMLIndividual specificationType = specification.getPropertyValue("type");
+		XMLIndividual specificationTypeRef = specificationType.getPropertyValue("specificationtyperef");
+
+		XMLIndividual spectypes = reqIfContent.getPropertyValue("spectypes");
+		XMLIndividual specificationtype = spectypes.getPropertyValue("specificationtype");
+
+		assertSame(specificationTypeRef, specificationtype);
 	}
 
 }
