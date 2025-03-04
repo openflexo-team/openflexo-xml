@@ -100,7 +100,7 @@ public class XSDMetaModelFactory extends AbstractXMLDocumentFactory<XSDMetaModel
 		return returned;
 	}
 
-	public XMLSimpleType makeReferencedType(String uri, String localName, XMLSimpleType referencedType, XSDMetaModel metaModel) {
+	public XMLSimpleType makeReferencedType(String uri, String localName, XMLType referencedType, XSDMetaModel metaModel) {
 		XMLReferenceType returned = newInstance(XMLReferenceType.class);
 		returned.setIsAbstract(false);
 		returned.setReferencedType(referencedType);

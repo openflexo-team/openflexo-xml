@@ -57,6 +57,7 @@ import org.openflexo.technologyadapter.xml.metamodel.XMLEnumerationType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty.XMLSupport;
 import org.openflexo.technologyadapter.xml.metamodel.XMLSimpleType;
+import org.openflexo.technologyadapter.xml.metamodel.XMLSimpleType.XMLSchemaPrimitiveType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModelFactory;
@@ -217,9 +218,12 @@ public interface XSDMetaModelResource
 						return returned;
 					}
 					else {
-						// This is a reference type
-						return getFactory().makeReferencedType(uri, type.getName(),
-								(XMLSimpleType) ensureTypeExists(restrictionType.getBaseType()), resourceData);
+						XMLSchemaPrimitiveType primitiveType = XMLSimpleType.getPrimitiveFromURI(uri);
+						// If this does not map a primitive, consider it as a reference type
+						if (primitiveType == null) {
+							return getFactory().makeReferencedType(uri, type.getName(), ensureTypeExists(restrictionType.getBaseType()),
+									resourceData);
+						}
 					}
 				}
 

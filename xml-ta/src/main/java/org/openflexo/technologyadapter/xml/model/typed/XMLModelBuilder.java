@@ -233,11 +233,12 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory<XMLModel, XMLInd
 		else if (property.getType() instanceof XMLReferenceType) {
 			XMLReferenceType t = (XMLReferenceType) property.getType();
 			if (value instanceof String) {
-				if (t.getReferencedType() != null && t.getReferencedType().getPrimitiveType() != null) {
-					return decodeValue(t.getReferencedType().getPrimitiveType(), (String) value);
+				if (t.getReferencedPrimitiveType() != null) {
+					return decodeValue(t.getReferencedPrimitiveType(), (String) value);
 				}
 				else {
-					logger.warning("Not supported : type " + t.getURI() + " for value " + value + " for " + property);
+					logger.warning(
+							"Not supported : type " + t.getURI() + " for value " + value + " of " + value.getClass() + " for " + property);
 					return null;
 				}
 			}

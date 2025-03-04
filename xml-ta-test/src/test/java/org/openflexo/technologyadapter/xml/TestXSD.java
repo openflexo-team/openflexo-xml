@@ -235,7 +235,7 @@ public class TestXSD extends OpenflexoTestCase {
 
 		Helpers.dumpTypes(metaModel);
 
-		assertEquals(7, metaModel.getTypes().size());
+		assertEquals(9, metaModel.getTypes().size());
 
 		XMLSimpleType stringType = metaModel.getSimpleTypeFromURI("http://www.w3.org/2001/XMLSchema#string");
 		assertNotNull(stringType);
@@ -243,6 +243,10 @@ public class TestXSD extends OpenflexoTestCase {
 		assertNotNull(integerType);
 		XMLSimpleType dateType = metaModel.getSimpleTypeFromURI("http://www.w3.org/2001/XMLSchema#date");
 		assertNotNull(dateType);
+		XMLSimpleType normalizedStringType = metaModel.getSimpleTypeFromURI("http://www.w3.org/2001/XMLSchema#normalizedString");
+		assertNotNull(normalizedStringType);
+		XMLSimpleType tokenType = metaModel.getSimpleTypeFromURI("http://www.w3.org/2001/XMLSchema#token");
+		assertNotNull(tokenType);
 		XMLSimpleType nmTokenType = metaModel.getSimpleTypeFromURI("http://www.w3.org/2001/XMLSchema#NMTOKEN");
 		assertNotNull(nmTokenType);
 

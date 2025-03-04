@@ -52,10 +52,12 @@ public interface XMLReferenceType extends XMLSimpleType {
 	public final String REFERENCED_TYPE = "referencedType";
 
 	@Getter(REFERENCED_TYPE)
-	public XMLSimpleType getReferencedType();
+	public XMLType getReferencedType();
 
 	@Setter(REFERENCED_TYPE)
-	public void setReferencedType(XMLSimpleType t);
+	public void setReferencedType(XMLType t);
+
+	public XMLSchemaPrimitiveType getReferencedPrimitiveType();
 
 	public static abstract class XMLReferenceTypeImpl extends XMLSimpleTypeImpl implements XMLReferenceType {
 
@@ -71,6 +73,16 @@ public interface XMLReferenceType extends XMLSimpleType {
 			return "[ReferenceType: " + getName() + " uri=" + getURI() + "->" + getReferencedType() + "]";
 		}
 
+		@Override
+		public XMLSchemaPrimitiveType getReferencedPrimitiveType() {
+			if (getReferencedType() instanceof XMLReferenceType) {
+				return ((XMLReferenceType) getReferencedType()).getReferencedPrimitiveType();
+			}
+			else if (getReferencedType() instanceof XMLSimpleType) {
+				return ((XMLSimpleType) getReferencedType()).getPrimitiveType();
+			}
+			return null;
+		}
 	}
 
 }
