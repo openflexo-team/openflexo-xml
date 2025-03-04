@@ -50,6 +50,7 @@ import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLEnumValue;
 import org.openflexo.technologyadapter.xml.metamodel.XMLEnumerationType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
+import org.openflexo.technologyadapter.xml.metamodel.XMLReferenceType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLSimpleType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLSimpleType.XMLSchemaPrimitiveType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
@@ -166,7 +167,12 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory<XMLModel, XMLInd
 
 		// System.out.println("-------> addToRootNodes " + anObject);
 
-		model.setRoot(anObject);
+		if (model.getRoot() == null) {
+			model.setRoot(anObject);
+		}
+		else {
+			logger.warning("XMLModel already declares a root node : " + model.getRoot() + " while setting root node " + anObject);
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -224,19 +230,27 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory<XMLModel, XMLInd
 			logger.warning("Unexpected enum value " + value + " for " + property);
 			return null;
 		}
+		else if (property.getType() instanceof XMLReferenceType) {
+			XMLReferenceType t = (XMLReferenceType) property.getType();
+			if (value instanceof String) {
+				if (t.getReferencedType() != null && t.getReferencedType().getPrimitiveType() != null) {
+					return decodeValue(t.getReferencedType().getPrimitiveType(), (String) value);
+				}
+				else {
+					logger.warning("Not supported : type " + t.getURI() + " for value " + value + " for " + property);
+					return null;
+				}
+			}
+			else {
+				logger.warning("Unexpected value " + value + " for " + property);
+				return null;
+			}
+		}
 		else if (property.getType() instanceof XMLSimpleType) {
 			XMLSimpleType t = (XMLSimpleType) property.getType();
 			if (value instanceof String) {
 				if (t.getPrimitiveType() != null) {
-					try {
-						return (T) t.getPrimitiveType().valueFromString((String) value);
-					} catch (InvalidDataException e) {
-						logger.warning("InvalidDataException : unexpected value " + value + " for " + property);
-						return null;
-					} catch (ClassCastException e) {
-						logger.warning("ClassCastException : unexpected value " + value + " for " + property);
-						return null;
-					}
+					return decodeValue(t.getPrimitiveType(), (String) value);
 				}
 				else {
 					logger.warning("Not supported : type " + t.getURI() + " for value " + value + " for " + property);
@@ -249,6 +263,19 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory<XMLModel, XMLInd
 			}
 		}
 		return (T) value;
+	}
+
+	private <T> T decodeValue(XMLSchemaPrimitiveType primitiveType, String value) {
+		try {
+			return (T) primitiveType.valueFromString(value, model);
+		} catch (InvalidDataException e) {
+			logger.warning("InvalidDataException : unexpected value " + value);
+			return null;
+		} catch (ClassCastException e) {
+			logger.warning("ClassCastException : unexpected value " + value);
+			return null;
+		}
+
 	}
 
 	@Override
@@ -272,7 +299,7 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory<XMLModel, XMLInd
 				object.setPropertyValue(prop, valueForProperty(prop, value));
 				if (prop.getType() instanceof XMLSimpleType
 						&& ((XMLSimpleType) prop.getType()).getPrimitiveType() == XMLSchemaPrimitiveType.ID) {
-					//System.out.println("          ##### nouvel ID " + value + " of " + value.getClass() + " pour " + object);
+					// System.out.println(" ##### nouvel ID " + value + " of " + value.getClass() + " pour " + object);
 					object.setUUID((String) value);
 				}
 

@@ -40,6 +40,8 @@ package org.openflexo.technologyadapter.xml.metamodel;
 
 import java.lang.reflect.Type;
 import java.net.URISyntaxException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Logger;
 
@@ -49,6 +51,9 @@ import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.Setter;
 import org.openflexo.pamela.exceptions.InvalidDataException;
 import org.openflexo.pamela.model.StringConverterLibrary;
+import org.openflexo.pamela.model.StringConverterLibrary.DateConverter;
+import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
+import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
 
 /**
  * Represents a simple XML type, reflected by a base java type
@@ -69,6 +74,9 @@ public interface XMLSimpleType extends XMLType {
 	public static String INTEGER_URI = "integer";
 	public static String LONG_URI = "long";
 	public static String SHORT_URI = "short";
+	public static String ID_URI = "ID";
+	public static String ID_REF_URI = "IDREF";
+	public static String DATE_TIME_URI = "dateTime";
 	public static String ANY_URI = "anyURI";
 
 	public static XMLSchemaPrimitiveType getPrimitiveFromURI(String uri) {
@@ -98,7 +106,7 @@ public interface XMLSimpleType extends XMLType {
 			}
 
 			@Override
-			public String valueFromString(String stringValue) {
+			public String valueFromString(String stringValue, XMLModel model) {
 				return stringValue;
 			}
 
@@ -115,7 +123,7 @@ public interface XMLSimpleType extends XMLType {
 			}
 
 			@Override
-			public Boolean valueFromString(String stringValue) throws InvalidDataException {
+			public Boolean valueFromString(String stringValue, XMLModel model) throws InvalidDataException {
 				return StringConverterLibrary.getInstance().getConverter(Boolean.class).convertFromString(stringValue, null);
 			}
 		},
@@ -131,7 +139,7 @@ public interface XMLSimpleType extends XMLType {
 			}
 
 			@Override
-			public Byte valueFromString(String stringValue) throws InvalidDataException {
+			public Byte valueFromString(String stringValue, XMLModel model) throws InvalidDataException {
 				return StringConverterLibrary.getInstance().getConverter(Byte.class).convertFromString(stringValue, null);
 			}
 		},
@@ -147,7 +155,7 @@ public interface XMLSimpleType extends XMLType {
 			}
 
 			@Override
-			public Date valueFromString(String stringValue) throws InvalidDataException {
+			public Date valueFromString(String stringValue, XMLModel model) throws InvalidDataException {
 				return StringConverterLibrary.getInstance().getConverter(Date.class).convertFromString(stringValue, null);
 			}
 		},
@@ -163,7 +171,7 @@ public interface XMLSimpleType extends XMLType {
 			}
 
 			@Override
-			public Number valueFromString(String stringValue) throws InvalidDataException {
+			public Number valueFromString(String stringValue, XMLModel model) throws InvalidDataException {
 				return StringConverterLibrary.getInstance().getConverter(Number.class).convertFromString(stringValue, null);
 			}
 		},
@@ -179,7 +187,7 @@ public interface XMLSimpleType extends XMLType {
 			}
 
 			@Override
-			public Double valueFromString(String stringValue) throws InvalidDataException {
+			public Double valueFromString(String stringValue, XMLModel model) throws InvalidDataException {
 				return StringConverterLibrary.getInstance().getConverter(Double.class).convertFromString(stringValue, null);
 			}
 		},
@@ -195,7 +203,7 @@ public interface XMLSimpleType extends XMLType {
 			}
 
 			@Override
-			public Float valueFromString(String stringValue) throws InvalidDataException {
+			public Float valueFromString(String stringValue, XMLModel model) throws InvalidDataException {
 				return StringConverterLibrary.getInstance().getConverter(Float.class).convertFromString(stringValue, null);
 			}
 		},
@@ -211,7 +219,7 @@ public interface XMLSimpleType extends XMLType {
 			}
 
 			@Override
-			public Integer valueFromString(String stringValue) throws InvalidDataException {
+			public Integer valueFromString(String stringValue, XMLModel model) throws InvalidDataException {
 				return StringConverterLibrary.getInstance().getConverter(Integer.class).convertFromString(stringValue, null);
 			}
 		},
@@ -227,7 +235,7 @@ public interface XMLSimpleType extends XMLType {
 			}
 
 			@Override
-			public Integer valueFromString(String stringValue) throws InvalidDataException {
+			public Integer valueFromString(String stringValue, XMLModel model) throws InvalidDataException {
 				return StringConverterLibrary.getInstance().getConverter(Integer.class).convertFromString(stringValue, null);
 			}
 		},
@@ -243,7 +251,7 @@ public interface XMLSimpleType extends XMLType {
 			}
 
 			@Override
-			public Long valueFromString(String stringValue) throws InvalidDataException {
+			public Long valueFromString(String stringValue, XMLModel model) throws InvalidDataException {
 				return StringConverterLibrary.getInstance().getConverter(Long.class).convertFromString(stringValue, null);
 			}
 		},
@@ -259,9 +267,74 @@ public interface XMLSimpleType extends XMLType {
 			}
 
 			@Override
-			public Short valueFromString(String stringValue) throws InvalidDataException {
+			public Short valueFromString(String stringValue, XMLModel model) throws InvalidDataException {
 				return StringConverterLibrary.getInstance().getConverter(Short.class).convertFromString(stringValue, null);
 			}
+		},
+		ID {
+			@Override
+			public String getLocalURI() {
+				return ID_URI;
+			}
+
+			@Override
+			public Type getJavaType() {
+				return String.class;
+			}
+
+			@Override
+			public String valueFromString(String stringValue, XMLModel model) throws InvalidDataException {
+				return stringValue;
+			}
+		},
+		ID_REF {
+			@Override
+			public String getLocalURI() {
+				return ID_REF_URI;
+			}
+
+			@Override
+			public Type getJavaType() {
+				return String.class;
+			}
+
+			@Override
+			public XMLIndividual valueFromString(String stringValue, XMLModel model) throws InvalidDataException {
+				// Search the XMLIndividual with supplied UUID
+				XMLIndividual returned = model.getIndividualWithUUID(stringValue);
+				if (returned != null) {
+					return returned;
+				}
+				else {
+					XMLSimpleTypeImpl.logger.warning("Cannot find XMLIndividual with UUID " + stringValue);
+					return null;
+				}
+			}
+		},
+		DATE_TIME {
+			@Override
+			public String getLocalURI() {
+				return DATE_TIME_URI;
+			}
+
+			@Override
+			public Type getJavaType() {
+				return Date.class;
+			}
+
+			@Override
+			public Date valueFromString(String stringValue, XMLModel model) throws InvalidDataException {
+
+				System.out.println("Hop, je dois convertir : [" + stringValue + "]");
+				System.out.println("Je retourne: " + XMLSimpleTypeImpl.dateConverter.convertFromString(stringValue, null));
+				// System.exit(-1);
+
+				return XMLSimpleTypeImpl.dateConverter.convertFromString(stringValue, null);
+				// return StringConverterLibrary.getInstance().getConverter(Date.class).convertFromString(stringValue, null);
+			}
+
+			// 2017-04-25T15:44:26.000+02:00
+			// 2025-03-03T10:03:04.491+01:00
 		},
 		ANY {
 			@Override
@@ -275,7 +348,7 @@ public interface XMLSimpleType extends XMLType {
 			}
 
 			@Override
-			public Object valueFromString(String stringValue) throws InvalidDataException {
+			public Object valueFromString(String stringValue, XMLModel model) throws InvalidDataException {
 				try {
 					return new java.net.URI(stringValue);
 				} catch (URISyntaxException e) {
@@ -296,7 +369,7 @@ public interface XMLSimpleType extends XMLType {
 
 		public abstract Type getJavaType();
 
-		public abstract Object valueFromString(String stringValue) throws InvalidDataException;
+		public abstract Object valueFromString(String stringValue, XMLModel model) throws InvalidDataException;
 	}
 
 	public final String PRIMITIVE_TYPE = "primitiveType";
@@ -312,6 +385,8 @@ public interface XMLSimpleType extends XMLType {
 	public static abstract class XMLSimpleTypeImpl extends XMLTypeImpl implements XMLSimpleType {
 
 		private static final Logger logger = Logger.getLogger(XMLSimpleTypeImpl.class.getPackage().getName());
+
+		private static StringConverterLibrary.DateConverter dateConverter = new DateConverter("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
 
 		@Override
 		public String getDisplayableDescription() {

@@ -211,10 +211,15 @@ public interface XSDMetaModelResource
 						// This is an enumeration
 						XMLEnumerationType returned = getFactory().makeEnumerationType(uri, type.getName(), resourceData);
 						for (XSFacet xsFacet : facets) {
-							System.out.println(" > " + xsFacet.getName() + "=" + xsFacet.getValue() + " fixed:" + xsFacet.isFixed());
+							// System.out.println(" > " + xsFacet.getName() + "=" + xsFacet.getValue() + " fixed:" + xsFacet.isFixed());
 							getFactory().makeEnumValue(xsFacet.getValue().toString(), returned);
 						}
 						return returned;
+					}
+					else {
+						// This is a reference type
+						return getFactory().makeReferencedType(uri, type.getName(),
+								(XMLSimpleType) ensureTypeExists(restrictionType.getBaseType()), resourceData);
 					}
 				}
 

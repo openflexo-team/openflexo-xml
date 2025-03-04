@@ -338,7 +338,7 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 			else {
 				logger.warning("Inconsistent data : called GET for a MULTIPLE property: " + property.getName());
 				List<T> l = getPropertyValues(property);
-				if (l.size() > 0) {
+				if (l != null && l.size() > 0) {
 					return l.get(0);
 				}
 				return null;

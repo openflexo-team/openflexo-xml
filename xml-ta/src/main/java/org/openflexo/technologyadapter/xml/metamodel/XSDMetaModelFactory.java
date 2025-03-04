@@ -100,6 +100,16 @@ public class XSDMetaModelFactory extends AbstractXMLDocumentFactory<XSDMetaModel
 		return returned;
 	}
 
+	public XMLSimpleType makeReferencedType(String uri, String localName, XMLSimpleType referencedType, XSDMetaModel metaModel) {
+		XMLReferenceType returned = newInstance(XMLReferenceType.class);
+		returned.setIsAbstract(false);
+		returned.setReferencedType(referencedType);
+		returned.setURI(uri);
+		returned.setName(localName);
+		metaModel.addToTypes(returned);
+		return returned;
+	}
+
 	public XMLEnumerationType makeEnumerationType(String uri, String localName, XSDMetaModel metaModel) {
 		// System.out.println("Creating a XMLEnumerationType " + localName + " " + uri);
 		XMLEnumerationType returned = newInstance(XMLEnumerationType.class);

@@ -153,6 +153,8 @@ public interface XMLModel extends AbstractXMLDocument<XMLModel>, FlexoModel<XMLM
 	@Remover(IND)
 	public void removeFromIndividuals(XMLIndividual ind);
 
+	public XMLIndividual getIndividualWithUUID(String uuid);
+
 	@Finder(attribute = XMLIndividual.TYPE, collection = IND, isMultiValued = true)
 	public List<? extends XMLIndividual> getIndividualsOfType(XMLType aType);
 
@@ -263,14 +265,19 @@ public interface XMLModel extends AbstractXMLDocument<XMLModel>, FlexoModel<XMLM
 		@Override
 		public void addIndividual(XMLIndividual anIndividual) {
 			individuals.put(anIndividual.getUUID(), anIndividual);
-			//System.out.println("On enregistre l'individual " + anIndividual.getUUID());
+			// System.out.println("On enregistre l'individual " + anIndividual.getUUID());
 		}
 
 		@Override
 		public void changeUUID(XMLIndividual anIndividual, String oldUUID, String newUUID) {
 			individuals.remove(oldUUID);
 			individuals.put(anIndividual.getUUID(), anIndividual);
-			//System.out.println("On change le UUID de l'individual de " + oldUUID + " a " + newUUID);
+			// System.out.println("On change le UUID de l'individual de " + oldUUID + " a " + newUUID);
+		}
+
+		@Override
+		public XMLIndividual getIndividualWithUUID(String uuid) {
+			return individuals.get(uuid);
 		}
 
 		public Document toXML() throws ParserConfigurationException {

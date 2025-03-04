@@ -54,7 +54,8 @@ import org.openflexo.technologyadapter.xml.XMLObject;
  */
 @ModelEntity(isAbstract = true)
 @ImplementationClass(XMLType.XMLTypeImpl.class)
-@Imports({ @Import(XMLSimpleType.class), @Import(XMLComplexType.class), @Import(XMLEnumerationType.class) })
+@Imports({ @Import(XMLSimpleType.class), @Import(XMLComplexType.class), @Import(XMLEnumerationType.class),
+		@Import(XMLReferenceType.class) })
 public interface XMLType extends XMLObject<XSDMetaModel>, Type, InnerResourceData<XSDMetaModel> {
 
 	public final String MM = "metamodel";
