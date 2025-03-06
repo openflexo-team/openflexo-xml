@@ -42,6 +42,7 @@ import java.io.InputStream;
 import java.util.logging.Level;
 
 import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
@@ -53,7 +54,7 @@ public class XSOMUtils {
 	private static final java.util.logging.Logger logger = org.openflexo.logging.FlexoLogger
 			.getLogger(XSOMUtils.class.getPackage().getName());
 
-	public static XSSchemaSet read(InputStream xsdInputStream) {
+	public static XSSchemaSet read(InputStream xsdInputStream, String uri) {
 		if (logger.isLoggable(Level.INFO)) {
 			logger.info("Loading an XSD " + xsdInputStream);
 		}
@@ -87,7 +88,12 @@ public class XSOMUtils {
 		});
 
 		try {
-			parser.parse(xsdInputStream);
+			parser.parse(new InputSource(xsdInputStream) {
+				@Override
+				public String getSystemId() {
+					return uri;
+				}
+			});
 		} catch (SAXException e) {
 			e.printStackTrace();
 		}

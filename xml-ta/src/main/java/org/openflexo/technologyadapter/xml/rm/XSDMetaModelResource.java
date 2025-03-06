@@ -400,7 +400,7 @@ public interface XSDMetaModelResource
 
 			notifyResourceWillLoad();
 
-			schemaSet = XSOMUtils.read(getInputStream());
+			schemaSet = XSOMUtils.read(getInputStream(), getURI());
 
 			if (schemaSet != null) {
 				fetcher = new XSDeclarationsFetcher();
