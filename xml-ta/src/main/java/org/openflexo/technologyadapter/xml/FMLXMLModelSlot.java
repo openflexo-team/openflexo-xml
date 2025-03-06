@@ -55,6 +55,7 @@
 
 package org.openflexo.technologyadapter.xml;
 
+import java.io.IOException;
 import java.util.logging.Logger;
 
 import org.openflexo.foundation.fml.FlexoRole;
@@ -65,10 +66,12 @@ import org.openflexo.foundation.fml.rt.FlexoConceptInstance;
 import org.openflexo.foundation.fml.rt.ReflectedFMLRTModelSlot;
 import org.openflexo.foundation.fml.rt.ReflectedFMLRTModelSlotInstance;
 import org.openflexo.foundation.fml.rt.VirtualModelInstance;
+import org.openflexo.foundation.resource.StreamIODelegate;
 import org.openflexo.foundation.technologyadapter.ModelSlot;
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.exceptions.ModelDefinitionException;
+import org.openflexo.technologyadapter.xml.fml.reflect.FMLXMLModelBuilder;
 import org.openflexo.technologyadapter.xml.fml.reflect.XMLVirtualModelInstance;
 import org.openflexo.technologyadapter.xml.fml.reflect.XMLVirtualModelInstanceModelFactory;
 import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument;
@@ -158,13 +161,28 @@ public interface FMLXMLModelSlot<RD extends AbstractXMLDocument<RD>>
 				System.out.println("Resource: " + xmlVmi.getReflectedModelFactory().getResource());
 				// System.exit(-1);
 
+				if (xmlVmi.getReflectedModelFactory().getResource() != null
+						&& xmlVmi.getReflectedModelFactory().getResource().getIODelegate() instanceof StreamIODelegate) {
+
+					FMLXMLModelBuilder builder = new FMLXMLModelBuilder();
+					builder.setModelContext(xmlVmi);
+					builder.deserialize(
+							((StreamIODelegate) xmlVmi.getReflectedModelFactory().getResource().getIODelegate()).getInputStream());
+					builder.resetModelContext();
+					//System.exit(-1);
+				}
+
 				ReflectedFMLRTModelSlotInstance<XMLVirtualModelInstance<RD>, XMLResource<RD, ?>, RD, XMLTechnologyAdapter> modelSlotInstance;
 				modelSlotInstance = makeActorReference(xmlVmi, context);
 				context.addToActors(modelSlotInstance);
 				return modelSlotInstance;
 
 			} catch (ModelDefinitionException e) {
-				logger.warning("Unexpected exception: " + e);
+				logger.warning("Unexpected ModelDefinitionException: " + e);
+				e.printStackTrace();
+				return null;
+			} catch (IOException e) {
+				logger.warning("Unexpected IOException: " + e);
 				e.printStackTrace();
 				return null;
 			}
