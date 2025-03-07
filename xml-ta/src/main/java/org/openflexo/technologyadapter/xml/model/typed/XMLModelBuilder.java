@@ -75,7 +75,7 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory<XMLModel, XMLInd
 
 			XMLIndividual returned = model.addNewIndividual((XMLComplexType) aType);
 
-			System.out.println("Make XMLIndividual for type" + aType + " return " + returned);
+			logger.fine("Make XMLIndividual for type" + aType + " return " + returned);
 
 			return returned;
 		}
@@ -93,11 +93,11 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory<XMLModel, XMLInd
 		}
 
 		if (returned == null) {
-			System.out.println("Not found : " + typeURI);
+			// System.out.println("Not found : " + typeURI);
 			returned = mm.getTypeFromContextualURI(typeURI);
-			if (returned == null) {
+			/*if (returned == null) {
 				System.out.println("Still not found : " + typeURI);
-			}
+			}*/
 		}
 
 		// Try to match as local uri
