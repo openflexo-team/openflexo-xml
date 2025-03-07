@@ -144,6 +144,9 @@ public abstract class AbstractXMLResourceFactory<R extends TechnologyAdapterReso
 	}
 
 	private <I> boolean retrieveIsXMLArtefact(I serializationArtefact, FlexoResourceCenter<I> resourceCenter) {
+		if (resourceCenter.isDirectory(serializationArtefact)) {
+			return false;
+		}
 		XMLRootElementInfo xmlRootElementInfo = resourceCenter.getXMLRootElementInfo(serializationArtefact);
 		boolean isXML = xmlRootElementInfo != null;
 		saveIsXMLArtefact(isXML, serializationArtefact, resourceCenter);
