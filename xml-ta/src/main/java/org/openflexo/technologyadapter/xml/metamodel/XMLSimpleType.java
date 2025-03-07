@@ -40,8 +40,6 @@ package org.openflexo.technologyadapter.xml.metamodel;
 
 import java.lang.reflect.Type;
 import java.net.URISyntaxException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Logger;
 
@@ -324,17 +322,9 @@ public interface XMLSimpleType extends XMLType {
 
 			@Override
 			public Date valueFromString(String stringValue, XMLModel model) throws InvalidDataException {
-
-				System.out.println("Hop, je dois convertir : [" + stringValue + "]");
-				System.out.println("Je retourne: " + XMLSimpleTypeImpl.dateConverter.convertFromString(stringValue, null));
-				// System.exit(-1);
-
 				return XMLSimpleTypeImpl.dateConverter.convertFromString(stringValue, null);
-				// return StringConverterLibrary.getInstance().getConverter(Date.class).convertFromString(stringValue, null);
 			}
 
-			// 2017-04-25T15:44:26.000+02:00
-			// 2025-03-03T10:03:04.491+01:00
 		},
 		ANY {
 			@Override
