@@ -38,9 +38,13 @@
 
 package org.openflexo.technologyadapter.xml.fml.reflect;
 
+import org.openflexo.foundation.fml.AbstractCreationScheme;
 import org.openflexo.foundation.fml.FlexoConcept;
+import org.openflexo.foundation.fml.rt.FMLExecutionException;
 import org.openflexo.foundation.fml.rt.FlexoConceptInstance;
-import org.openflexo.foundation.fml.rt.ReflectedVirtualModelInstanceModelFactory;
+import org.openflexo.foundation.fml.rt.RunTimeEvaluationContext;
+import org.openflexo.foundation.fml.rt.VirtualModelInstance;
+import org.openflexo.foundation.fml.rt.reflect.ReflectedVirtualModelInstanceModelFactory;
 import org.openflexo.foundation.technologyadapter.TechnologyAdapterService;
 import org.openflexo.pamela.exceptions.ModelDefinitionException;
 import org.openflexo.pamela.factory.EditingContext;
@@ -48,32 +52,30 @@ import org.openflexo.pamela.factory.PamelaModelFactory;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
 import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument;
 import org.openflexo.technologyadapter.xml.rm.XMLResource;
+import org.openflexo.xml.XMLReaderSAXHandler.ParsedElement;
 
 /**
- * {@link PamelaModelFactory} used to handle {@link XLSVirtualModelInstance} models<br>
+ * {@link PamelaModelFactory} used to handle {@link XMLVirtualModelInstance} models<br>
  * 
  * @author sylvain
  * 
  */
-public class XMLVirtualModelInstanceModelFactory<RD extends AbstractXMLDocument<RD>>
-		extends ReflectedVirtualModelInstanceModelFactory<XMLResource<RD, ?>, RD, XMLTechnologyAdapter> {
+public class XMLVirtualModelInstanceModelFactory<RD extends AbstractXMLDocument<RD>> extends
+		ReflectedVirtualModelInstanceModelFactory<XMLResource<RD, ?>, RD, XMLTechnologyAdapter, ParsedElement<XMLFlexoConceptInstance>> {
 
 	public XMLVirtualModelInstanceModelFactory(XMLResource<RD, ?> resource, EditingContext editingContext,
 			TechnologyAdapterService taService) throws ModelDefinitionException {
 		super(resource, (Class) XMLVirtualModelInstance.class, editingContext, taService);
 	}
 
-	public XMLFlexoConceptInstance newFlexoConceptInstance(XMLVirtualModelInstance owner, FlexoConceptInstance container, Object xmlObject,
-			FlexoConcept concept) {
-		System.out.println("On construit un nouveau XMLFlexoConceptInstance pour " + xmlObject);
-		XMLFlexoConceptInstance returned = newInstance(XMLFlexoConceptInstance.class, concept);
-		// returned.setRowSupportObject(row);
-		owner.addToFlexoConceptInstances(returned);
-		if (container != null && container != owner) {
-			container.addToEmbeddedFlexoConceptInstances(returned);
-		}
+	@Override
+	public XMLFlexoConceptInstance makeNewFlexoConceptInstance(FlexoConcept concept, ParsedElement<XMLFlexoConceptInstance> supportObject,
+			FlexoConceptInstance container, VirtualModelInstance<?, ?> ownerVirtualModelInstance, AbstractCreationScheme creationScheme,
+			RunTimeEvaluationContext evaluationContext) throws FMLExecutionException {
+		System.out.println("On construit un nouveau XMLFlexoConceptInstance pour " + supportObject);
+		XMLFlexoConceptInstance returned = newInstance(XMLFlexoConceptInstance.class, concept, supportObject);
+		ownerVirtualModelInstance.addToFlexoConceptInstances(returned);
 		return returned;
-
 	}
 
 }

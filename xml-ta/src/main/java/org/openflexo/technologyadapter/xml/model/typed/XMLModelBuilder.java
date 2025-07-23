@@ -57,6 +57,7 @@ import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.xml.SaxBasedObjectGraphFactory;
 import org.openflexo.xml.XMLReaderSAXHandler;
+import org.openflexo.xml.XMLReaderSAXHandler.ParsedElement;
 import org.xml.sax.SAXException;
 
 /**
@@ -69,7 +70,7 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory<XMLModel, XMLInd
 	private XMLModel model = null;
 
 	@Override
-	public XMLIndividual createInstance(Type aType, String name) {
+	public XMLIndividual createInstance(Type aType, String name, ParsedElement<XMLIndividual> parsed) {
 
 		if (aType instanceof XMLComplexType) {
 
@@ -196,6 +197,12 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory<XMLModel, XMLInd
 	}
 
 	@Override
+	public boolean modelHasPropertyNamed(String propertyName) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
 	public boolean objectHasPropertyNamed(XMLObject<XMLModel> object, String propertyName) {
 
 		// System.out.println("***** objectHasAttributeNamed??? object=" + object + " propertyName=" + propertyName);
@@ -282,7 +289,12 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory<XMLModel, XMLInd
 	@Override
 	public void addPropertyValueForObject(XMLIndividual object, String propertyName, Object value) {
 
-		// System.out.println("***** addAttributeValueForObject object=" + object + " name=" + name + " value=" + value);
+		System.out.println("***** addAttributeValueForObject object=" + object + " propertyName=" + propertyName + " value=" + value
+				+ " of " + value.getClass());
+
+		if (propertyName.equals("latency") && value.equals("25")) {
+			Thread.dumpStack();
+		}
 
 		if (object instanceof XMLIndividual) {
 
@@ -332,6 +344,11 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory<XMLModel, XMLInd
 			
 			}*/
 		}
+	}
+
+	@Override
+	public void addPropertyValueForModel(String propertyName, Object value) {
+		logger.warning("Please implement me");
 	}
 
 	@Override

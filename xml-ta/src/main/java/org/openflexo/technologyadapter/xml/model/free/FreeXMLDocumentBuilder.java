@@ -45,6 +45,7 @@ import java.lang.reflect.Type;
 import org.openflexo.technologyadapter.xml.XMLObject;
 import org.openflexo.xml.SaxBasedObjectGraphFactory;
 import org.openflexo.xml.XMLCst;
+import org.openflexo.xml.XMLReaderSAXHandler.ParsedElement;
 import org.xml.sax.SAXException;
 
 /**
@@ -55,7 +56,7 @@ public class FreeXMLDocumentBuilder extends SaxBasedObjectGraphFactory<FreeXMLDo
 	private FreeXMLDocument document = null;
 
 	@Override
-	public XMLElement createInstance(Type aType, String name) {
+	public XMLElement createInstance(Type aType, String name, ParsedElement<XMLElement> parsed) {
 
 		// System.out.println("Called createInstance() with " + aType + " and " + name);
 
@@ -136,6 +137,12 @@ public class FreeXMLDocumentBuilder extends SaxBasedObjectGraphFactory<FreeXMLDo
 	}
 
 	@Override
+	public boolean modelHasPropertyNamed(String propertyName) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
 	public boolean objectHasPropertyNamed(XMLObject<FreeXMLDocument> object, String propertyName) {
 
 		// System.out.println("Called objectHasAttributeNamed() with " + object + " and " + propertyName);
@@ -156,6 +163,11 @@ public class FreeXMLDocumentBuilder extends SaxBasedObjectGraphFactory<FreeXMLDo
 				object.setAttributeValue(name, value);
 			}
 		}
+	}
+
+	@Override
+	public void addPropertyValueForModel(String propertyName, Object value) {
+		// logger.warning("Please implement me");
 	}
 
 	@Override

@@ -6,7 +6,7 @@ import java.lang.String;
 @XMLElement("Library")
 public model Library {
 
-   @XMLAttribute("name")
+   @XMLElement("name")
    String name;
 
    @XMLElement

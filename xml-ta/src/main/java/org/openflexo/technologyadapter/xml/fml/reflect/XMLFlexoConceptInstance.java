@@ -37,12 +37,16 @@ package org.openflexo.technologyadapter.xml.fml.reflect;
 
 import java.util.logging.Logger;
 
+import org.openflexo.foundation.fml.FlexoConcept;
 import org.openflexo.foundation.fml.rt.FlexoConceptInstance;
+import org.openflexo.foundation.fml.rt.reflect.ReflectedFlexoConceptInstance;
 import org.openflexo.logging.FlexoLogger;
 import org.openflexo.pamela.annotations.ImplementationClass;
+import org.openflexo.pamela.annotations.Initializer;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.XMLElement;
 import org.openflexo.technologyadapter.xml.FMLXMLModelSlot;
+import org.openflexo.xml.XMLReaderSAXHandler.ParsedElement;
 
 /**
  * A XML-specific {@link FlexoConceptInstance} reflecting a distant object (represented by an XML element in a XML file) accessible in an
@@ -52,30 +56,10 @@ import org.openflexo.technologyadapter.xml.FMLXMLModelSlot;
 @ModelEntity
 @ImplementationClass(XMLFlexoConceptInstance.XMLFlexoConceptInstanceImpl.class)
 @XMLElement
-public interface XMLFlexoConceptInstance extends FlexoConceptInstance {
+public interface XMLFlexoConceptInstance extends ReflectedFlexoConceptInstance<ParsedElement<XMLFlexoConceptInstance>> {
 
-	/**
-	 * Initialize this {@link XMLFlexoConceptInstance} with supplied Hibernate support object, and explicit concept (type)
-	 * 
-	 * @param hbnMap
-	 * @param concept
-	 */
-	// @Initializer
-	// void initialize(FlexoConcept concept);
-
-	/**
-	 * Return {@link Row} support object
-	 * 
-	 * @return
-	 */
-	// public Row getRowSupportObject();
-
-	/**
-	 * Sets {@link Row} support object
-	 * 
-	 * @return
-	 */
-	// public void setRowSupportObject(Row row);
+	@Initializer
+	void initialize(FlexoConcept concept, ParsedElement<XMLFlexoConceptInstance> supportObject);
 
 	/**
 	 * Default implementation for {@link XMLFlexoConceptInstance}
@@ -87,23 +71,20 @@ public interface XMLFlexoConceptInstance extends FlexoConceptInstance {
 
 		private static final Logger logger = FlexoLogger.getLogger(XMLFlexoConceptInstance.class.getPackage().toString());
 
-		// Row support object
-		// private Row row;
-
 		/**
 		 * Initialize this {@link XMLFlexoConceptInstance} with supplied Hibernate support object, and explicit concept (type)
 		 * 
-		 * @param hbnMap
 		 * @param concept
 		 */
-		/*@Override
-		public void initialize(FlexoConcept concept) {
+		@Override
+		public void initialize(FlexoConcept concept, ParsedElement<XMLFlexoConceptInstance> supportObject) {
 			setFlexoConcept(concept);
-		}*/
+			setSupportObject(supportObject);
+		}
 
 		@Override
-		public XMLVirtualModelInstance getVirtualModelInstance() {
-			return (XMLVirtualModelInstance) super.getVirtualModelInstance();
+		public XMLVirtualModelInstance<?> getVirtualModelInstance() {
+			return (XMLVirtualModelInstance<?>) super.getVirtualModelInstance();
 		}
 
 		/*@Override

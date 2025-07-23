@@ -63,9 +63,9 @@ import org.openflexo.foundation.fml.VirtualModel;
 import org.openflexo.foundation.fml.annotations.DeclareActorReferences;
 import org.openflexo.foundation.fml.annotations.FML;
 import org.openflexo.foundation.fml.rt.FlexoConceptInstance;
-import org.openflexo.foundation.fml.rt.ReflectedFMLRTModelSlot;
-import org.openflexo.foundation.fml.rt.ReflectedFMLRTModelSlotInstance;
 import org.openflexo.foundation.fml.rt.VirtualModelInstance;
+import org.openflexo.foundation.fml.rt.reflect.ReflectedFMLRTModelSlot;
+import org.openflexo.foundation.fml.rt.reflect.ReflectedFMLRTModelSlotInstance;
 import org.openflexo.foundation.resource.StreamIODelegate;
 import org.openflexo.foundation.technologyadapter.ModelSlot;
 import org.openflexo.pamela.annotations.ImplementationClass;
@@ -159,17 +159,17 @@ public interface FMLXMLModelSlot<RD extends AbstractXMLDocument<RD>>
 				System.out.println("OK, j'ai ma VMI: " + xmlVmi);
 				System.out.println("Factory: " + xmlVmi.getReflectedModelFactory());
 				System.out.println("Resource: " + xmlVmi.getReflectedModelFactory().getResource());
-				// System.exit(-1);
+				System.out.println("VM: " + getAccessedVirtualModel());
 
 				if (xmlVmi.getReflectedModelFactory().getResource() != null
 						&& xmlVmi.getReflectedModelFactory().getResource().getIODelegate() instanceof StreamIODelegate) {
 
-					FMLXMLModelBuilder builder = new FMLXMLModelBuilder();
+					FMLXMLModelBuilder builder = new FMLXMLModelBuilder(factory, getAccessedVirtualModel());
 					builder.setModelContext(xmlVmi);
 					builder.deserialize(
 							((StreamIODelegate) xmlVmi.getReflectedModelFactory().getResource().getIODelegate()).getInputStream());
 					builder.resetModelContext();
-					//System.exit(-1);
+					// System.exit(-1);
 				}
 
 				ReflectedFMLRTModelSlotInstance<XMLVirtualModelInstance<RD>, XMLResource<RD, ?>, RD, XMLTechnologyAdapter> modelSlotInstance;
@@ -188,6 +188,13 @@ public interface FMLXMLModelSlot<RD extends AbstractXMLDocument<RD>>
 			}
 
 		}
+
+		/*@Override
+		public ReflectedFMLRTModelSlotInstance<XMLVirtualModelInstance<RD>, XMLResource<RD, ?>, RD, XMLTechnologyAdapter> makeActorReference(
+				XMLVirtualModelInstance<RD> object, FlexoConceptInstance fci) {
+			// TODO Auto-generated method stub
+			return super.makeActorReference(object, fci);
+		}*/
 
 	}
 
