@@ -57,13 +57,13 @@ import org.openflexo.view.controller.model.FlexoPerspective;
  * 
  */
 @SuppressWarnings("serial")
-public class XMLMetaModelView extends AbstractXMLModuleView<XSDMetaModel> {
+public class XMLMetaModelFIBView extends AbstractXMLFIBModuleView<XSDMetaModel> {
 
 	public static final Resource FIB_FILE = ResourceLocator.locateResource("Fib/FIBXMLMetaModelView.fib");
 	public static final Resource XMLType_FIB_FILE = ResourceLocator.locateResource("Fib/FIBPanelXMLType.fib");
 	public static final Resource XMLProperty_FIB_FILE = ResourceLocator.locateResource("Fib/FIBPanelXMLProperty.fib");
 
-	public XMLMetaModelView(XSDMetaModel object, FlexoController controller, FlexoPerspective perspective) {
+	public XMLMetaModelFIBView(XSDMetaModel object, FlexoController controller, FlexoPerspective perspective) {
 		super(controller, object, perspective, FIB_FILE);
 	}
 

@@ -61,10 +61,11 @@ import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
 import org.openflexo.technologyadapter.xml.fml.XMLIndividualRole;
 import org.openflexo.technologyadapter.xml.fml.editionaction.AddXMLIndividual;
 import org.openflexo.technologyadapter.xml.gui.XMLIconLibrary;
-import org.openflexo.technologyadapter.xml.gui.view.XMLMetaModelView;
-import org.openflexo.technologyadapter.xml.gui.view.XMLModelView;
+import org.openflexo.technologyadapter.xml.gui.view.XMLDocumentTextualView;
 import org.openflexo.technologyadapter.xml.gui.widget.XMLIndividualTypeEditor;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
+import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument;
+import org.openflexo.technologyadapter.xml.model.free.FreeXMLDocument;
 import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
 import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
 import org.openflexo.view.EmptyPanel;
@@ -196,7 +197,10 @@ public class XMLAdapterController extends FlexoOntologyTechnologyAdapterControll
 
 	@Override
 	public boolean isRepresentableInModuleView(TechnologyObject<XMLTechnologyAdapter> object) {
-		if (object instanceof XMLModel) {
+		if (object instanceof FreeXMLDocument) {
+			return true;
+		}
+		else if (object instanceof XMLModel) {
 			return true;
 		}
 		else if (object instanceof XSDMetaModel) {
@@ -207,7 +211,10 @@ public class XMLAdapterController extends FlexoOntologyTechnologyAdapterControll
 
 	@Override
 	public FlexoObject getRepresentableMasterObject(TechnologyObject<XMLTechnologyAdapter> object) {
-		if (object instanceof XMLModel) {
+		if (object instanceof FreeXMLDocument) {
+			return object;
+		}
+		else if (object instanceof XMLModel) {
 			return object;
 		}
 		else if (object instanceof XSDMetaModel) {
@@ -218,8 +225,11 @@ public class XMLAdapterController extends FlexoOntologyTechnologyAdapterControll
 
 	@Override
 	public String getWindowTitleforObject(TechnologyObject<XMLTechnologyAdapter> object, FlexoController controller) {
+		if (object instanceof AbstractXMLDocument) {
+			return ((AbstractXMLDocument) object).getName();
+		}
 		if (object instanceof XMLObject) {
-			return "XML Object: " + ((XMLObject) object).getName();
+			return ((XMLObject) object).getName();
 		}
 		return object.toString();
 	}
@@ -227,12 +237,15 @@ public class XMLAdapterController extends FlexoOntologyTechnologyAdapterControll
 	@Override
 	public ModuleView<?> createModuleViewForMasterObject(TechnologyObject<XMLTechnologyAdapter> object, FlexoController controller,
 			FlexoPerspective perspective) {
-		if (object instanceof XMLModel) {
-			return new XMLModelView((XMLModel) object, controller, perspective);
+		if (object instanceof AbstractXMLDocument) {
+			return new XMLDocumentTextualView((AbstractXMLDocument) object, controller, perspective);
+		}
+		/*else if (object instanceof XMLModel) {
+			return new XMLModelFIBView((XMLModel) object, controller, perspective);
 		}
 		else if (object instanceof XSDMetaModel) {
-			return new XMLMetaModelView((XSDMetaModel) object, controller, perspective);
-		}
+			return new XMLMetaModelFIBView((XSDMetaModel) object, controller, perspective);
+		}*/
 		return new EmptyPanel<>(controller, perspective, object);
 	}
 

@@ -167,6 +167,8 @@ public interface XMLModel extends AbstractXMLDocument<XMLModel>, FlexoModel<XMLM
 
 	public void setNamespace(String ns, String prefix);
 
+	// public String getXMLRepresentation();
+
 	/**
 	 * Default implementaion for {@link XMLModel}
 	 * 
@@ -294,6 +296,36 @@ public interface XMLModel extends AbstractXMLDocument<XMLModel>, FlexoModel<XMLM
 
 			return doc;
 		}
+
+		/*@Override
+		public String getXMLRepresentation() {
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer;
+			try {
+				transformer = transformerFactory.newTransformer();
+				transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+				transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+		
+				DOMSource source = new DOMSource(toXML());
+				StringWriter writer = new StringWriter();
+				StreamResult result = new StreamResult(writer);
+		
+				transformer.transform(source, result);
+		
+				return writer.toString();
+			} catch (TransformerConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ParserConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (TransformerException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+		
+		}*/
 
 	}
 

@@ -66,9 +66,9 @@ import org.openflexo.view.controller.model.FlexoPerspective;
  * JScrollPane, to contain XML View.
  * 
  */
-public abstract class AbstractXMLModuleView<T extends XMLObject> extends SelectionSynchronizedFIBView implements ModuleView<T> {
+public abstract class AbstractXMLFIBModuleView<T extends XMLObject> extends SelectionSynchronizedFIBView implements ModuleView<T> {
 
-	protected static final Logger logger = Logger.getLogger(AbstractXMLModuleView.class.getPackage().getName());
+	protected static final Logger logger = Logger.getLogger(AbstractXMLFIBModuleView.class.getPackage().getName());
 
 	protected final FlexoController controller;
 
@@ -91,7 +91,7 @@ public abstract class AbstractXMLModuleView<T extends XMLObject> extends Selecti
 	 * @param object
 	 * @param perspective
 	 */
-	protected AbstractXMLModuleView(FlexoController controller, T object, FlexoPerspective perspective, Resource fib_file) {
+	protected AbstractXMLFIBModuleView(FlexoController controller, T object, FlexoPerspective perspective, Resource fib_file) {
 		super(null, controller, fib_file, controller.getTechnologyAdapter(XMLTechnologyAdapter.class).getLocales());
 		this.controller = controller;
 		this.representedObject = object;

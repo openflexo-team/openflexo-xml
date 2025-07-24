@@ -101,6 +101,15 @@ public interface FreeXMLDocument extends AbstractXMLDocument<FreeXMLDocument> {
 			return null;
 		}
 
+		@Override
+		public String getName() {
+			if (getResource() != null) {
+				return getResource().getName();
+			}
+			else
+				return "";
+		}
+
 	}
 
 }

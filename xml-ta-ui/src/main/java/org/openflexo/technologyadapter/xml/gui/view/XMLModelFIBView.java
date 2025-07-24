@@ -55,12 +55,12 @@ import org.openflexo.view.controller.model.FlexoPerspective;
  */
 
 @SuppressWarnings("serial")
-public class XMLModelView extends AbstractXMLModuleView<XMLModel> {
+public class XMLModelFIBView extends AbstractXMLFIBModuleView<XMLModel> {
 	
 	public static final Resource FIB_FILE = ResourceLocator.locateResource("Fib/FIBXMLModelView.fib");
 	public static final Resource XMLIndividual_FIB_FILE = ResourceLocator.locateResource("Fib/FIBPanelXMLIndividual.fib");
 
-	public XMLModelView(XMLModel object, FlexoController controller, FlexoPerspective perspective) {
+	public XMLModelFIBView(XMLModel object, FlexoController controller, FlexoPerspective perspective) {
 		super(controller, object, perspective, FIB_FILE);
 	}
 	
