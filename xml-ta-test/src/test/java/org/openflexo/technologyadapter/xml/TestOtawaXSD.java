@@ -310,7 +310,9 @@ public class TestOtawaXSD extends OpenflexoTestCase {
 		}*/
 
 		assertNotNull(mmRes);
-		assertFalse(mmRes.isLoaded());
+
+		// The resource may be already loaded because of findVirtualModelInfo() in compilation units in this resource center
+		// assertFalse(mmRes.isLoaded());
 		mmRes.loadResourceData();
 		assertTrue(mmRes.isLoaded());
 
