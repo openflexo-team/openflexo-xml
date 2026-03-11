@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Panel opaque="false" layout="border" borderTitle="Panel" borderTop="10"
 	titleFont="SansSerif,0,11" darkLevel="0"
-	dataClassName="org.openflexo.technologyadapter.xml.gui.view.XMLModelView"
+	dataClassName="org.openflexo.technologyadapter.xml.gui.view.XMLModelFIBView"
 	controllerClassName="org.openflexo.view.controller.FlexoFIBController"
 	font="SansSerif,0,12" name="main">
 	<SplitPanel index="0"
