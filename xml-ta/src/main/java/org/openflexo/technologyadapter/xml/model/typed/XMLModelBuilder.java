@@ -70,7 +70,7 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory<XMLModel, XMLInd
 	private XMLModel model = null;
 
 	@Override
-	public XMLIndividual createInstance(Type aType, String name, ParsedElement<XMLIndividual> parsed) {
+	public XMLIndividual createInstance(Type aType, String name, ParsedElement<XMLIndividual, XMLObject<XMLModel>> parsed) {
 
 		if (aType instanceof XMLComplexType) {
 
@@ -187,6 +187,7 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory<XMLModel, XMLInd
 
 	@Override
 	public void setModelContext(XMLModel objectGraph) {
+		super.setModelContext(objectGraph);
 		model = objectGraph;
 
 	}
@@ -208,19 +209,22 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory<XMLModel, XMLInd
 		// System.out.println("***** objectHasAttributeNamed??? object=" + object + " propertyName=" + propertyName);
 
 		if (object instanceof XMLIndividual) {
-			return getProperty((XMLIndividual) object, propertyName) != null;
+			return getProperty(object, propertyName) != null;
 		}
 		return false;
 	}
 
-	private XMLProperty<?, ?> getProperty(XMLIndividual object, String propertyName) {
-		XMLProperty<?, ?> prop = object.getType().getPropertyByName(propertyName);
-		if (prop != null) {
-			return prop;
-		}
-		for (XMLProperty<?, ?> property : object.getType().getProperties()) {
-			if (propertyName.equals(property.getXMLSupportName())) {
-				return property;
+	private XMLProperty<?, ?> getProperty(XMLObject<XMLModel> object, String propertyName) {
+		if (object instanceof XMLIndividual) {
+			XMLIndividual individual = (XMLIndividual) object;
+			XMLProperty<?, ?> prop = individual.getType().getPropertyByName(propertyName);
+			if (prop != null) {
+				return prop;
+			}
+			for (XMLProperty<?, ?> property : individual.getType().getProperties()) {
+				if (propertyName.equals(property.getXMLSupportName())) {
+					return property;
+				}
 			}
 		}
 		return null;
@@ -287,7 +291,7 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory<XMLModel, XMLInd
 	}
 
 	@Override
-	public void addPropertyValueForObject(XMLIndividual object, String propertyName, Object value) {
+	public void addPropertyValueForObject(XMLObject<XMLModel> object, String propertyName, Object value) {
 
 		System.out.println("***** addAttributeValueForObject object=" + object + " propertyName=" + propertyName + " value=" + value
 				+ " of " + value.getClass());
@@ -298,6 +302,7 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory<XMLModel, XMLInd
 
 		if (object instanceof XMLIndividual) {
 
+			XMLIndividual individual = (XMLIndividual) object;
 			XMLProperty prop = getProperty(object, propertyName);
 
 			if (prop == null) {
@@ -306,14 +311,14 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory<XMLModel, XMLInd
 			}
 
 			if (prop.isMultiple()) {
-				object.addPropertyValue(prop, valueForProperty(prop, value));
+				individual.addPropertyValue(prop, valueForProperty(prop, value));
 			}
 			else {
-				object.setPropertyValue(prop, valueForProperty(prop, value));
+				individual.setPropertyValue(prop, valueForProperty(prop, value));
 				if (prop.getType() instanceof XMLSimpleType
 						&& ((XMLSimpleType) prop.getType()).getPrimitiveType() == XMLSchemaPrimitiveType.ID) {
 					// System.out.println(" ##### nouvel ID " + value + " of " + value.getClass() + " pour " + object);
-					object.setUUID((String) value);
+					individual.setUUID((String) value);
 				}
 
 			}
@@ -352,31 +357,46 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory<XMLModel, XMLInd
 	}
 
 	@Override
-	public void addChildToObject(XMLIndividual currentObject, XMLIndividual currentContainer) {
+	public void addChildToObject(XMLIndividual currentObject, XMLObject<XMLModel> currentContainer) {
 
 		// System.out.println("------> Et hop, on ajoute " + currentObject + " a " + currentContainer);
 
 		if (currentContainer instanceof XMLIndividual) {
-			currentContainer.addChild(currentObject);
+			((XMLIndividual) currentContainer).addChild(currentObject);
 		}
 
 	}
 
 	@Override
-	public Type getTypeForProperty(XMLIndividual currentContainer, String localName) {
-		XMLProperty prop = currentContainer.getType().getPropertyByName(localName);
+	public Type getTypeForProperty(XMLObject<XMLModel> currentContainer, String localName) {
+		if (currentContainer instanceof XMLIndividual) {
+			XMLProperty prop = ((XMLIndividual) currentContainer).getType().getPropertyByName(localName);
 
-		if (prop == null) {
-			for (XMLProperty property : currentContainer.getType().getProperties()) {
-				if (localName.equals(property.getXMLSupportName())) {
-					prop = property;
+			if (prop == null) {
+				for (XMLProperty property : ((XMLIndividual) currentContainer).getType().getProperties()) {
+					if (localName.equals(property.getXMLSupportName())) {
+						prop = property;
+					}
 				}
 			}
-		}
 
-		if (prop != null) {
-			return prop.getType();
+			if (prop != null) {
+				return prop.getType();
+			}
 		}
 		return null;
 	}
+
+	@Override
+	public String getPropertyName(XMLObject<XMLModel> object, String propertyName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public <T> void addPropertyObject(XMLObject<XMLModel> object, String propertyName, XMLObject<XMLModel> value) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

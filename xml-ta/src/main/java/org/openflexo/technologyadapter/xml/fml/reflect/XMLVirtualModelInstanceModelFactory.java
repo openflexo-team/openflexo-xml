@@ -61,7 +61,7 @@ import org.openflexo.xml.XMLReaderSAXHandler.ParsedElement;
  * 
  */
 public class XMLVirtualModelInstanceModelFactory<RD extends AbstractXMLDocument<RD>> extends
-		ReflectedVirtualModelInstanceModelFactory<XMLResource<RD, ?>, RD, XMLTechnologyAdapter, ParsedElement<XMLFlexoConceptInstance>> {
+		ReflectedVirtualModelInstanceModelFactory<XMLResource<RD, ?>, RD, XMLTechnologyAdapter, ParsedElement<XMLFlexoConceptInstance, FlexoConceptInstance>> {
 
 	public XMLVirtualModelInstanceModelFactory(XMLResource<RD, ?> resource, EditingContext editingContext,
 			TechnologyAdapterService taService) throws ModelDefinitionException {
@@ -69,10 +69,12 @@ public class XMLVirtualModelInstanceModelFactory<RD extends AbstractXMLDocument<
 	}
 
 	@Override
-	public XMLFlexoConceptInstance makeNewFlexoConceptInstance(FlexoConcept concept, ParsedElement<XMLFlexoConceptInstance> supportObject,
-			FlexoConceptInstance container, VirtualModelInstance<?, ?> ownerVirtualModelInstance, AbstractCreationScheme creationScheme,
+	public XMLFlexoConceptInstance makeNewFlexoConceptInstance(FlexoConcept concept,
+			ParsedElement<XMLFlexoConceptInstance, FlexoConceptInstance> supportObject, FlexoConceptInstance container,
+			VirtualModelInstance<?, ?> ownerVirtualModelInstance, AbstractCreationScheme creationScheme,
 			RunTimeEvaluationContext evaluationContext) throws FMLExecutionException {
-		System.out.println("On construit un nouveau XMLFlexoConceptInstance pour " + supportObject);
+		// System.err.println(
+		// "makeNewFlexoConceptInstance with " + supportObject + " of " + (supportObject != null ? supportObject.getClass() : null));
 		XMLFlexoConceptInstance returned = newInstance(XMLFlexoConceptInstance.class, concept, supportObject);
 		ownerVirtualModelInstance.addToFlexoConceptInstances(returned);
 		return returned;

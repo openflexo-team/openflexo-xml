@@ -56,7 +56,7 @@ public class FreeXMLDocumentBuilder extends SaxBasedObjectGraphFactory<FreeXMLDo
 	private FreeXMLDocument document = null;
 
 	@Override
-	public XMLElement createInstance(Type aType, String name, ParsedElement<XMLElement> parsed) {
+	public XMLElement createInstance(Type aType, String name, ParsedElement<XMLElement, XMLObject<FreeXMLDocument>> parsed) {
 
 		// System.out.println("Called createInstance() with " + aType + " and " + name);
 
@@ -128,6 +128,7 @@ public class FreeXMLDocumentBuilder extends SaxBasedObjectGraphFactory<FreeXMLDo
 
 	@Override
 	public void setModelContext(FreeXMLDocument objectGraph) {
+		super.setModelContext(objectGraph);
 		document = objectGraph;
 	}
 
@@ -151,16 +152,16 @@ public class FreeXMLDocumentBuilder extends SaxBasedObjectGraphFactory<FreeXMLDo
 	}
 
 	@Override
-	public void addPropertyValueForObject(XMLElement object, String name, Object value) {
+	public void addPropertyValueForObject(XMLObject<FreeXMLDocument> object, String name, Object value) {
 
 		// System.out.println("Called addAttributeValueForObject() with " + object + " and " + name + " and " + value);
 
 		if (object instanceof XMLElement) {
 			if (name.equals(XMLCst.CDATA_ATTR_NAME)) {
-				object.setValue(value);
+				((XMLElement) object).setValue(value);
 			}
 			else {
-				object.setAttributeValue(name, value);
+				((XMLElement) object).setAttributeValue(name, value);
 			}
 		}
 	}
@@ -171,20 +172,32 @@ public class FreeXMLDocumentBuilder extends SaxBasedObjectGraphFactory<FreeXMLDo
 	}
 
 	@Override
-	public void addChildToObject(XMLElement currentObject, XMLElement currentContainer) {
+	public void addChildToObject(XMLElement currentObject, XMLObject<FreeXMLDocument> currentContainer) {
 
 		// System.out.println("addChildToObject with " + currentObject + " and " + currentContainer);
 
 		if (currentObject instanceof XMLElement && currentContainer instanceof XMLElement) {
-			currentContainer.addToChildElements(currentObject);
+			((XMLElement) currentContainer).addToChildElements(currentObject);
 		}
 	}
 
 	@Override
-	public Type getTypeForProperty(XMLElement currentContainer, String localName) {
+	public Type getTypeForProperty(XMLObject<FreeXMLDocument> currentContainer, String localName) {
 
 		// System.out.println("getAttributeType with " + currentContainer + " and " + localName);
 
 		return null;
+	}
+
+	@Override
+	public String getPropertyName(XMLObject<FreeXMLDocument> object, String propertyName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public <T> void addPropertyObject(XMLObject<FreeXMLDocument> object, String propertyName, XMLObject<FreeXMLDocument> value) {
+		// TODO Auto-generated method stub
+
 	}
 }

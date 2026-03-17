@@ -2,9 +2,9 @@ use org.openflexo.foundation.fml.rt.FMLRTModelSlot as FMLRT;
 
 import java.lang.String;
 
-@URI("http://openflexo.org/xml-test/FML/reflect/Library")
+@URI("http://openflexo.org/xml-test/FML/reflect/Library1")
 @XMLElement("Library")
-public model Library {
+public model Library1 {
 
    @XMLElement("name")
    String name;
@@ -14,9 +14,17 @@ public model Library {
 
    @XMLElement("Book")
    public concept Book {
+	   
+	  @XMLElement("title")
       String title;
+
+	  @XMLElement
       int pages;
+
+	  @XMLElement
       String category;
+
+	  @XMLElement
       String author;
    }
 }

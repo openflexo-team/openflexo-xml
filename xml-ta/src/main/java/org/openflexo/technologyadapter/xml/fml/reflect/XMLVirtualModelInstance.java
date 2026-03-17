@@ -73,5 +73,14 @@ public interface XMLVirtualModelInstance<RD extends AbstractXMLDocument<RD>>
 		public Class<XMLVirtualModelInstance<RD>> getInferedImplementedInterface() {
 			return (Class) XMLVirtualModelInstance.class;
 		}
+
+		/*@Override
+		public AbstractVirtualModelInstanceModelFactory<?> getFactory() {
+			AbstractVirtualModelInstanceModelFactory<?> returned = super.getFactory();
+			System.err.println("Bon ici , je retourne " + returned);
+			System.err.println("getReflectedModelFactory()=" + getReflectedModelFactory());
+			return returned;
+		}*/
+
 	}
 }
