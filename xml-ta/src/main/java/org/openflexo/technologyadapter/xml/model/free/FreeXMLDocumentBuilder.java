@@ -38,38 +38,45 @@
 
 package org.openflexo.technologyadapter.xml.model.free;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Type;
 
 import org.openflexo.technologyadapter.xml.XMLObject;
 import org.openflexo.xml.SaxBasedObjectGraphFactory;
 import org.openflexo.xml.XMLCst;
 import org.openflexo.xml.XMLReaderSAXHandler.ParsedElement;
-import org.xml.sax.SAXException;
 
 /**
  * A builder for a {@link FreeXMLDocument} (sax-based)
  */
-public class FreeXMLDocumentBuilder extends SaxBasedObjectGraphFactory<FreeXMLDocument, XMLElement, XMLObject<FreeXMLDocument>> {
-
-	private FreeXMLDocument document = null;
+public class FreeXMLDocumentBuilder extends SaxBasedObjectGraphFactory<FreeXMLDocument, XMLElement, XMLObject<FreeXMLDocument>, String> {
 
 	@Override
-	public XMLElement createInstance(Type aType, String name, ParsedElement<XMLElement, XMLObject<FreeXMLDocument>> parsed) {
+	public RootNodeStrategy getRootNodeStrategy() {
+		return RootNodeStrategy.SINGLE_ROOT_NODE;
+	}
+
+	private FreeXMLDocumentFactory getModelFactory() {
+		if (getModelContext() != null) {
+			return getModelContext().getModelFactory();
+		}
+		return null;
+	}
+
+	@Override
+	public XMLElement createInstance(Type aType, String name, ParsedElement<XMLElement, XMLObject<FreeXMLDocument>, String> parsed) {
 
 		// System.out.println("Called createInstance() with " + aType + " and " + name);
 
 		if (aType == XMLElement.class) {
 			// System.out.println("Creating Element " + name);
-			return document.getModelFactory().makeXMLElement(name, document);
+			return getModelFactory().makeXMLElement(name, getModelContext());
 		}
 
 		return null;
 	}
 
 	@Override
-	public Type getTypeForObject(String typeURI, XMLObject<FreeXMLDocument> container, String objectName) {
+	public Type getType(String typeURI, String localName, XMLObject<FreeXMLDocument> container) {
 
 		// System.out.println(
 		// "Called getTypeForObject() with typeURI=" + typeURI + " and container=" + container + " and objectName=" + objectName);
@@ -78,44 +85,18 @@ public class FreeXMLDocumentBuilder extends SaxBasedObjectGraphFactory<FreeXMLDo
 	}
 
 	@Override
-	public Object deserialize(String input) throws IOException {
-		if (document != null) {
-
-			try {
-				saxParser.parse(input, handler);
-			} catch (SAXException e) {
-				LOGGER.warning("Cannot parse document: " + e.getMessage());
-				throw new IOException(e.getMessage());
-			}
-			return this.document;
-		}
-		LOGGER.warning("Context is not set for parsing, aborting");
-		return null;
-	}
-
-	@Override
-	public Object deserialize(InputStream input) throws IOException {
-		if (document != null) {
-
-			try {
-				saxParser.parse(input, handler);
-			} catch (SAXException e) {
-				LOGGER.warning("Cannot parse document: " + e.getMessage());
-				throw new IOException(e.getMessage());
-			}
-			return this.document;
-
-		}
-		LOGGER.warning("Context is not set for parsing, aborting");
-		return null;
+	public void setRootNode(XMLElement rootNode) {
+		getModelContext().setRootElement(rootNode);
 	}
 
 	@Override
 	public void addToRootNodes(XMLElement anObject) {
+		// not applicable
+	}
 
-		// System.out.println("addToRootNodes with " + anObject);
-
-		document.setRootElement(anObject);
+	@Override
+	public void updateRootNode(ParsedElement<XMLElement, XMLObject<FreeXMLDocument>, String> parsed) {
+		// not applicable
 	}
 
 	@SuppressWarnings("unchecked")
@@ -127,48 +108,26 @@ public class FreeXMLDocumentBuilder extends SaxBasedObjectGraphFactory<FreeXMLDo
 	}
 
 	@Override
-	public void setModelContext(FreeXMLDocument objectGraph) {
-		super.setModelContext(objectGraph);
-		document = objectGraph;
+	public void setModelContext(FreeXMLDocument document) {
+		super.setModelContext(document);
 	}
 
 	@Override
-	public void resetModelContext() {
-		document = null;
-	}
+	public void addOrSetDataPropertyValue(XMLObject<FreeXMLDocument> targetObject, String property, Object value) {
 
-	@Override
-	public boolean modelHasPropertyNamed(String propertyName) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean objectHasPropertyNamed(XMLObject<FreeXMLDocument> object, String propertyName) {
-
-		// System.out.println("Called objectHasAttributeNamed() with " + object + " and " + propertyName);
-
-		return false;
-	}
-
-	@Override
-	public void addPropertyValueForObject(XMLObject<FreeXMLDocument> object, String name, Object value) {
-
-		// System.out.println("Called addAttributeValueForObject() with " + object + " and " + name + " and " + value);
-
-		if (object instanceof XMLElement) {
-			if (name.equals(XMLCst.CDATA_ATTR_NAME)) {
-				((XMLElement) object).setValue(value);
+		if (targetObject instanceof XMLElement) {
+			if (property.equals(XMLCst.CDATA_ATTR_NAME)) {
+				((XMLElement) targetObject).setValue(value);
 			}
 			else {
-				((XMLElement) object).setAttributeValue(name, value);
+				((XMLElement) targetObject).setAttributeValue(property, value);
 			}
 		}
 	}
 
 	@Override
-	public void addPropertyValueForModel(String propertyName, Object value) {
-		// logger.warning("Please implement me");
+	public void addOrSetObjectPropertyValue(XMLObject<FreeXMLDocument> targetObject, String property, XMLObject<FreeXMLDocument> value) {
+		// Never used in this context
 	}
 
 	@Override
@@ -182,22 +141,27 @@ public class FreeXMLDocumentBuilder extends SaxBasedObjectGraphFactory<FreeXMLDo
 	}
 
 	@Override
-	public Type getTypeForProperty(XMLObject<FreeXMLDocument> currentContainer, String localName) {
-
-		// System.out.println("getAttributeType with " + currentContainer + " and " + localName);
-
+	public String getPropertyNamed(XMLObject<FreeXMLDocument> object, String propertyName) {
 		return null;
 	}
 
 	@Override
-	public String getPropertyName(XMLObject<FreeXMLDocument> object, String propertyName) {
-		// TODO Auto-generated method stub
+	public Type getTypeForProperty(String property) {
 		return null;
 	}
 
 	@Override
-	public <T> void addPropertyObject(XMLObject<FreeXMLDocument> object, String propertyName, XMLObject<FreeXMLDocument> value) {
-		// TODO Auto-generated method stub
+	public String getPropertyForElementName(XMLObject<FreeXMLDocument> object, String elementName) {
+		return null;
+	}
 
+	@Override
+	public String getPropertyForAttributeName(XMLObject<FreeXMLDocument> object, String attributeName) {
+		return attributeName;
+	}
+
+	@Override
+	public void handleCData(XMLElement targetObject, String value) {
+		targetObject.setValue(value);
 	}
 }

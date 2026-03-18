@@ -38,6 +38,7 @@ package org.openflexo.technologyadapter.xml.fml.reflect;
 import java.util.logging.Logger;
 
 import org.openflexo.foundation.fml.FlexoConcept;
+import org.openflexo.foundation.fml.FlexoProperty;
 import org.openflexo.foundation.fml.rt.AbstractVirtualModelInstanceModelFactory;
 import org.openflexo.foundation.fml.rt.FlexoConceptInstance;
 import org.openflexo.foundation.fml.rt.reflect.ReflectedFlexoConceptInstance;
@@ -58,10 +59,10 @@ import org.openflexo.xml.XMLReaderSAXHandler.ParsedElement;
 @ImplementationClass(XMLFlexoConceptInstance.XMLFlexoConceptInstanceImpl.class)
 @XMLElement
 public interface XMLFlexoConceptInstance
-		extends ReflectedFlexoConceptInstance<ParsedElement<XMLFlexoConceptInstance, FlexoConceptInstance>> {
+		extends ReflectedFlexoConceptInstance<ParsedElement<XMLFlexoConceptInstance, FlexoConceptInstance, FlexoProperty<?>>> {
 
 	@Initializer
-	void initialize(FlexoConcept concept, ParsedElement<XMLFlexoConceptInstance, FlexoConceptInstance> supportObject);
+	void initialize(FlexoConcept concept, ParsedElement<XMLFlexoConceptInstance, FlexoConceptInstance, FlexoProperty<?>> supportObject);
 
 	/**
 	 * Default implementation for {@link XMLFlexoConceptInstance}
@@ -79,7 +80,8 @@ public interface XMLFlexoConceptInstance
 		 * @param concept
 		 */
 		@Override
-		public void initialize(FlexoConcept concept, ParsedElement<XMLFlexoConceptInstance, FlexoConceptInstance> supportObject) {
+		public void initialize(FlexoConcept concept,
+				ParsedElement<XMLFlexoConceptInstance, FlexoConceptInstance, FlexoProperty<?>> supportObject) {
 			setFlexoConcept(concept);
 			setSupportObject(supportObject);
 		}

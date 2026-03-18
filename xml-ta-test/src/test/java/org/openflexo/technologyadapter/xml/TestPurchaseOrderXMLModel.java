@@ -165,6 +165,19 @@ public class TestPurchaseOrderXMLModel extends OpenflexoProjectAtRunTimeTestCase
 		assertEquals(shippingAddress, po.getPropertyValues("shipTos").get(0));
 		// assertEquals(shippingAddress, po.getPropertyValue("shipTos"));
 
+		assertEquals("Portland", billingAddress.getPropertyValue("city"));
+		assertEquals("US", billingAddress.getPropertyValue("country"));
+		assertEquals("Michael Johnson", billingAddress.getPropertyValue("name"));
+		assertEquals("OR", billingAddress.getPropertyValue("state"));
+		assertEquals("456 Oak Avenue", billingAddress.getPropertyValue("street"));
+		assertEquals(97205, (int) billingAddress.getPropertyValue("zip"));
+
+		assertEquals("Seattle", shippingAddress.getPropertyValue("city"));
+		assertEquals("US", shippingAddress.getPropertyValue("country"));
+		assertEquals("Emily Johnson", shippingAddress.getPropertyValue("name"));
+		assertEquals("WA", shippingAddress.getPropertyValue("state"));
+		assertEquals("789 Pine Street", shippingAddress.getPropertyValue("street"));
+		assertEquals(98101, (int) shippingAddress.getPropertyValue("zip"));
 	}
 
 }

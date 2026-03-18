@@ -38,8 +38,6 @@
 
 package org.openflexo.technologyadapter.xml.fml.reflect;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,17 +63,16 @@ import org.openflexo.pamela.model.StringConverterLibrary;
 import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
 import org.openflexo.xml.SaxBasedObjectGraphFactory;
 import org.openflexo.xml.XMLReaderSAXHandler.ParsedElement;
-import org.xml.sax.SAXException;
 
 /**
  * A builder for a {@link XMLModel} (sax-based)
  */
 public class FMLXMLModelBuilder
-		extends SaxBasedObjectGraphFactory<XMLVirtualModelInstance<?>, XMLFlexoConceptInstance, FlexoConceptInstance> {
+		extends SaxBasedObjectGraphFactory<XMLVirtualModelInstance<?>, XMLFlexoConceptInstance, FlexoConceptInstance, FlexoProperty<?>> {
 
 	private static final Logger logger = Logger.getLogger(FMLXMLModelBuilder.class.getPackage().getName());
 
-	private XMLVirtualModelInstance<?> model = null;
+	private static final String XML_ELEMENT = "XMLElement";
 
 	private XMLVirtualModelInstanceModelFactory<?> factory;
 	private VirtualModel reflectedVM;
@@ -105,8 +102,13 @@ public class FMLXMLModelBuilder
 
 	}
 
+	@Override
+	public RootNodeStrategy getRootNodeStrategy() {
+		return RootNodeStrategy.ROOT_NODE_IS_THE_MODEL;
+	}
+
 	private void registerConcept(FlexoConcept concept) {
-		FMLMetaData metaData = concept.getMetaData("XMLElement");
+		FMLMetaData metaData = concept.getMetaData(XML_ELEMENT);
 		if (metaData instanceof BasicMetaData) {
 			// Basic @XMLElement where XML tag is not specified : use concept name
 			List<FlexoConcept> l = conceptsByXMLElementName.get(concept.getName());
@@ -130,16 +132,12 @@ public class FMLXMLModelBuilder
 
 	@Override
 	public XMLFlexoConceptInstance createInstance(Type aType, String name,
-			ParsedElement<XMLFlexoConceptInstance, FlexoConceptInstance> parsed) {
+			ParsedElement<XMLFlexoConceptInstance, FlexoConceptInstance, FlexoProperty<?>> parsed) {
 
-		if (aType instanceof VirtualModelInstanceType) {
-			// This is the root element
-			model.setVirtualModel(((VirtualModelInstanceType) aType).getVirtualModel());
-		}
-		else if (aType instanceof FlexoConceptInstanceType) {
+		if (aType instanceof FlexoConceptInstanceType) {
 			try {
 				return (XMLFlexoConceptInstance) factory.makeNewFlexoConceptInstance(((FlexoConceptInstanceType) aType).getFlexoConcept(),
-						parsed, model, model, null);
+						parsed, getModelContext(), getModelContext(), null);
 			} catch (FMLExecutionException e) {
 				e.printStackTrace();
 				return null;
@@ -149,7 +147,7 @@ public class FMLXMLModelBuilder
 	}
 
 	@Override
-	public Type getTypeForObject(String typeURI, FlexoConceptInstance container, String objectName) {
+	public Type getType(String typeURI, String localName, FlexoConceptInstance container) {
 		// System.out.println("getTypeForObject() ??? " + typeURI + " container: " + container + " objectName=" + objectName);
 
 		List<FlexoConcept> matchingConcepts = conceptsByXMLElementName.get(typeURI);
@@ -169,99 +167,36 @@ public class FMLXMLModelBuilder
 	}
 
 	@Override
-	public Object deserialize(String input) throws IOException {
-		if (model != null) {
+	public void updateRootNode(ParsedElement<XMLFlexoConceptInstance, FlexoConceptInstance, FlexoProperty<?>> parsed) {
 
-			try {
-				saxParser.parse(input, handler);
-			} catch (SAXException e) {
-				LOGGER.warning("Cannot parse document: " + e.getMessage());
-				throw new IOException(e.getMessage());
-			}
-			return this.model;
+		if (parsed.objectType instanceof VirtualModelInstanceType) {
+			// This is the root element : we set here the VirtualModel for the root element
+			getModelContext().setVirtualModel(((VirtualModelInstanceType) parsed.objectType).getVirtualModel());
 		}
-		LOGGER.warning("Context is not set for parsing, aborting");
-		return null;
+		else {
+			logger.warning("Unexpected objectType " + parsed.objectType + " as root node");
+		}
+
 	}
 
 	@Override
-	public Object deserialize(InputStream input) throws IOException {
-		if (model != null) {
-
-			try {
-				saxParser.parse(input, handler);
-			} catch (SAXException e) {
-				LOGGER.warning("Cannot parse document: " + e.getMessage());
-				throw new IOException(e.getMessage());
-			}
-			return this.model;
-
-		}
-		LOGGER.warning("Context is not set for parsing, aborting");
-		return null;
+	public void setRootNode(XMLFlexoConceptInstance rootNode) {
+		// not applicable
 	}
 
 	@Override
 	public void addToRootNodes(XMLFlexoConceptInstance anObject) {
-		// TODO Auto-generated method stub
-
+		// not applicable
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void setModelProperty(String propertyName, Object value) {
-		/*if (propertyName.equals(XMLReaderSAXHandler.NAMESPACE_Property)) {
-			model.setNamespace(((List<String>) value).get(0), ((List<String>) value).get(1));
-		}*/
-
 	}
 
 	@Override
-	public void setModelContext(XMLVirtualModelInstance<?> objectGraph) {
-		super.setModelContext(objectGraph);
-		model = objectGraph;
+	public FlexoProperty<?> getPropertyForElementName(FlexoConceptInstance object, String elementName) {
 
-	}
-
-	@Override
-	public void resetModelContext() {
-		model = null;
-	}
-
-	@Override
-	public boolean modelHasPropertyNamed(String propertyName) {
-		return getFlexoProperty(model, propertyName) != null;
-	}
-
-	@Override
-	public String getPropertyName(FlexoConceptInstance object, String elementName) {
-
-		FlexoProperty<?> property = getFlexoProperty(object, elementName);
-
-		if (property != null) {
-			return property.getName();
-		}
-
-		return null;
-	}
-
-	@Override
-	public boolean objectHasPropertyNamed(FlexoConceptInstance object, String propertyName) {
-
-		if (object == null) {
-			// This is a root element : consider the model itself
-			object = model;
-		}
-
-		FlexoProperty<?> property = getFlexoProperty(object, propertyName);
-		if (property != null) {
-			return true;
-		}
-
-		return false;
-	}
-
-	private FlexoProperty<?> getFlexoProperty(FlexoConceptInstance object, String propertyName) {
 		if (object == null) {
 			return null;
 		}
@@ -273,23 +208,23 @@ public class FMLXMLModelBuilder
 		}
 
 		for (FlexoProperty<?> p : concept.getAccessibleProperties()) {
-			FMLMetaData metaData = p.getMetaData("XMLElement");
+			FMLMetaData metaData = p.getMetaData(XML_ELEMENT);
 			// System.err.println("Property: " + p + " metaData=" + metaData);
 			if (metaData instanceof BasicMetaData) {
 				// Basic @XMLElement where XML tag is not specified : use property name
-				if (propertyName.equals(p.getName())) {
+				if (elementName.equals(p.getName())) {
 					return p;
 				}
 				if (p.getType() instanceof FlexoConceptInstanceType) {
 					FlexoConcept targetType = ((FlexoConceptInstanceType) p.getType()).getFlexoConcept();
-					FMLMetaData conceptMetaData = targetType.getMetaData("XMLElement");
+					FMLMetaData conceptMetaData = targetType.getMetaData(XML_ELEMENT);
 					if (conceptMetaData instanceof BasicMetaData) {
-						if (propertyName.equals(targetType.getName())) {
+						if (elementName.equals(targetType.getName())) {
 							return p;
 						}
 					}
 					else if (conceptMetaData instanceof SingleMetaData) {
-						if (propertyName.equals(((SingleMetaData<String>) conceptMetaData).getValue(String.class))) {
+						if (elementName.equals(((SingleMetaData<String>) conceptMetaData).getValue(String.class))) {
 							return p;
 						}
 					}
@@ -297,7 +232,7 @@ public class FMLXMLModelBuilder
 			}
 			else if (metaData instanceof SingleMetaData) {
 				String xmlElementName = ((SingleMetaData<String>) metaData).getValue(String.class);
-				if (propertyName.equals(xmlElementName)) {
+				if (elementName.equals(xmlElementName)) {
 					return p;
 				}
 			}
@@ -306,28 +241,21 @@ public class FMLXMLModelBuilder
 	}
 
 	@Override
-	public void addPropertyValueForObject(FlexoConceptInstance object, String propertyName, Object value) {
-		FlexoProperty<?> property = getFlexoProperty(object, propertyName);
-		if (property != null) {
-			addPropertyValue(object, property, value);
-		}
-		else {
-			logger.warning("Cannot find property " + propertyName + " for " + object);
-		}
+	public FlexoProperty<?> getPropertyForAttributeName(FlexoConceptInstance object, String attributeName) {
+		return null;
 	}
 
 	@Override
-	public void addPropertyValueForModel(String propertyName, Object value) {
-		FlexoProperty<?> property = getFlexoProperty(model, propertyName);
+	public void addOrSetDataPropertyValue(FlexoConceptInstance targetObject, FlexoProperty<?> property, Object value) {
 		if (property != null) {
-			addPropertyValue(model, property, value);
+			addPropertyValue(targetObject, property, value);
 		}
 		else {
-			logger.warning("Cannot find property " + propertyName + " for " + model);
+			logger.warning("addOrSetDataPropertyValue() : null property for " + targetObject);
 		}
 	}
 
-	public <T> void addPropertyValue(FlexoConceptInstance object, FlexoProperty<T> property, Object value) {
+	private <T> void addPropertyValue(FlexoConceptInstance object, FlexoProperty<T> property, Object value) {
 		if (property != null) {
 			// System.err.println(
 			// "addPropertyValue for " + object + " will set " + property + " with " + value + " type=" + property.getType());
@@ -346,33 +274,41 @@ public class FMLXMLModelBuilder
 	}
 
 	@Override
-	public <T> void addPropertyObject(FlexoConceptInstance object, String propertyName, FlexoConceptInstance value) {
-		FlexoRole property = object.getFlexoConcept().getAccessibleRole(propertyName);
-		if (property != null) {
-			object.addToFlexoActors(value, property);
+	public void addOrSetObjectPropertyValue(FlexoConceptInstance targetObject, FlexoProperty<?> property, FlexoConceptInstance value) {
+		if (property instanceof FlexoRole) {
+			targetObject.addToFlexoActors(value, (FlexoRole) property);
+		}
+		else {
+			logger.warning("addOrSetObjectPropertyValue() : property " + property + " is not a FlexoRole " + targetObject);
 		}
 	}
 
 	@Override
 	public void addChildToObject(XMLFlexoConceptInstance child, FlexoConceptInstance container) {
-		if (container != null && container != model) {
+		if (container != null && container != getModelContext()) {
 			container.addToEmbeddedFlexoConceptInstances(child);
 		}
 
 	}
 
 	@Override
-	public Type getTypeForProperty(FlexoConceptInstance currentContainer, String localName) {
-		if (currentContainer == null) {
-			// This is a root element : consider the model itself
-			currentContainer = model;
+	public FlexoProperty<?> getPropertyNamed(FlexoConceptInstance object, String propertyName) {
+		if (object != null) {
+			return object.getFlexoConcept().getAccessibleProperty(propertyName);
 		}
+		return null;
+	}
 
-		FlexoProperty<?> property = getFlexoProperty(currentContainer, localName);
+	@Override
+	public Type getTypeForProperty(FlexoProperty<?> property) {
 		if (property != null) {
 			return property.getType();
 		}
 		return null;
-
 	}
+
+	@Override
+	public void handleCData(XMLFlexoConceptInstance object, String value) {
+	}
+
 }

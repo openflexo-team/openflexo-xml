@@ -40,6 +40,7 @@ package org.openflexo.technologyadapter.xml.fml.reflect;
 
 import org.openflexo.foundation.fml.AbstractCreationScheme;
 import org.openflexo.foundation.fml.FlexoConcept;
+import org.openflexo.foundation.fml.FlexoProperty;
 import org.openflexo.foundation.fml.rt.FMLExecutionException;
 import org.openflexo.foundation.fml.rt.FlexoConceptInstance;
 import org.openflexo.foundation.fml.rt.RunTimeEvaluationContext;
@@ -61,7 +62,7 @@ import org.openflexo.xml.XMLReaderSAXHandler.ParsedElement;
  * 
  */
 public class XMLVirtualModelInstanceModelFactory<RD extends AbstractXMLDocument<RD>> extends
-		ReflectedVirtualModelInstanceModelFactory<XMLResource<RD, ?>, RD, XMLTechnologyAdapter, ParsedElement<XMLFlexoConceptInstance, FlexoConceptInstance>> {
+		ReflectedVirtualModelInstanceModelFactory<XMLResource<RD, ?>, RD, XMLTechnologyAdapter, ParsedElement<XMLFlexoConceptInstance, FlexoConceptInstance, FlexoProperty<?>>> {
 
 	public XMLVirtualModelInstanceModelFactory(XMLResource<RD, ?> resource, EditingContext editingContext,
 			TechnologyAdapterService taService) throws ModelDefinitionException {
@@ -70,7 +71,7 @@ public class XMLVirtualModelInstanceModelFactory<RD extends AbstractXMLDocument<
 
 	@Override
 	public XMLFlexoConceptInstance makeNewFlexoConceptInstance(FlexoConcept concept,
-			ParsedElement<XMLFlexoConceptInstance, FlexoConceptInstance> supportObject, FlexoConceptInstance container,
+			ParsedElement<XMLFlexoConceptInstance, FlexoConceptInstance, FlexoProperty<?>> supportObject, FlexoConceptInstance container,
 			VirtualModelInstance<?, ?> ownerVirtualModelInstance, AbstractCreationScheme creationScheme,
 			RunTimeEvaluationContext evaluationContext) throws FMLExecutionException {
 		// System.err.println(
