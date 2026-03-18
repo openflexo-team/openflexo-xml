@@ -1,0 +1,30 @@
+use org.openflexo.foundation.fml.rt.FMLRTModelSlot as FMLRT;
+
+import java.lang.String;
+
+@URI("http://openflexo.org/xml-test/FML/reflect/Library2")
+@XMLElement("Library")
+public model Library2 {
+
+   @XMLElement("name")
+   String name;
+
+   @XMLElement
+   Book[0,*] books with ConceptInstance();
+
+   @XMLElement("Book")
+   public concept Book {
+	   
+	  @XMLAttribute("title")
+      String title;
+
+	  @XMLAttribute
+      int pages;
+
+	  @XMLAttribute
+      String category;
+
+	  @XMLAttribute
+      String author;
+   }
+}

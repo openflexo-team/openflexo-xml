@@ -4,7 +4,7 @@ resources;
 context;
 
 // Load TestFMLReflect virtual model
-virtualModel = load -r ["http://openflexo.org/xml-test/FML/reflect/TestFMLReflect1.fml"];
+virtualModel = load -r ["http://openflexo.org/xml-test/FML/reflect/TestFMLReflect2.fml"];
 context;
 assert virtualModel != null;
 log "Pretty-print of "+virtualModel;
@@ -12,13 +12,13 @@ log virtualModel.fMLPrettyPrint;
 //validate virtualModel;
 
 // Load resources beeing used in this use case
-libraryXML = load -r ["http://openflexo.org/xml-test/TestResourceCenter/XML/Library1.xml"];
+libraryXML = load -r ["http://openflexo.org/xml-test/TestResourceCenter/XML/Library2.xml"];
 log "libraryXML="+libraryXML;
 assert libraryXML != null;
 
 // Instantiate TestFMLReflect
 service ResourceCenterService add_temp_rc;
-myVMI = new TestFMLReflect1(libraryXML.resource) with (name="testReflect1");
+myVMI = new TestFMLReflect2(libraryXML.resource) with (name="testReflect2");
 context;
 assert myVMI != null;
 assert myVMI.library != null;
@@ -30,7 +30,7 @@ assert book1 != null;
 log "book1="+book1;
 assert book1 == library.flexoConceptInstances.get(0);
 assert book1.title == "toto";
-assert book1.author == "Le Lapin";
+assert book1.author == "Le lapin";
 assert book1.pages == 35;
 book2 = library.books.get(1);
 assert book2 != null;

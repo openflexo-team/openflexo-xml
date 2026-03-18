@@ -1,0 +1,14 @@
+use org.openflexo.technologyadapter.xml.FMLXMLModelSlot as XML;
+
+import org.openflexo.technologyadapter.xml.model.free.FreeXMLDocument;
+
+import ["http://openflexo.org/xml-test/FML/reflect/Library2"];
+
+@URI("http://openflexo.org/xml-test/FML/reflect/TestFMLReflect2.fml")
+public model TestFMLReflect2 {
+	Library2 library with FMLXMLModelSlot();
+
+   create(Resource<FreeXMLDocument> resource) {
+      connect library using parameters.resource ;
+   }
+}

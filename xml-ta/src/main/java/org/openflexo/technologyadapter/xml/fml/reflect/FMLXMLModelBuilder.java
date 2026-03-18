@@ -73,6 +73,7 @@ public class FMLXMLModelBuilder
 	private static final Logger logger = Logger.getLogger(FMLXMLModelBuilder.class.getPackage().getName());
 
 	private static final String XML_ELEMENT = "XMLElement";
+	private static final String XML_ATTRIBUTE = "XMLAttribute";
 
 	private XMLVirtualModelInstanceModelFactory<?> factory;
 	private VirtualModel reflectedVM;
@@ -242,6 +243,32 @@ public class FMLXMLModelBuilder
 
 	@Override
 	public FlexoProperty<?> getPropertyForAttributeName(FlexoConceptInstance object, String attributeName) {
+		if (object == null) {
+			return null;
+		}
+
+		FlexoConcept concept = object.getFlexoConcept();
+
+		if (concept == null) {
+			return null;
+		}
+
+		for (FlexoProperty<?> p : concept.getAccessibleProperties()) {
+			FMLMetaData metaData = p.getMetaData(XML_ATTRIBUTE);
+			// System.err.println("Property: " + p + " metaData=" + metaData);
+			if (metaData instanceof BasicMetaData) {
+				// Basic @XMLAttribute where XML tag is not specified : use property name
+				if (attributeName.equals(p.getName())) {
+					return p;
+				}
+			}
+			else if (metaData instanceof SingleMetaData) {
+				String xmlAttributetName = ((SingleMetaData<String>) metaData).getValue(String.class);
+				if (attributeName.equals(xmlAttributetName)) {
+					return p;
+				}
+			}
+		}
 		return null;
 	}
 
