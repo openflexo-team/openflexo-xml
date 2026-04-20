@@ -92,10 +92,6 @@ import org.openflexo.technologyadapter.xml.rm.XMLResource;
 @ImplementationClass(FMLXMLModelSlot.FMLXMLModelSlotImpl.class)
 // TODO : it would be nice to inherits from super declaration
 @DeclareActorReferences({ ReflectedFMLRTModelSlotInstance.class })
-/*@DeclareFlexoRoles({ SEColumnRole.class, SEDataAreaRole.class, SEReferenceRole.class })
-@DeclareEditionActions({ CreateSEResource.class, InsertSEObject.class, RemoveSEObject.class })
-@DeclareFlexoBehaviours({ SEInitializer.class })
-@DeclareActorReferences({ XMLObjectActorReference.class })*/
 @FML("FMLXMLModelSlot")
 public interface FMLXMLModelSlot<RD extends AbstractXMLDocument<RD>>
 		extends ReflectedFMLRTModelSlot<XMLVirtualModelInstance<RD>, XMLResource<RD, ?>, RD, XMLTechnologyAdapter> {
