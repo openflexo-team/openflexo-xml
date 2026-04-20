@@ -121,7 +121,7 @@ public interface XMLIndividualRole extends FlexoRole<XMLIndividual> {
 
 		@Override
 		public ActorReference<XMLIndividual> makeActorReference(XMLIndividual object, FlexoConceptInstance fci) {
-			AbstractVirtualModelInstanceModelFactory<?> factory = fci.getFactory();
+			AbstractVirtualModelInstanceModelFactory factory = fci.getFactory();
 			XMLActorReference<XMLIndividual> returned = factory.newInstance(XMLActorReference.class);
 			returned.setFlexoRole(this);
 			returned.setFlexoConceptInstance(fci);

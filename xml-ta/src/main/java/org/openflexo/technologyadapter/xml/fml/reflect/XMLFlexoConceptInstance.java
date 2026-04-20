@@ -92,7 +92,7 @@ public interface XMLFlexoConceptInstance
 		}
 
 		@Override
-		public AbstractVirtualModelInstanceModelFactory<?> getFactory() {
+		public AbstractVirtualModelInstanceModelFactory getFactory() {
 			if (getVirtualModelInstance() != null) {
 				return getVirtualModelInstance().getFactory();
 			}
@@ -193,7 +193,7 @@ public interface XMLFlexoConceptInstance
 		
 		@Override
 		public XMLObjectActorReference makeActorReference(FlexoConceptInstanceRole role, FlexoConceptInstance fci) {
-			AbstractVirtualModelInstanceModelFactory<?> factory = getFactory();
+			AbstractVirtualModelInstanceModelFactory factory = getFactory();
 			XMLObjectActorReference returned = factory.newInstance(XMLObjectActorReference.class);
 			returned.setFlexoRole(role);
 			returned.setFlexoConceptInstance(fci);

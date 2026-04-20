@@ -107,8 +107,6 @@ public interface FMLXMLModelSlot<RD extends AbstractXMLDocument<RD>>
 		@SuppressWarnings("unused")
 		private static final Logger logger = Logger.getLogger(FMLXMLModelSlotImpl.class.getPackage().getName());
 
-		// private VirtualModelInstanceType type;
-
 		@Override
 		public Class<XMLTechnologyAdapter> getTechnologyAdapterClass() {
 			return XMLTechnologyAdapter.class;
@@ -124,28 +122,6 @@ public interface FMLXMLModelSlot<RD extends AbstractXMLDocument<RD>>
 			return (XMLTechnologyAdapter) super.getModelSlotTechnologyAdapter();
 		}
 
-		/*@Override
-		public VirtualModelInstanceType getType() {
-			//if (type == null || type.getVirtualModel() != getAccessedVirtualModel()) {
-			//	type = SEVirtualModelInstanceType.getVirtualModelInstanceType(getAccessedVirtualModel());
-			//}
-			return type;
-		}*/
-
-		/*@Override
-		public void setType(Type type) {
-			// TODO Auto-generated method stub
-			super.setType(type);
-		}*/
-
-		/*@Override
-		public void setAccessedVirtualModel(VirtualModel aVirtualModel) {
-			if (aVirtualModel != getAccessedVirtualModel()) {
-				super.setAccessedVirtualModel(aVirtualModel);
-				type = SEVirtualModelInstanceType.getVirtualModelInstanceType(getAccessedVirtualModel());
-			}
-		}*/
-
 		@Override
 		public ReflectedFMLRTModelSlotInstance<XMLVirtualModelInstance<RD>, XMLResource<RD, ?>, RD, XMLTechnologyAdapter> connectTo(
 				XMLResource<RD, ?> resource, FlexoConceptInstance context) {
@@ -156,20 +132,19 @@ public interface FMLXMLModelSlot<RD extends AbstractXMLDocument<RD>>
 				XMLVirtualModelInstance<RD> xmlVmi = factory.newInstance(XMLVirtualModelInstance.class);
 				xmlVmi.setReflectedModelFactory(factory);
 
-				System.out.println("OK, j'ai ma VMI: " + xmlVmi);
+				/*System.out.println("Built VMI: " + xmlVmi);
 				System.out.println("Factory: " + xmlVmi.getReflectedModelFactory());
 				System.out.println("Resource: " + xmlVmi.getReflectedModelFactory().getResource());
-				System.out.println("VM: " + getAccessedVirtualModel());
+				System.out.println("VM: " + getAccessedVirtualModel());*/
 
-				if (xmlVmi.getReflectedModelFactory().getResource() != null
-						&& xmlVmi.getReflectedModelFactory().getResource().getIODelegate() instanceof StreamIODelegate) {
+				if (xmlVmi.getReflectedModelFactory().getReflectedResource() != null
+						&& xmlVmi.getReflectedModelFactory().getReflectedResource().getIODelegate() instanceof StreamIODelegate) {
 
 					FMLXMLModelBuilder builder = new FMLXMLModelBuilder(factory, getAccessedVirtualModel());
 					builder.setModelContext(xmlVmi);
 					builder.deserialize(
-							((StreamIODelegate) xmlVmi.getReflectedModelFactory().getResource().getIODelegate()).getInputStream());
+							((StreamIODelegate) xmlVmi.getReflectedModelFactory().getReflectedResource().getIODelegate()).getInputStream());
 					builder.resetModelContext();
-					// System.exit(-1);
 				}
 
 				ReflectedFMLRTModelSlotInstance<XMLVirtualModelInstance<RD>, XMLResource<RD, ?>, RD, XMLTechnologyAdapter> modelSlotInstance;
@@ -188,13 +163,6 @@ public interface FMLXMLModelSlot<RD extends AbstractXMLDocument<RD>>
 			}
 
 		}
-
-		/*@Override
-		public ReflectedFMLRTModelSlotInstance<XMLVirtualModelInstance<RD>, XMLResource<RD, ?>, RD, XMLTechnologyAdapter> makeActorReference(
-				XMLVirtualModelInstance<RD> object, FlexoConceptInstance fci) {
-			// TODO Auto-generated method stub
-			return super.makeActorReference(object, fci);
-		}*/
 
 	}
 

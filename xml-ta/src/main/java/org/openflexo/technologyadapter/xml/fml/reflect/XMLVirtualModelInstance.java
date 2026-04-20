@@ -38,6 +38,7 @@ package org.openflexo.technologyadapter.xml.fml.reflect;
 import java.util.logging.Logger;
 
 import org.openflexo.foundation.fml.VirtualModel;
+import org.openflexo.foundation.fml.rt.AbstractVirtualModelInstanceModelFactory;
 import org.openflexo.foundation.fml.rt.VirtualModelInstance;
 import org.openflexo.foundation.fml.rt.reflect.ReflectedVirtualModelInstance;
 import org.openflexo.logging.FlexoLogger;
@@ -75,12 +76,25 @@ public interface XMLVirtualModelInstance<RD extends AbstractXMLDocument<RD>>
 		}
 
 		/*@Override
-		public AbstractVirtualModelInstanceModelFactory<?> getFactory() {
-			AbstractVirtualModelInstanceModelFactory<?> returned = super.getFactory();
+		public AbstractVirtualModelInstanceModelFactory getFactory() {
+			AbstractVirtualModelInstanceModelFactory returned = super.getFactory();
 			System.err.println("Bon ici , je retourne " + returned);
 			System.err.println("getReflectedModelFactory()=" + getReflectedModelFactory());
 			return returned;
 		}*/
+
+		@Override
+		public AbstractVirtualModelInstanceModelFactory getFactory() {
+			// TODO Auto-generated method stub
+			return super.getFactory();
+		}
+
+		@Override
+		public void setVirtualModel(VirtualModel virtualModel) {
+			System.err.println("Qui fait ca avec " + virtualModel);
+			Thread.dumpStack();
+			super.setVirtualModel(virtualModel);
+		}
 
 	}
 }
