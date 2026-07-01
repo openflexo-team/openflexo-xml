@@ -54,6 +54,7 @@ import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.Remover;
 import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
+import org.openflexo.xml.XMLCst;
 
 /**
  * Represents a complex XML type, reflected at runtime by an instance of {@link XMLIndividual}<br>
@@ -195,7 +196,26 @@ public interface XMLComplexType extends XMLType {
 				}
 				// Looks for the property in super-Type
 				if (this.getSuperType() != null) {
-					prop = ((XMLComplexType) this.getSuperType()).getPropertyByName(name);
+					if(this.getSuperType().getName().contains("XMLSimpleType$XMLSimpleTypeImpl_$$"))
+						prop = ((XMLComplexType) this.getSuperType()).getPropertyByName(name);
+
+				}
+				// Creates the property for PCDATA
+				if (prop == null && XMLCst.CDATA_ATTR_NAME.equals(name)) {
+					// get the string simple type
+					XMLSimpleType stringType = (XMLSimpleType) getMetamodel().getTypeFromURI("http://www.w3.org/2001/XMLSchema#string");
+
+					XMLDataProperty<String> cd = getModelFactory().newInstance(
+							XMLDataProperty.class,
+							XMLCst.CDATA_ATTR_NAME,     // name - PCDATA
+							stringType                  // type
+					);
+					cd.setURI(getURI() + "#" + XMLCst.CDATA_ATTR_NAME); // before addToProperties(cd)
+					cd.setXMLSupport(XMLProperty.XMLSupport.CDATA);
+					cd.setLowerBound(0);
+					cd.setUpperBound(1);
+					addToProperties(cd);
+					return cd;
 				}
 				// Creates the property for PCDATA
 				/*if (prop == null && name.equals(XMLCst.CDATA_ATTR_NAME)) {

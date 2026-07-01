@@ -171,6 +171,7 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 
 	public <T> void removePropertyValue(XMLProperty<?, T> prop, T value);
 
+	public String getHtmlAsText();
 	// public String getPropertyStringValue(XMLProperty prop);
 
 	@Getter(TEXT)
@@ -263,6 +264,24 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 			return "";
 		}
 
+		public String getHtmlAsText() {
+
+			StringBuilder sb = new StringBuilder();
+			List<XMLIndividual> queue = new ArrayList<>(getChildren());
+
+			while (!queue.isEmpty()) {
+				XMLIndividual cur = queue.remove(0);
+
+				String text = cur.getContentDATA();
+				if (text != null) {
+					sb.append(text);
+				}
+
+				queue.addAll(cur.getChildren());
+			}
+
+			return sb.toString();
+		}
 		@Override
 		public void setContentDATA(String value) {
 			XMLProperty attr = this.getType().getPropertyByName(XMLCst.CDATA_ATTR_NAME);
@@ -593,5 +612,7 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 		}
 
 	}
+
+
 
 }

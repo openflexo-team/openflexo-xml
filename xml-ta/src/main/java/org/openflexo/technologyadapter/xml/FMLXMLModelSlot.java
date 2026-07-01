@@ -74,6 +74,7 @@ import org.openflexo.pamela.exceptions.ModelDefinitionException;
 import org.openflexo.technologyadapter.xml.fml.reflect.FMLXMLModelBuilder;
 import org.openflexo.technologyadapter.xml.fml.reflect.XMLVirtualModelInstance;
 import org.openflexo.technologyadapter.xml.fml.reflect.XMLVirtualModelInstanceModelFactory;
+import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument;
 import org.openflexo.technologyadapter.xml.rm.XMLResource;
 
@@ -116,6 +117,22 @@ public interface FMLXMLModelSlot<RD extends AbstractXMLDocument<RD>>
 		@Override
 		public XMLTechnologyAdapter getModelSlotTechnologyAdapter() {
 			return (XMLTechnologyAdapter) super.getModelSlotTechnologyAdapter();
+		}
+
+
+		public XMLURIProcessor createURIProcessor() {
+			XMLURIProcessor xsuriProc = getFMLModelFactory().newInstance(XMLURIProcessor.class);
+			//xsuriProc.setModelSlot(this);
+			//TODO
+			return xsuriProc;
+		}
+
+		public XMLURIProcessor createURIProcessor(XMLType aXmlType) {
+			XMLURIProcessor xsuriProc = createURIProcessor();
+
+			// TODO Implement the processors in FMLXMLModelSLot
+
+			return xsuriProc;
 		}
 
 		@Override

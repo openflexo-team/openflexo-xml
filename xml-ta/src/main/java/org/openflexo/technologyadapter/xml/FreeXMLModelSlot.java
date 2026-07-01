@@ -106,6 +106,14 @@ public interface FreeXMLModelSlot extends FreeModelSlot<FreeXMLDocument, FreeXML
 			this.addToUriProcessorsList(xsuriProc);
 			return xsuriProc;
 		}
+		@Override
+		public FreeXMLURIProcessor createURIProcessor(XMLType aXmlType) {
+			FreeXMLURIProcessor xsuriProc = createURIProcessor();
+
+			// TODO Implement the processors in FreeXMLModelSLot
+
+			return xsuriProc;
+		}
 
 		/*=====================================================================================
 		 * URI Accessors

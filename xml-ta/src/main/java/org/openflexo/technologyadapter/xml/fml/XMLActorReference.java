@@ -87,39 +87,75 @@ public interface XMLActorReference<T extends XMLObject> extends ActorReference<T
 
 		@Override
 		public T getModellingElement(boolean forceLoading) {
-			if (object == null) {
-				ModelSlotInstance msInstance = getModelSlotInstance();
-				if (msInstance.getAccessedResourceData() != null) {
-					/** Model Slot is responsible for URI mapping */
-					object = (T) msInstance.getModelSlot().retrieveObjectWithURI(msInstance.getAccessedResourceData(), objectURI);
-				}
-				else {
-					logger.warning("Could not access to model in model slot " + getModelSlotInstance());
-				}
+			if (object != null) {
+				return object;
 			}
-			if (object == null) {
-				logger.warning("Could not retrieve object " + objectURI);
-			}
-			return object;
 
+			if (objectURI == null) {
+				return null;
+			}
+
+			ModelSlotInstance msInstance = getModelSlotInstance();
+
+			if (msInstance == null) {
+				logger.warning("Cannot retrieve XML object: model slot instance is null");
+				return null;
+			}
+
+			if (msInstance.getModelSlot() == null) {
+				logger.warning("Cannot retrieve XML object: model slot is null");
+				return null;
+			}
+
+			if (msInstance.getAccessedResourceData() == null) {
+				logger.warning("Cannot retrieve XML object: accessed resource data is null");
+				return null;
+			}
+
+			object = (T) msInstance.getModelSlot().retrieveObjectWithURI(
+					msInstance.getAccessedResourceData(),
+					objectURI);
+
+			if (object == null) {
+				logger.warning("Could not retrieve XML object " + objectURI);
+			}
+
+			return object;
 		}
 
 		@Override
 		public void setModellingElement(T object) {
 			this.object = object;
-			if (object != null && getModelSlotInstance() != null) {
-				ModelSlotInstance msInstance = getModelSlotInstance();
-				/** Model Slot is responsible for URI mapping */
-				objectURI = msInstance.getModelSlot().getURIForObject(msInstance.getAccessedResourceData(), object);
+
+			if (object == null) {
+				objectURI = null;
+				return;
 			}
+
+			ModelSlotInstance msInstance = getModelSlotInstance();
+
+			if (msInstance == null) {
+				logger.warning("Cannot compute XML object URI: model slot instance is null");
+				return;
+			}
+
+			if (msInstance.getModelSlot() == null) {
+				logger.warning("Cannot compute XML object URI: model slot is null");
+				return;
+			}
+
+			if (msInstance.getAccessedResourceData() == null) {
+				logger.warning("Cannot compute XML object URI: accessed resource data is null");
+				return;
+			}
+
+			objectURI = msInstance.getModelSlot().getURIForObject(
+					msInstance.getAccessedResourceData(),
+					object);
 		}
 
 		@Override
 		public String getObjectURI() {
-			if (object != null) {
-				ModelSlotInstance msInstance = getModelSlotInstance();
-				objectURI = msInstance.getModelSlot().getURIForObject(msInstance.getAccessedResourceData(), object);
-			}
 			return objectURI;
 		}
 
@@ -127,7 +163,6 @@ public interface XMLActorReference<T extends XMLObject> extends ActorReference<T
 		public void setObjectURI(String objectURI) {
 			this.objectURI = objectURI;
 		}
-
 		@Override
 		public XMLTechnologyAdapter getTechnologyAdapter() {
 			if (getModelSlotInstance() != null) {

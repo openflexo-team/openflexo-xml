@@ -84,7 +84,7 @@ public interface AbstractXMLModelSlot<RD extends AbstractXMLDocument<RD>, R exte
 	public void removeFromUriProcessorsList(T aUriProcessorsList);
 
 	public T createURIProcessor();
-
+	public T createURIProcessor(XMLType aXmlType);
 	public T retrieveURIProcessorForType(XMLType aXmlType);
 
 }

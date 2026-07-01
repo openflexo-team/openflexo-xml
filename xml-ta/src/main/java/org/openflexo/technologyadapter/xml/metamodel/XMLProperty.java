@@ -152,7 +152,18 @@ public interface XMLProperty<TT extends XMLType, T>
 
 		@Override
 		public int compareTo(XMLProperty<TT, T> arg0) {
-			return this.getName().compareTo(arg0.getName());
+			String thisName = getName();
+			String otherName = arg0 != null ? arg0.getName() : null;
+
+			if (thisName == null) {
+				return otherName == null ? 0 : -1;
+			}
+
+			if (otherName == null) {
+				return 1;
+			}
+
+			return thisName.compareTo(otherName);
 		}
 
 		@Override
