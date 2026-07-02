@@ -119,7 +119,7 @@ public interface FMLXMLModelSlot<RD extends AbstractXMLDocument<RD>>
 			return (XMLTechnologyAdapter) super.getModelSlotTechnologyAdapter();
 		}
 
-
+/*
 		public XMLURIProcessor createURIProcessor() {
 			XMLURIProcessor xsuriProc = getFMLModelFactory().newInstance(XMLURIProcessor.class);
 			//xsuriProc.setModelSlot(this);
@@ -134,7 +134,7 @@ public interface FMLXMLModelSlot<RD extends AbstractXMLDocument<RD>>
 
 			return xsuriProc;
 		}
-
+*/
 		@Override
 		public ReflectedFMLRTModelSlotInstance<XMLVirtualModelInstance<RD>, XMLResource<RD, ?>, RD, XMLTechnologyAdapter> connectTo(
 				XMLResource<RD, ?> resource, FlexoConceptInstance context) {
