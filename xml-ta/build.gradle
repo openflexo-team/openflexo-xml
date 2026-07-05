@@ -5,5 +5,13 @@ dependencies {
   // external dep
   //implementation 'com.sun.xsom:xsom:20140925'
   implementation group: 'org.glassfish.jaxb', name: 'xsom', version: '4.0.0-M1' // cannot upgrade because compiled for Java11
+  // --- required for the smarter processor ---
+  implementation 'org.apache.santuario:xmlsec:3.0.3'         // canonical XML (C14N) + Init.init()
+  implementation 'org.apache.commons:commons-text:1.12.0'     // Jaro–Winkler, Levenshtein, etc.
 
+  // --- optional helpers (comment in if/when you use them) ---
+  // implementation 'org.xmlunit:xmlunit-core:2.10.0'          // XPath/diff helpers (Java 8+)
+  // implementation 'org.mapdb:mapdb:3.1.0'                    // persistent redirects/tombstones
+  // implementation 'info.debatty:java-lsh:0.11'               // MinHash/LSH for near-duplicates
+  // implementation 'io.github.yuemenglong:simhash:1.2.0'      // SimHash alternative
 }
