@@ -242,7 +242,7 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 		 * XML individual keeps its {@link XMLIndividualType} rather than falling back to its raw PAMELA proxy class.
 		 */
 		@Override
-		public java.lang.reflect.Type getInstanceType() {
+		public java.lang.reflect.Type getFMLType() {
 			return XMLIndividualType.getXMLIndividualOfType(getType());
 		}
 
@@ -304,7 +304,7 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 				childrenByTypes.put(aType, typedSet);
 			}
 			typedSet.add((XMLIndividualImpl) anIndividual);
-			((XMLIndividualImpl) anIndividual).setParent(this);
+			anIndividual.setParent(this);
 		}
 
 		@Override
