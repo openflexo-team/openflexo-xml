@@ -72,6 +72,7 @@ import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.exceptions.ModelDefinitionException;
 import org.openflexo.technologyadapter.xml.fml.reflect.FMLXMLModelBuilder;
+import org.openflexo.technologyadapter.xml.fml.reflect.XMLObjectActorReference;
 import org.openflexo.technologyadapter.xml.fml.reflect.XMLVirtualModelInstance;
 import org.openflexo.technologyadapter.xml.fml.reflect.XMLVirtualModelInstanceModelFactory;
 import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument;
@@ -91,7 +92,7 @@ import org.openflexo.technologyadapter.xml.rm.XMLResource;
 @ModelEntity
 @ImplementationClass(FMLXMLModelSlot.FMLXMLModelSlotImpl.class)
 // TODO : it would be nice to inherits from super declaration
-@DeclareActorReferences({ ReflectedFMLRTModelSlotInstance.class })
+@DeclareActorReferences({ ReflectedFMLRTModelSlotInstance.class, XMLObjectActorReference.class })
 @FML("FMLXMLModelSlot")
 public interface FMLXMLModelSlot<RD extends AbstractXMLDocument<RD>>
 		extends ReflectedFMLRTModelSlot<XMLVirtualModelInstance<RD>, XMLResource<RD, ?>, RD, XMLTechnologyAdapter> {
