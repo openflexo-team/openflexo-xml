@@ -114,6 +114,11 @@ public interface XMLModelSlot extends TypeAwareModelSlot<XMLModel, XSDMetaModel,
 	@PropertyIdentifier(type = XSDMetaModel.class)
 	public static final String META_MODEL_KEY = "metaModel";
 
+	/**
+	 * Marks an URI generated positionally, for individuals whose type has no declared {@link XMLURIProcessor}.
+	 */
+	public static final String DEFAULT_URI_PREFIX = "xmlpath:";
+
 	@Override
 	public XMLTechnologyAdapter getModelSlotTechnologyAdapter();
 
@@ -177,7 +182,10 @@ public interface XMLModelSlot extends TypeAwareModelSlot<XMLModel, XSDMetaModel,
 				if (p != null) {
 					return p.getURIForObject(model, (XMLObject) o);
 				}
-				logger.warning("Unable to calculate URI as I have no XMLURIProcessor");
+				// No URI processor declared for that type: fall back on the individual's position in the
+				// document tree. Without this, no URI at all was produced, XMLActorReference was serialized
+				// empty, and every XMLIndividualRole came back null after a reload.
+				return defaultURIForIndividual(model, (XMLIndividual) o);
 			}
 			else if (o instanceof XMLType) {
 				return ((XMLType) o).getURI();
@@ -186,11 +194,79 @@ public interface XMLModelSlot extends TypeAwareModelSlot<XMLModel, XSDMetaModel,
 			return null;
 		}
 
+		/**
+		 * Positional fallback identifier for an individual with no declared {@link XMLURIProcessor}: the sequence of child indexes leading
+		 * to it from the document root, e.g. {@code xmlpath:/1/0/3}. The root itself is {@code xmlpath:}.
+		 *
+		 * <p>
+		 * Deliberately simple, and NOT robust to document change: inserting or removing an element shifts the path of everything after it,
+		 * so references serialized against an older revision of the document then resolve to the wrong element. Declare an
+		 * {@link XMLURIProcessor} on the model slot to key an individual on its own data instead.
+		 */
+		private String defaultURIForIndividual(XMLModel model, XMLIndividual individual) {
+
+			if (model == null || individual == null) {
+				return null;
+			}
+			StringBuilder path = new StringBuilder();
+			XMLIndividual current = individual;
+			while (current.getParent() != null) {
+				XMLIndividual parent = current.getParent();
+				int index = parent.getChildren().indexOf(current);
+				if (index < 0) {
+					logger.warning("Individual " + current + " is not a child of its own parent: cannot compute a positional URI");
+					return null;
+				}
+				path.insert(0, "/" + index);
+				current = parent;
+			}
+			if (current != model.getRoot()) {
+				logger.warning("Individual " + individual + " does not belong to the document rooted at " + model.getRoot());
+				return null;
+			}
+			return DEFAULT_URI_PREFIX + path;
+		}
+
+		/**
+		 * Resolve an URI produced by {@link #defaultURIForIndividual(XMLModel, XMLIndividual)} by walking the child indexes it holds.
+		 */
+		private Object retrieveObjectWithDefaultURI(XMLModel model, String objectURI) {
+
+			XMLIndividual current = (model != null ? model.getRoot() : null);
+			if (current == null) {
+				return null;
+			}
+			for (String segment : objectURI.substring(DEFAULT_URI_PREFIX.length()).split("/")) {
+				if (segment.isEmpty()) {
+					continue;
+				}
+				int index;
+				try {
+					index = Integer.parseInt(segment);
+				} catch (NumberFormatException e) {
+					logger.warning("Malformed positional XML URI: " + objectURI);
+					return null;
+				}
+				List<XMLIndividual> children = current.getChildren();
+				if (index < 0 || index >= children.size()) {
+					// The document changed since the URI was written.
+					logger.warning("Positional XML URI " + objectURI + " does not match this document any more");
+					return null;
+				}
+				current = children.get(index);
+			}
+			return current;
+		}
+
 		@Override
 		public Object retrieveObjectWithURI(XMLModel model, String objectURI) {
 
 			if (objectURI == null) {
 				return null;
+			}
+
+			if (objectURI.startsWith(DEFAULT_URI_PREFIX)) {
+				return retrieveObjectWithDefaultURI(model, objectURI);
 			}
 			String typeUri = XMLURIProcessorImpl.retrieveTypeURI(model, objectURI);
 			XMLURIProcessor mapParams = uriProcessorsMap.get(XMLURIProcessorImpl.retrieveTypeURI(model, objectURI));
