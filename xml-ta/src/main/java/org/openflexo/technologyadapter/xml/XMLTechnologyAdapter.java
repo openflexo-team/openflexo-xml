@@ -119,7 +119,8 @@ public class XMLTechnologyAdapter extends TechnologyAdapter<XMLTechnologyAdapter
 		XSDMetaModelRepository<I> returned = resourceCenter.retrieveRepository(XSDMetaModelRepository.class, this);
 		if (returned == null) {
 			returned = XSDMetaModelRepository.instanciateNewRepository(this, resourceCenter);
-			resourceCenter.registerRepository(returned, XSDMetaModelRepository.class, this);
+			// Another thread may have registered one meanwhile: use the registered one (CORE-D-25)
+			returned = resourceCenter.registerRepository(returned, XSDMetaModelRepository.class, this);
 		}
 		return returned;
 	}
@@ -128,7 +129,8 @@ public class XMLTechnologyAdapter extends TechnologyAdapter<XMLTechnologyAdapter
 		XMLModelRepository<I> returned = resourceCenter.retrieveRepository(XMLModelRepository.class, this);
 		if (returned == null) {
 			returned = XMLModelRepository.instanciateNewRepository(this, resourceCenter);
-			resourceCenter.registerRepository(returned, XMLModelRepository.class, this);
+			// Another thread may have registered one meanwhile: use the registered one (CORE-D-25)
+			returned = resourceCenter.registerRepository(returned, XMLModelRepository.class, this);
 		}
 		return returned;
 	}
@@ -137,7 +139,8 @@ public class XMLTechnologyAdapter extends TechnologyAdapter<XMLTechnologyAdapter
 		FreeXMLDocumentRepository<I> returned = resourceCenter.retrieveRepository(FreeXMLDocumentRepository.class, this);
 		if (returned == null) {
 			returned = FreeXMLDocumentRepository.instanciateNewRepository(this, resourceCenter);
-			resourceCenter.registerRepository(returned, FreeXMLDocumentRepository.class, this);
+			// Another thread may have registered one meanwhile: use the registered one (CORE-D-25)
+			returned = resourceCenter.registerRepository(returned, FreeXMLDocumentRepository.class, this);
 		}
 		return returned;
 	}

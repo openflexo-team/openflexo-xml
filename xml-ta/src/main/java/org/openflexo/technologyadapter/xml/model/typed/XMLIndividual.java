@@ -58,6 +58,7 @@ import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.PastingPoint;
 import org.openflexo.pamela.annotations.Remover;
 import org.openflexo.pamela.annotations.Setter;
+import org.openflexo.technologyadapter.xml.XMLIndividualType;
 import org.openflexo.technologyadapter.xml.XMLObject;
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
@@ -235,6 +236,16 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 			return getContainerModel();
 		}
 
+		/**
+		 * Expose the {@link XMLIndividualType} reflecting this individual in FML type system.<br>
+		 * Used to provide dynamic typing in FML-script (see {@code FMLUtils#inferType(Object)}), so that a variable assigned with a typed
+		 * XML individual keeps its {@link XMLIndividualType} rather than falling back to its raw PAMELA proxy class.
+		 */
+		@Override
+		public java.lang.reflect.Type getFMLType() {
+			return XMLIndividualType.getXMLIndividualOfType(getType());
+		}
+
 		@Override
 		public String getUUID() {
 			String returned = (String) performSuperGetter(UUID_KEY);
@@ -293,7 +304,7 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 				childrenByTypes.put(aType, typedSet);
 			}
 			typedSet.add((XMLIndividualImpl) anIndividual);
-			((XMLIndividualImpl) anIndividual).setParent(this);
+			anIndividual.setParent(this);
 		}
 
 		@Override

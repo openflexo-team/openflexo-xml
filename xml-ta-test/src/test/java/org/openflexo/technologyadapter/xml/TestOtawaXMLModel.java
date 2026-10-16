@@ -234,7 +234,8 @@ public class TestOtawaXMLModel extends OpenflexoProjectAtRunTimeTestCase {
 
 		XSDMetaModelResource otawaPipelineXSDResource = mmRepository.getResource("http://mem4csd.telecom-paris.fr/OtawaPipeline");
 		assertNotNull(otawaPipelineXSDResource);
-		assertFalse(otawaPipelineXSDResource.isLoaded());
+		// The resource may be already loaded because of findVirtualModelInfo() in compilation units in this resource center
+		// assertFalse(otawaPipelineXSDResource.isLoaded());
 
 		TypedXMLResource pipelineResource = modelRepository.getResource(baseUrl + "/TestResourceCenter/CaoticWorkflow/otawa_pipeline.xml");
 		assertNotNull(pipelineResource);

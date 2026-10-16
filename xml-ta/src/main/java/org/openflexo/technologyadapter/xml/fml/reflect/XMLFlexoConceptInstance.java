@@ -38,6 +38,8 @@ package org.openflexo.technologyadapter.xml.fml.reflect;
 import java.util.logging.Logger;
 
 import org.openflexo.foundation.fml.FlexoConcept;
+import org.openflexo.foundation.fml.FlexoProperty;
+import org.openflexo.foundation.fml.rt.AbstractVirtualModelInstanceModelFactory;
 import org.openflexo.foundation.fml.rt.FlexoConceptInstance;
 import org.openflexo.foundation.fml.rt.reflect.ReflectedFlexoConceptInstance;
 import org.openflexo.logging.FlexoLogger;
@@ -56,10 +58,11 @@ import org.openflexo.xml.XMLReaderSAXHandler.ParsedElement;
 @ModelEntity
 @ImplementationClass(XMLFlexoConceptInstance.XMLFlexoConceptInstanceImpl.class)
 @XMLElement
-public interface XMLFlexoConceptInstance extends ReflectedFlexoConceptInstance<ParsedElement<XMLFlexoConceptInstance>> {
+public interface XMLFlexoConceptInstance
+		extends ReflectedFlexoConceptInstance<ParsedElement<XMLFlexoConceptInstance, FlexoConceptInstance, FlexoProperty<?>>> {
 
 	@Initializer
-	void initialize(FlexoConcept concept, ParsedElement<XMLFlexoConceptInstance> supportObject);
+	void initialize(FlexoConcept concept, ParsedElement<XMLFlexoConceptInstance, FlexoConceptInstance, FlexoProperty<?>> supportObject);
 
 	/**
 	 * Default implementation for {@link XMLFlexoConceptInstance}
@@ -77,7 +80,8 @@ public interface XMLFlexoConceptInstance extends ReflectedFlexoConceptInstance<P
 		 * @param concept
 		 */
 		@Override
-		public void initialize(FlexoConcept concept, ParsedElement<XMLFlexoConceptInstance> supportObject) {
+		public void initialize(FlexoConcept concept,
+				ParsedElement<XMLFlexoConceptInstance, FlexoConceptInstance, FlexoProperty<?>> supportObject) {
 			setFlexoConcept(concept);
 			setSupportObject(supportObject);
 		}
@@ -85,6 +89,14 @@ public interface XMLFlexoConceptInstance extends ReflectedFlexoConceptInstance<P
 		@Override
 		public XMLVirtualModelInstance<?> getVirtualModelInstance() {
 			return (XMLVirtualModelInstance<?>) super.getVirtualModelInstance();
+		}
+
+		@Override
+		public AbstractVirtualModelInstanceModelFactory getFactory() {
+			if (getVirtualModelInstance() != null) {
+				return getVirtualModelInstance().getFactory();
+			}
+			return super.getFactory();
 		}
 
 		/*@Override
@@ -181,7 +193,7 @@ public interface XMLFlexoConceptInstance extends ReflectedFlexoConceptInstance<P
 		
 		@Override
 		public XMLObjectActorReference makeActorReference(FlexoConceptInstanceRole role, FlexoConceptInstance fci) {
-			AbstractVirtualModelInstanceModelFactory<?> factory = getFactory();
+			AbstractVirtualModelInstanceModelFactory factory = getFactory();
 			XMLObjectActorReference returned = factory.newInstance(XMLObjectActorReference.class);
 			returned.setFlexoRole(role);
 			returned.setFlexoConceptInstance(fci);
