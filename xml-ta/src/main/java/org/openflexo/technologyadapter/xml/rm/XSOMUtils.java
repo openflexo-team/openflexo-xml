@@ -58,7 +58,10 @@ public class XSOMUtils {
 		if (logger.isLoggable(Level.INFO)) {
 			logger.info("Loading an XSD " + xsdInputStream);
 		}
-		XSOMParser parser = new XSOMParser();
+		// XSOM 4 does not create its own SAX parser factory any more; the namespaces must be understood
+		javax.xml.parsers.SAXParserFactory saxParserFactory = javax.xml.parsers.SAXParserFactory.newInstance();
+		saxParserFactory.setNamespaceAware(true);
+		XSOMParser parser = new XSOMParser(saxParserFactory);
 		parser.setErrorHandler(new ErrorHandler() {
 
 			@Override
