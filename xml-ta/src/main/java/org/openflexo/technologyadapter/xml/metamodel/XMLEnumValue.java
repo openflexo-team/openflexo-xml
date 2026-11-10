@@ -74,7 +74,8 @@ public interface XMLEnumValue extends XMLObject<XSDMetaModel> {
 	public static abstract class XMLEnumValueImpl extends XMLObjectImpl<XSDMetaModel> implements XMLEnumValue {
 		@Override
 		public XSDMetaModel getResourceData() {
-			return getType().getMetamodel();
+			// A value is built before it is attached to its type
+			return getType() != null ? getType().getMetamodel() : null;
 		}
 
 		@Override
