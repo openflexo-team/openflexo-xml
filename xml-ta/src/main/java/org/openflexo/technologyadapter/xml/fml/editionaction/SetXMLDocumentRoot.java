@@ -53,8 +53,6 @@ import org.openflexo.pamela.annotations.Imports;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.PropertyIdentifier;
 import org.openflexo.pamela.annotations.Setter;
-import org.openflexo.pamela.annotations.XMLAttribute;
-import org.openflexo.pamela.annotations.XMLElement;
 import org.openflexo.technologyadapter.xml.XMLModelSlot;
 import org.openflexo.technologyadapter.xml.fml.XMLActorReference;
 import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
@@ -62,7 +60,6 @@ import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
 
 @ModelEntity
 @ImplementationClass(SetXMLDocumentRoot.SetXMLDocumentRootImpl.class)
-@XMLElement
 @Imports({ @Import(XMLActorReference.class), })
 @FML("SetXMLDocumentRoot")
 public interface SetXMLDocumentRoot extends XMLAction<XMLModelSlot, XMLIndividual> {
@@ -71,7 +68,6 @@ public interface SetXMLDocumentRoot extends XMLAction<XMLModelSlot, XMLIndividua
 	public static final String PARAMETER_KEY = "parameter";
 
 	@Getter(value = PARAMETER_KEY)
-	@XMLAttribute
 	public DataBinding<Object> getParameter();
 
 	@Setter(value = PARAMETER_KEY)

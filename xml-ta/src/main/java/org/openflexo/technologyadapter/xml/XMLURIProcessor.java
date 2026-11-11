@@ -50,7 +50,6 @@ import java.util.logging.Logger;
 import org.openflexo.foundation.ontology.DuplicateURIException;
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
-import org.openflexo.pamela.annotations.XMLElement;
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLDataProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLProperty;
@@ -67,7 +66,6 @@ import org.openflexo.technologyadapter.xml.rm.XSDMetaModelResource;
 // TODO Manage the fact that URI May Change
 
 @ModelEntity
-@XMLElement
 @ImplementationClass(XMLURIProcessor.XMLURIProcessorImpl.class)
 public interface XMLURIProcessor extends AbstractXMLURIProcessor {
 

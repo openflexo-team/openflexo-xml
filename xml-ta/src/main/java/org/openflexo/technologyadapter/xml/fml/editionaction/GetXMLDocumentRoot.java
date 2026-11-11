@@ -45,14 +45,12 @@ import org.openflexo.foundation.fml.annotations.FML;
 import org.openflexo.foundation.fml.rt.RunTimeEvaluationContext;
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
-import org.openflexo.pamela.annotations.XMLElement;
 import org.openflexo.technologyadapter.xml.XMLModelSlot;
 import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
 import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
 
 @ModelEntity
 @ImplementationClass(GetXMLDocumentRoot.GetXMLDocumentRootImpl.class)
-@XMLElement
 @FML("GetXMLDocumentRoot")
 public interface GetXMLDocumentRoot extends XMLAction<XMLModelSlot, XMLIndividual> {
 

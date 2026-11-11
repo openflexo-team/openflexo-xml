@@ -52,8 +52,6 @@ import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.PropertyIdentifier;
 import org.openflexo.pamela.annotations.Setter;
-import org.openflexo.pamela.annotations.XMLAttribute;
-import org.openflexo.pamela.annotations.XMLElement;
 import org.openflexo.pamela.validation.ValidationError;
 import org.openflexo.pamela.validation.ValidationIssue;
 import org.openflexo.pamela.validation.ValidationRule;
@@ -63,7 +61,6 @@ import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 
 @ModelEntity
 @ImplementationClass(XMLDataPropertyAssertion.XMLDataPropertyAssertionImpl.class)
-@XMLElement
 public interface XMLDataPropertyAssertion extends AbstractAssertion {
 
 	@PropertyIdentifier(type = AddXMLIndividual.class)
@@ -83,14 +80,12 @@ public interface XMLDataPropertyAssertion extends AbstractAssertion {
 	public void setAction(AddIndividual<?, ?, ?, ?> action);
 
 	@Getter(value = DATA_PROPERTY_NAME_KEY)
-	@XMLAttribute
 	public String _getDataPropertyName();
 
 	@Setter(DATA_PROPERTY_NAME_KEY)
 	public void _setDataPropertyName(String dataPropertyURI);
 
 	@Getter(value = VALUE_KEY)
-	@XMLAttribute
 	public DataBinding<?> getValue();
 
 	@Setter(VALUE_KEY)

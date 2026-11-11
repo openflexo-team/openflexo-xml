@@ -51,8 +51,6 @@ import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.PropertyIdentifier;
 import org.openflexo.pamela.annotations.Setter;
-import org.openflexo.pamela.annotations.XMLAttribute;
-import org.openflexo.pamela.annotations.XMLElement;
 import org.openflexo.technologyadapter.xml.XMLModelSlot;
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
@@ -61,7 +59,6 @@ import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
 
 @ModelEntity
 @ImplementationClass(AddXMLType.AddXMLTypeImpl.class)
-@XMLElement
 @FML("AddXMLType")
 public interface AddXMLType extends XMLAction<XMLModelSlot, XMLType> {
 
@@ -75,28 +72,24 @@ public interface AddXMLType extends XMLAction<XMLModelSlot, XMLType> {
 	public static final String SIMPLE_TYPE = "simpleType";
 
 	@Getter(value = TYPE_NAME)
-	@XMLAttribute
 	public DataBinding<String> getTypeName();
 
 	@Setter(TYPE_NAME)
 	public void setTypeName(DataBinding<String> name);
 
 	@Getter(value = SUPER_TYPE)
-	@XMLAttribute
 	public DataBinding<XMLComplexType> getSuperType();
 
 	@Setter(SUPER_TYPE)
 	public void setgetSuperType(DataBinding<XMLComplexType> aType);
 
 	@Getter(value = METAMODEL)
-	@XMLAttribute
 	public DataBinding<XSDMetaModel> getMetamodel();
 
 	@Setter(METAMODEL)
 	public void setMetamodel(DataBinding<XSDMetaModel> metamodel);
 
 	@Getter(value = SIMPLE_TYPE, defaultValue = "false")
-	@XMLAttribute
 	public boolean isSimpleType();
 
 	@Setter(SIMPLE_TYPE)

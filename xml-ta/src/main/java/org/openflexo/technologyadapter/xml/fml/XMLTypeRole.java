@@ -47,13 +47,11 @@ import org.openflexo.foundation.fml.rt.FlexoConceptInstance;
 import org.openflexo.foundation.technologyadapter.TechnologyAdapter;
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
-import org.openflexo.pamela.annotations.XMLElement;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 
 @ModelEntity
 @ImplementationClass(XMLTypeRole.XMLTypeRoleImpl.class)
-@XMLElement
 @FML("XMLTypeRole")
 public interface XMLTypeRole extends FlexoRole<XMLType> {
 

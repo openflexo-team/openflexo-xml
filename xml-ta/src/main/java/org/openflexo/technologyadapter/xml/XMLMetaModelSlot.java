@@ -49,7 +49,6 @@ import org.openflexo.foundation.fml.annotations.FML;
 import org.openflexo.foundation.technologyadapter.FreeModelSlot;
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
-import org.openflexo.pamela.annotations.XMLElement;
 import org.openflexo.technologyadapter.xml.fml.XMLIndividualRole;
 import org.openflexo.technologyadapter.xml.fml.XMLTypeRole;
 import org.openflexo.technologyadapter.xml.fml.editionaction.AddXMLType;
@@ -70,7 +69,6 @@ import org.openflexo.technologyadapter.xml.rm.XSDMetaModelResource;
 @DeclareFetchRequests({})
 @ModelEntity
 @ImplementationClass(XMLMetaModelSlot.XMLMetaModelSlotImpl.class)
-@XMLElement
 @FML("XMLMetaModelSlot")
 public interface XMLMetaModelSlot extends FreeModelSlot<XSDMetaModel, XSDMetaModelResource> {
 

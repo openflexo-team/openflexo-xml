@@ -55,7 +55,6 @@ import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.PropertyIdentifier;
 import org.openflexo.pamela.annotations.Setter;
-import org.openflexo.pamela.annotations.XMLElement;
 import org.openflexo.technologyadapter.xml.XMLIndividualType;
 import org.openflexo.technologyadapter.xml.XMLModelSlot;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
@@ -67,7 +66,6 @@ import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
  * 
  */
 @ModelEntity
-@XMLElement
 @ImplementationClass(XMLIndividualRole.XMLIndividualRoleImpl.class)
 @FML("XMLIndividualRole")
 public interface XMLIndividualRole extends FlexoRole<XMLIndividual> {

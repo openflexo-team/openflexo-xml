@@ -53,7 +53,6 @@ import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.Import;
 import org.openflexo.pamela.annotations.Imports;
 import org.openflexo.pamela.annotations.ModelEntity;
-import org.openflexo.pamela.annotations.XMLElement;
 import org.openflexo.technologyadapter.xml.fml.editionaction.CreateXMLFileResource;
 import org.openflexo.technologyadapter.xml.fml.editionaction.GetXMLDocumentRoot;
 import org.openflexo.technologyadapter.xml.fml.editionaction.SetXMLDocumentRoot;
@@ -72,7 +71,6 @@ import org.openflexo.technologyadapter.xml.rm.FreeXMLResource;
 @DeclareFlexoRoles({ /*XMLElementRole.class*/ })
 @DeclareEditionActions({ CreateXMLFileResource.class, /*AddXMLElement.class,*/ GetXMLDocumentRoot.class, SetXMLDocumentRoot.class })
 @ModelEntity
-@XMLElement
 @ImplementationClass(FreeXMLModelSlot.FreeXMLModelSlotImpl.class)
 @Imports({ @Import(FreeXMLURIProcessor.class), })
 @FML("FreeXMLModelSlot")

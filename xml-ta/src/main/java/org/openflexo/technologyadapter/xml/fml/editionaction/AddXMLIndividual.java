@@ -56,8 +56,6 @@ import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.PropertyIdentifier;
 import org.openflexo.pamela.annotations.Remover;
 import org.openflexo.pamela.annotations.Setter;
-import org.openflexo.pamela.annotations.XMLAttribute;
-import org.openflexo.pamela.annotations.XMLElement;
 import org.openflexo.technologyadapter.xml.XMLModelSlot;
 import org.openflexo.technologyadapter.xml.fml.XMLActorReference;
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
@@ -73,7 +71,6 @@ import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
  */
 
 @ModelEntity
-@XMLElement
 @ImplementationClass(AddXMLIndividual.AddXMLIndividualImpl.class)
 @Imports({ @Import(XMLDataPropertyAssertion.class), @Import(XMLActorReference.class), })
 @FML("AddXMLIndividual")
@@ -84,14 +81,12 @@ public interface AddXMLIndividual extends XMLAction<XMLModelSlot, XMLIndividual>
 	public static final String DATA_ASSERTIONS_KEY = "dataAssertions";
 
 	@Getter(TYPE_URI)
-	@XMLAttribute
 	public String getTypeURI();
 
 	@Setter(TYPE_URI)
 	public void setTypeURI(String aTypeURI);
 
 	@Getter(value = DATA_ASSERTIONS_KEY, cardinality = Cardinality.LIST, inverse = DataPropertyAssertion.ACTION_KEY)
-	@XMLElement(xmlTag = "DataPropertyAssertion")
 	public List<XMLDataPropertyAssertion> getDataAssertions();
 
 	@Setter(DATA_ASSERTIONS_KEY)

@@ -52,7 +52,6 @@ import org.openflexo.foundation.resource.ResourceLoadingCancelledException;
 import org.openflexo.foundation.resource.SaveResourceException;
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
-import org.openflexo.pamela.annotations.XMLElement;
 import org.openflexo.pamela.exceptions.ModelDefinitionException;
 import org.openflexo.technologyadapter.xml.FreeXMLModelSlot;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
@@ -69,7 +68,6 @@ import org.openflexo.technologyadapter.xml.rm.TypedXMLResource;
  */
 @ModelEntity
 @ImplementationClass(CreateXMLFileResource.CreateXMLResourceImpl.class)
-@XMLElement
 @FML("CreateXMLFileResource")
 public interface CreateXMLFileResource extends AbstractCreateResource<FreeXMLModelSlot, FreeXMLDocument, XMLTechnologyAdapter> {
 

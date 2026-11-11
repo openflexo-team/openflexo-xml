@@ -73,7 +73,6 @@ import org.openflexo.pamela.annotations.Imports;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.PropertyIdentifier;
 import org.openflexo.pamela.annotations.Setter;
-import org.openflexo.pamela.annotations.XMLElement;
 import org.openflexo.pamela.exceptions.ModelDefinitionException;
 import org.openflexo.technologyadapter.xml.XMLURIProcessor.XMLURIProcessorImpl;
 import org.openflexo.technologyadapter.xml.fml.XMLActorReference;
@@ -104,7 +103,6 @@ import org.openflexo.technologyadapter.xml.rm.XSDMetaModelResource;
 @DeclareEditionActions({ CreateXMLFileResource.class, AddXMLIndividual.class, GetXMLDocumentRoot.class, SetXMLDocumentRoot.class })
 @DeclareFetchRequests({ SelectXMLIndividual.class, SelectUniqueIndividual.class })
 @ModelEntity
-@XMLElement
 @ImplementationClass(XMLModelSlot.XMLModelSlotImpl.class)
 @Imports({ @Import(XMLURIProcessor.class), })
 @FML("XMLModelSlot")

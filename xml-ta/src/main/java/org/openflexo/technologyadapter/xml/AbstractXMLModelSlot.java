@@ -49,7 +49,6 @@ import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.PropertyIdentifier;
 import org.openflexo.pamela.annotations.Remover;
 import org.openflexo.pamela.annotations.Setter;
-import org.openflexo.pamela.annotations.XMLElement;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument;
 import org.openflexo.technologyadapter.xml.rm.XMLResource;
@@ -70,7 +69,6 @@ public interface AbstractXMLModelSlot<RD extends AbstractXMLDocument<RD>, R exte
 	public static final String URI_PROCESSORS_LIST_KEY = "uriProcessorsList";
 
 	@Getter(value = URI_PROCESSORS_LIST_KEY, cardinality = Cardinality.LIST, inverse = AbstractXMLURIProcessor.MODELSLOT)
-	@XMLElement
 	@Embedded
 	public List<T> getUriProcessorsList();
 

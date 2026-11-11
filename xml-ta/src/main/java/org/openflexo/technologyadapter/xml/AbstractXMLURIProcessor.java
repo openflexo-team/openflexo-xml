@@ -57,7 +57,6 @@ import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.pamela.annotations.Parameter;
 import org.openflexo.pamela.annotations.PropertyIdentifier;
 import org.openflexo.pamela.annotations.Setter;
-import org.openflexo.pamela.annotations.XMLAttribute;
 import org.openflexo.technologyadapter.xml.metamodel.XMLDataProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
@@ -98,21 +97,18 @@ public interface AbstractXMLURIProcessor extends FlexoConceptObject {
 	public AbstractXMLURIProcessor init(@Parameter(TYPE_URI_KEY) String typeURI);
 
 	@Getter(value = TYPE_URI_KEY)
-	@XMLAttribute
 	public String getTypeURI();
 
 	@Setter(TYPE_URI_KEY)
 	public void setTypeURI(String typeURI);
 
 	@Getter(value = MAPPING_STYLE_KEY)
-	@XMLAttribute
 	public MappingStyle getMappingStyle();
 
 	@Setter(MAPPING_STYLE_KEY)
 	public void setMappingStyle(MappingStyle mappingStyle);
 
 	@Getter(value = ATTRIBUTE_NAME_KEY)
-	@XMLAttribute
 	public String getAttributeName();
 
 	@Setter(ATTRIBUTE_NAME_KEY)

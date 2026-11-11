@@ -43,7 +43,6 @@ import org.openflexo.foundation.fml.editionaction.FetchRequest;
 import org.openflexo.foundation.fml.editionaction.UniqueFetchRequest;
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
-import org.openflexo.pamela.annotations.XMLElement;
 import org.openflexo.technologyadapter.xml.XMLModelSlot;
 import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
 import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
@@ -56,7 +55,6 @@ import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
  */
 @ModelEntity
 @ImplementationClass(AbstractSelectXMLIndividual.AbstractSelectXMLIndividualImpl.class)
-@XMLElement
 @FML("SelectUniqueXMLIndividual")
 public interface SelectUniqueXMLIndividual
 		extends AbstractSelectXMLIndividual<XMLIndividual>, UniqueFetchRequest<XMLModelSlot, XMLModel, XMLIndividual> {
