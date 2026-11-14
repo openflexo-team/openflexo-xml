@@ -41,7 +41,7 @@ package org.openflexo.technologyadapter.xml.fml.reflect;
 import org.openflexo.foundation.fml.AbstractCreationScheme;
 import org.openflexo.foundation.fml.FlexoConcept;
 import org.openflexo.foundation.fml.FlexoProperty;
-import org.openflexo.foundation.fml.rt.FMLExecutionException;
+import org.openflexo.foundation.fml.rt.error.FMLExecutionException;
 import org.openflexo.foundation.fml.rt.FlexoConceptInstance;
 import org.openflexo.foundation.fml.rt.RunTimeEvaluationContext;
 import org.openflexo.foundation.fml.rt.VirtualModelInstance;
