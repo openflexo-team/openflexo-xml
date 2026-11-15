@@ -38,6 +38,7 @@
 
 package org.openflexo.technologyadapter.xml.fml.editionaction;
 
+import org.openflexo.foundation.fml.rt.error.FMLExecutionException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -69,7 +70,7 @@ public interface AbstractSelectXMLIndividual<AT> extends AbstractFetchRequest<XM
 		private static final Logger logger = Logger.getLogger(AbstractSelectXMLIndividual.class.getPackage().getName());
 
 		@Override
-		public List<XMLIndividual> performExecute(RunTimeEvaluationContext evaluationContext) {
+		public List<XMLIndividual> performExecute(RunTimeEvaluationContext evaluationContext) throws FMLExecutionException {
 
 			List<XMLIndividual> selectedIndividuals = new ArrayList<>();
 			XMLModel resourceData = getReceiver(evaluationContext);

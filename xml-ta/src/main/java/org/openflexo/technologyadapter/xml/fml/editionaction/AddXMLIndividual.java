@@ -38,6 +38,7 @@
 
 package org.openflexo.technologyadapter.xml.fml.editionaction;
 
+import org.openflexo.foundation.fml.rt.error.FMLExecutionException;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.logging.Logger;
@@ -177,7 +178,7 @@ public interface AddXMLIndividual extends XMLAction<XMLModelSlot, XMLIndividual>
 		}
 
 		@Override
-		public XMLIndividual execute(RunTimeEvaluationContext evaluationContext) {
+		public XMLIndividual execute(RunTimeEvaluationContext evaluationContext) throws FMLExecutionException {
 
 			XMLIndividual newIndividual = null;
 			try {

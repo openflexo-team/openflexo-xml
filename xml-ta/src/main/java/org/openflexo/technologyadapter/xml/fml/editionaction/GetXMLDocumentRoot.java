@@ -38,6 +38,7 @@
 
 package org.openflexo.technologyadapter.xml.fml.editionaction;
 
+import org.openflexo.foundation.fml.rt.error.FMLExecutionException;
 import java.lang.reflect.Type;
 import java.util.logging.Logger;
 
@@ -64,7 +65,7 @@ public interface GetXMLDocumentRoot extends XMLAction<XMLModelSlot, XMLIndividua
 		}
 
 		@Override
-		public XMLIndividual execute(RunTimeEvaluationContext evaluationContext) {
+		public XMLIndividual execute(RunTimeEvaluationContext evaluationContext) throws FMLExecutionException {
 
 			XMLModel model = getReceiver(evaluationContext);
 

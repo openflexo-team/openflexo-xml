@@ -38,6 +38,7 @@
 
 package org.openflexo.technologyadapter.xml.fml.editionaction;
 
+import org.openflexo.foundation.fml.rt.error.FMLExecutionException;
 import java.lang.reflect.Type;
 import java.util.logging.Logger;
 
@@ -115,7 +116,7 @@ public interface AddXMLType extends XMLAction<XMLModelSlot, XMLType> {
 		}
 
 		@Override
-		public XMLType execute(RunTimeEvaluationContext evaluationContext) {
+		public XMLType execute(RunTimeEvaluationContext evaluationContext) throws FMLExecutionException {
 
 			XMLType newClass = null;
 
