@@ -1,0 +1,6 @@
+// CORE-F-11 phase 6 (XML-F-1): rootOfNullModel() on a null XML model is an error (FMLNullReferenceError), no longer null or an empty result.
+virtualModel = load -r ["http://openflexo.org/xml-test/FML/XMLErrorKinds.fml"];
+pipeline = load -r ["http://openflexo.org/xml-test/TestResourceCenter/CaoticWorkflow/otawa_pipeline.xml"];
+service ResourceCenterService add_temp_rc;
+vmi = new XMLErrorKinds(pipeline.resource) with (name="rootOfNullModel");
+mustFail = vmi.rootOfNullModel();

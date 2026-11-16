@@ -38,6 +38,10 @@
 
 package org.openflexo.technologyadapter.xml.fml.editionaction;
 
+import org.openflexo.foundation.fml.rt.error.FMLExecution;
+import org.openflexo.foundation.fml.rt.error.FMLTechnologyError;
+import org.openflexo.foundation.fml.rt.error.FMLResolutionError;
+import org.openflexo.foundation.fml.rt.error.FMLNullReferenceError;
 import org.openflexo.foundation.fml.rt.error.FMLExecutionException;
 import java.lang.reflect.Type;
 import java.util.List;
@@ -180,56 +184,49 @@ public interface AddXMLIndividual extends XMLAction<XMLModelSlot, XMLIndividual>
 		@Override
 		public XMLIndividual execute(RunTimeEvaluationContext evaluationContext) throws FMLExecutionException {
 
-			XMLIndividual newIndividual = null;
-			try {
-
-				if (getXMLType() != null) {
-
-					XMLModel receiver = getReceiver(evaluationContext);
-
-					newIndividual = receiver.addNewIndividual(getXMLType());
-					receiver.setIsModified();
-
-					for (XMLDataPropertyAssertion dataPropertyAssertion : getDataAssertions()) {
-						if (dataPropertyAssertion.evaluateCondition(evaluationContext)) {
-							XMLDataProperty property = dataPropertyAssertion.getDataProperty();
-							Object value = dataPropertyAssertion.getValue(evaluationContext);
-							newIndividual.addPropertyValue(property, value);
-						}
-					}
-
-					// add it to the model
-					// Two phase creation, then addition, to be able to process URIs once you have the property values
-					// and verify that there is no duplicate URIs
-
-					XMLModelSlot modelSlot = getInferedModelSlot();
-
-					if (modelSlot != null) {
-						String processedURI = modelSlot.getURIForObject(receiver, newIndividual);
-						if (processedURI != null) {
-							Object o = modelSlot.retrieveObjectWithURI(receiver, processedURI);
-							if (o != null) {
-								receiver.removeFromIndividuals(newIndividual);
-								throw new DuplicateURIException("Error while creating Individual of type " + getXMLType().getURI());
-							}
-
-							return newIndividual;
-						}
-						else {
-							// TODO Provide a way to push an error message to the user!
-							logger.warning("Error while creating Individual of type " + getXMLType().getURI());
-							if (newIndividual != null) {
-								receiver.removeFromIndividuals(newIndividual);
-							}
-						}
-					}
-				}
-				return null;
-			} catch (DuplicateURIException e) {
-				e.printStackTrace();
-				return null;
+			if (getXMLType() == null) {
+				throw new FMLResolutionError("AddXMLIndividual: no XML type to instantiate");
+			}
+			XMLModel receiver = getReceiver(evaluationContext);
+			if (receiver == null) {
+				throw new FMLNullReferenceError("No XML model to create the individual of type " + getXMLType().getName() + " in");
 			}
 
+			XMLIndividual newIndividual = receiver.addNewIndividual(getXMLType());
+			receiver.setIsModified();
+
+			try {
+				for (XMLDataPropertyAssertion dataPropertyAssertion : getDataAssertions()) {
+					if (dataPropertyAssertion.evaluateCondition(evaluationContext)) {
+						XMLDataProperty property = dataPropertyAssertion.getDataProperty();
+						Object value = dataPropertyAssertion.getValue(evaluationContext);
+						newIndividual.addPropertyValue(property, value);
+					}
+				}
+
+				// Two phase creation, then addition, to be able to process URIs once you have the property values
+				// and verify that there is no duplicate URIs
+				XMLModelSlot modelSlot = getInferedModelSlot();
+				if (modelSlot != null) {
+					String processedURI = modelSlot.getURIForObject(receiver, newIndividual);
+					if (processedURI == null) {
+						throw new FMLTechnologyError("Cannot compute the URI of the new individual of type " + getXMLType().getURI());
+					}
+					if (modelSlot.retrieveObjectWithURI(receiver, processedURI) != null) {
+						throw new FMLTechnologyError("Duplicate URI " + processedURI + " for the new individual of type " + getXMLType().getURI(),
+								new DuplicateURIException(processedURI));
+					}
+				}
+				// Without a model slot, no URI can be checked: the individual is kept (decided with the user)
+				return newIndividual;
+			} catch (FMLExecutionException e) {
+				// The individual is not left half built in the model (CORE-F-11)
+				receiver.removeFromIndividuals(newIndividual);
+				throw e;
+			} catch (RuntimeException e) {
+				receiver.removeFromIndividuals(newIndividual);
+				throw FMLExecution.convertUnchecked(e);
+			}
 		}
 
 	}

@@ -38,13 +38,13 @@
 
 package org.openflexo.technologyadapter.xml.fml.editionaction;
 
+import org.openflexo.foundation.fml.rt.error.FMLNullReferenceError;
+import org.openflexo.foundation.fml.rt.error.FMLEvaluation;
 import org.openflexo.foundation.fml.rt.error.FMLExecutionException;
 import java.lang.reflect.Type;
 import java.util.logging.Logger;
 
 import org.openflexo.connie.DataBinding;
-import org.openflexo.connie.exception.NullReferenceException;
-import org.openflexo.connie.exception.TypeMismatchException;
 import org.openflexo.foundation.fml.annotations.FML;
 import org.openflexo.foundation.fml.rt.RunTimeEvaluationContext;
 import org.openflexo.pamela.annotations.Getter;
@@ -118,52 +118,35 @@ public interface AddXMLType extends XMLAction<XMLModelSlot, XMLType> {
 		@Override
 		public XMLType execute(RunTimeEvaluationContext evaluationContext) throws FMLExecutionException {
 
-			XMLType newClass = null;
-
 			XMLModel model = getReceiver(evaluationContext);
-
-			try {
-				XMLType father = getSuperType().getBindingValue(evaluationContext);
-				String newTypeName = null;
-				newTypeName = getTypeName().getBindingValue(evaluationContext);
-
-				logger.info("Adding class " + newTypeName + " as " + father);
-				// FIXME : Something wrong here!
-				XSDMetaModel mm = getMetamodel().getBindingValue(evaluationContext);
-				if (mm != null) {
-
-					if (isSimpleType()) {
-						newClass = model.getMetaModel().getModelFactory()
-								.makeSimpleType(father.getURI().replace('#', '/') + "#" + newTypeName, newTypeName, model.getMetaModel());
-					}
-					else {
-						newClass = model.getMetaModel().getModelFactory()
-								.makeComplexType(father.getURI().replace('#', '/') + "#" + newTypeName, newTypeName, model.getMetaModel());
-					}
-
-					if (father != null) {
-						newClass.setSuperType(father);
-					}
-
-					/*else {
-					
-						newClass = model.getMetaModel().createNewType(mm.getURI() + "/" + newTypeName, newTypeName, isSimpleType());
-					}
-					logger.info("Added class " + newClass.getName() + " as " + father);*/
-				}
-
-				else {
-					logger.warning("CANNOT create a new type in a null MetaModel!");
-				}
-			} catch (TypeMismatchException e) {
-				e.printStackTrace();
-			} catch (NullReferenceException e) {
-				e.printStackTrace();
-			} catch (ReflectiveOperationException e) {
-				e.printStackTrace();
+			if (model == null) {
+				throw new FMLNullReferenceError("No XML model to create the type in");
 			}
-			return newClass;
+			XMLType father = FMLEvaluation.evaluate(getSuperType(), evaluationContext, this);
+			if (father == null) {
+				throw new FMLNullReferenceError("No super type for the new XML type");
+			}
+			String newTypeName = FMLEvaluation.evaluate(getTypeName(), evaluationContext, this);
+			if (newTypeName == null) {
+				throw new FMLNullReferenceError("The name of the new XML type is null");
+			}
+			XSDMetaModel mm = FMLEvaluation.evaluate(getMetamodel(), evaluationContext, this);
+			if (mm == null) {
+				throw new FMLNullReferenceError("No metamodel to create the XML type " + newTypeName + " in");
+			}
 
+			// FIXME : the type is created in the metamodel of the model, not in the metamodel given
+			XMLType newClass;
+			if (isSimpleType()) {
+				newClass = model.getMetaModel().getModelFactory().makeSimpleType(father.getURI().replace('#', '/') + "#" + newTypeName,
+						newTypeName, model.getMetaModel());
+			}
+			else {
+				newClass = model.getMetaModel().getModelFactory().makeComplexType(father.getURI().replace('#', '/') + "#" + newTypeName,
+						newTypeName, model.getMetaModel());
+			}
+			newClass.setSuperType(father);
+			return newClass;
 		}
 
 		@Override

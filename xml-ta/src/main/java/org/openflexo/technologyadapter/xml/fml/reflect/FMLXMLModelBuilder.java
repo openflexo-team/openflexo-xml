@@ -55,7 +55,6 @@ import org.openflexo.foundation.fml.VirtualModelInstanceType;
 import org.openflexo.foundation.fml.md.BasicMetaData;
 import org.openflexo.foundation.fml.md.FMLMetaData;
 import org.openflexo.foundation.fml.md.SingleMetaData;
-import org.openflexo.foundation.fml.rt.error.FMLExecutionException;
 import org.openflexo.foundation.fml.rt.FlexoConceptInstance;
 import org.openflexo.foundation.fml.visitor.FlexoConceptVisitor;
 import org.openflexo.pamela.exceptions.InvalidDataException;
@@ -136,13 +135,8 @@ public class FMLXMLModelBuilder
 			ParsedElement<XMLFlexoConceptInstance, FlexoConceptInstance, FlexoProperty<?>> parsed) {
 
 		if (aType instanceof FlexoConceptInstanceType) {
-			try {
-				return (XMLFlexoConceptInstance) factory.makeNewFlexoConceptInstance(((FlexoConceptInstanceType) aType).getFlexoConcept(),
-						parsed, getModelContext(), getModelContext(), null);
-			} catch (FMLExecutionException e) {
-				e.printStackTrace();
-				return null;
-			}
+			return factory.makeNewFlexoConceptInstance(((FlexoConceptInstanceType) aType).getFlexoConcept(), parsed, getModelContext(),
+					getModelContext(), null, null);
 		}
 		return null;
 	}

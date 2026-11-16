@@ -41,7 +41,6 @@ package org.openflexo.technologyadapter.xml.fml.reflect;
 import org.openflexo.foundation.fml.AbstractCreationScheme;
 import org.openflexo.foundation.fml.FlexoConcept;
 import org.openflexo.foundation.fml.FlexoProperty;
-import org.openflexo.foundation.fml.rt.error.FMLExecutionException;
 import org.openflexo.foundation.fml.rt.FlexoConceptInstance;
 import org.openflexo.foundation.fml.rt.RunTimeEvaluationContext;
 import org.openflexo.foundation.fml.rt.VirtualModelInstance;
@@ -73,7 +72,8 @@ public class XMLVirtualModelInstanceModelFactory<RD extends AbstractXMLDocument<
 	public XMLFlexoConceptInstance makeNewFlexoConceptInstance(FlexoConcept concept,
 			ParsedElement<XMLFlexoConceptInstance, FlexoConceptInstance, FlexoProperty<?>> supportObject, FlexoConceptInstance container,
 			VirtualModelInstance<?, ?> ownerVirtualModelInstance, AbstractCreationScheme creationScheme,
-			RunTimeEvaluationContext evaluationContext) throws FMLExecutionException {
+			RunTimeEvaluationContext evaluationContext) {
+		// Builds and registers the reflected instance of a parsed element: no creation scheme runs here, and nothing can fail (CORE-F-11)
 		// System.err.println(
 		// "makeNewFlexoConceptInstance with " + supportObject + " of " + (supportObject != null ? supportObject.getClass() : null));
 		XMLFlexoConceptInstance returned = newInstance(XMLFlexoConceptInstance.class, concept, supportObject);

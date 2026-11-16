@@ -38,10 +38,11 @@
 
 package org.openflexo.technologyadapter.xml.fml.editionaction;
 
+import org.openflexo.foundation.fml.rt.error.FMLEvaluation;
+import org.openflexo.foundation.fml.rt.error.FMLExecutionException;
+
 import org.openflexo.connie.DataBinding;
 import org.openflexo.connie.DataBinding.BindingDefinitionType;
-import org.openflexo.connie.exception.NullReferenceException;
-import org.openflexo.connie.exception.TypeMismatchException;
 import org.openflexo.foundation.fml.rt.RunTimeEvaluationContext;
 import org.openflexo.foundation.fml.validation.BindingIsRequiredAndMustBeValid;
 import org.openflexo.foundation.ontology.IFlexoOntologyDataProperty;
@@ -95,7 +96,7 @@ public interface XMLDataPropertyAssertion extends AbstractAssertion {
 
 	public void setDataProperty(XMLDataProperty p);
 
-	public Object getValue(RunTimeEvaluationContext evaluationContext);
+	public Object getValue(RunTimeEvaluationContext evaluationContext) throws FMLExecutionException;
 
 	public java.lang.reflect.Type getType();
 
@@ -140,17 +141,8 @@ public interface XMLDataPropertyAssertion extends AbstractAssertion {
 		}
 
 		@Override
-		public Object getValue(RunTimeEvaluationContext evaluationContext) {
-			try {
-				return getValue().getBindingValue(evaluationContext);
-			} catch (TypeMismatchException e) {
-				e.printStackTrace();
-			} catch (NullReferenceException e) {
-				e.printStackTrace();
-			} catch (ReflectiveOperationException e) {
-				e.printStackTrace();
-			}
-			return null;
+		public Object getValue(RunTimeEvaluationContext evaluationContext) throws FMLExecutionException {
+			return FMLEvaluation.evaluate(getValue(), evaluationContext, this);
 		}
 
 		@Override

@@ -38,6 +38,7 @@
 
 package org.openflexo.technologyadapter.xml.fml.editionaction;
 
+import org.openflexo.foundation.fml.rt.error.FMLNullReferenceError;
 import org.openflexo.foundation.fml.rt.error.FMLExecutionException;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,23 +73,18 @@ public interface AbstractSelectXMLIndividual<AT> extends AbstractFetchRequest<XM
 		@Override
 		public List<XMLIndividual> performExecute(RunTimeEvaluationContext evaluationContext) throws FMLExecutionException {
 
-			List<XMLIndividual> selectedIndividuals = new ArrayList<>();
 			XMLModel resourceData = getReceiver(evaluationContext);
-
-			System.out.println("getFetchedType()=" + getFetchedType());
-
-			if (resourceData != null) {
-				for (XMLIndividual xmlIndividual : resourceData.getIndividuals()) {
-					if (TypeUtils.isOfType(xmlIndividual, getFetchedType())) {
-						selectedIndividuals.add(xmlIndividual);
-					}
+			if (resourceData == null) {
+				// A null source (CORE-F-11)
+				throw new FMLNullReferenceError(getStringRepresentation() + ": no XML model to select from");
+			}
+			List<XMLIndividual> selectedIndividuals = new ArrayList<>();
+			for (XMLIndividual xmlIndividual : resourceData.getIndividuals()) {
+				if (TypeUtils.isOfType(xmlIndividual, getFetchedType())) {
+					selectedIndividuals.add(xmlIndividual);
 				}
 			}
-
-			List<XMLIndividual> returned = filterWithConditions(selectedIndividuals, evaluationContext);
-
-			return returned;
-
+			return filterWithConditions(selectedIndividuals, evaluationContext);
 		}
 
 	}

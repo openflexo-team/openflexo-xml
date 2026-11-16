@@ -1,0 +1,37 @@
+use org.openflexo.technologyadapter.xml.XMLModelSlot as XML;
+
+import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
+import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
+
+import XSDMetaModel OTAWA_PIPELINE from ["http://mem4csd.telecom-paris.fr/OtawaPipeline"];
+
+/**
+ * Failures of the XML edition actions (CORE-F-11 phase 6, XML-F-1): see the scripts of XMLErrorKinds/ and TestXMLErrorKinds.
+ * The line numbers of the behaviours are asserted there.
+ */
+@URI("http://openflexo.org/xml-test/FML/XMLErrorKinds.fml")
+public model XMLErrorKinds {
+
+	XMLModel pipeline with XMLModelSlot(metaModel=OTAWA_PIPELINE);
+
+	create(Resource<XMLModel> pipelineResource) {
+		connect pipeline using parameters.pipelineResource;
+	}
+
+	public XMLModel noModel() {
+		return null;
+	}
+
+	public rootOfNullModel() {
+		XMLIndividual root = XML::GetXMLDocumentRoot() in (this.noModel());
+	}
+
+	public int selectFromNullModel() {
+		int n = 0;
+		for (XMLIndividual x : select XMLIndividual from (this.noModel())) {
+			n = n + 1;
+		}
+		return n;
+	}
+}

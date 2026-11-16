@@ -38,13 +38,14 @@
 
 package org.openflexo.technologyadapter.xml.fml.editionaction;
 
+import org.openflexo.foundation.fml.rt.error.FMLTypeError;
+import org.openflexo.foundation.fml.rt.error.FMLNullReferenceError;
+import org.openflexo.foundation.fml.rt.error.FMLEvaluation;
 import org.openflexo.foundation.fml.rt.error.FMLExecutionException;
 import java.lang.reflect.Type;
 import java.util.logging.Logger;
 
 import org.openflexo.connie.DataBinding;
-import org.openflexo.connie.exception.NullReferenceException;
-import org.openflexo.connie.exception.TypeMismatchException;
 import org.openflexo.foundation.fml.annotations.FML;
 import org.openflexo.foundation.fml.rt.RunTimeEvaluationContext;
 import org.openflexo.pamela.annotations.Getter;
@@ -117,31 +118,19 @@ public interface SetXMLDocumentRoot extends XMLAction<XMLModelSlot, XMLIndividua
 		public XMLIndividual execute(RunTimeEvaluationContext evaluationContext) throws FMLExecutionException {
 
 			XMLModel model = getReceiver(evaluationContext);
-
-			XMLIndividual rootIndiv = null;
-
-			try {
-				Object o = getParameter().getBindingValue(evaluationContext);
-				if (o instanceof XMLIndividual) {
-					rootIndiv = (XMLIndividual) o;
-				}
-				else {
-					logger.warning("Invalid value in Binding :" + getParameter());
-				}
-			} catch (TypeMismatchException e) {
-				e.printStackTrace();
-			} catch (NullReferenceException e) {
-				e.printStackTrace();
-			} catch (ReflectiveOperationException e) {
-				e.printStackTrace();
+			if (model == null) {
+				throw new FMLNullReferenceError("No XML model to set the root of");
 			}
-
-			if (rootIndiv != null) {
-				model.setRoot(rootIndiv);
+			Object o = FMLEvaluation.evaluate(getParameter(), evaluationContext, this);
+			if (o == null) {
+				throw new FMLNullReferenceError("The new root of the XML model is null");
 			}
-
+			if (!(o instanceof XMLIndividual)) {
+				throw new FMLTypeError("The new root of the XML model is not an XML individual: " + o);
+			}
+			XMLIndividual rootIndiv = (XMLIndividual) o;
+			model.setRoot(rootIndiv);
 			return rootIndiv;
-
 		}
 
 		@Override
