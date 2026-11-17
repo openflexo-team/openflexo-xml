@@ -25,9 +25,9 @@ public model TestOtawa {
 	Processor processor with XMLIndividualRole(container=pipeline,xsdType=PROCESSOR);
 
    create(Resource<XMLModel> cachesResource, Resource<XMLModel> memoryResource, Resource<XMLModel> pipelineResource) {
-      connect caches using  parameters.cachesResource;
-      connect memory using  parameters.memoryResource;
-      connect pipeline using  parameters.pipelineResource;
+      connect caches using  cachesResource;
+      connect memory using  memoryResource;
+      connect pipeline using  pipelineResource;
       //caches = parameters.cachesResource.resourceData;
       //memory = parameters.memoryResource.resourceData;
       //pipeline = parameters.pipelineResource.resourceData;

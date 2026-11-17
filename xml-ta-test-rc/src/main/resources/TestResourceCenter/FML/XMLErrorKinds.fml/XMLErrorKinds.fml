@@ -16,7 +16,7 @@ public model XMLErrorKinds {
 	XMLModel pipeline with XMLModelSlot(metaModel=OTAWA_PIPELINE);
 
 	create(Resource<XMLModel> pipelineResource) {
-		connect pipeline using parameters.pipelineResource;
+		connect pipeline using pipelineResource;
 	}
 
 	public XMLModel noModel() {
