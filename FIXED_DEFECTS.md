@@ -9,6 +9,8 @@ Status legend: `TODO` · `IN PROGRESS` · `BLOCKED` · `DONE` · `DEFERRED`.
 
 ### XML-D-1 — Deleting an instance that plays an XML role throws a `NullPointerException`  ·  `DONE`
 
+**GitHub:** [openflexo-team/openflexo-xml#4](https://github.com/openflexo-team/openflexo-xml/issues/4)
+
 **Symptom (verified 2026-11-14 by execution).** In openflexo-integration-tests, `ExternalWorkbookEditTest.externalEditIsPickedUpByRefresh`
 (digital-twin-demo): `delete eq` in `ProductionLine.refresh()` failed with an NPE in `XMLActorReference.getObjectURI()` ("msInstance is null").
 PAMELA reads that getter when it collects the embedded objects of the instance being deleted, after its model slot instance is gone, and

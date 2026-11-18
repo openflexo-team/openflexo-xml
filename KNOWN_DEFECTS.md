@@ -11,6 +11,8 @@ Status legend: `TODO` · `IN PROGRESS` · `BLOCKED` · `DONE` · `DEFERRED`.
 
 ### XML-D-2 — `AddXMLIndividual` with a model slot always fails its URI check  ·  `TODO`
 
+**GitHub:** [openflexo-team/openflexo-xml#3](https://github.com/openflexo-team/openflexo-xml/issues/3)
+
 **Symptom.** An `AddXMLIndividual` run with an XML model slot never gives an individual. Before `CORE-F-11` phase 6 it logged
 "Error while creating Individual of type …", removed the individual and returned null; since `XML-F-1` it raises an `FMLTechnologyError`
 "Cannot compute the URI of the new individual" (or "Duplicate URI").

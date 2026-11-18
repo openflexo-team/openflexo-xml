@@ -13,6 +13,8 @@ Status legend: `TODO` · `IN PROGRESS` · `BLOCKED` · `DONE` · `DEFERRED`.
 
 ### XML-F-1 — The XML adapter raises typed FML errors instead of returning null after a warning or a printed stack  ·  `DONE`
 
+**GitHub:** [openflexo-team/openflexo-xml#5](https://github.com/openflexo-team/openflexo-xml/issues/5)
+
 **Problem.** Part of `CORE-F-11` phase 6 (`openflexo-core/BACKLOG.md`): the edition actions of the XML adapter caught the failures of
 their evaluations four at a time, printed the stack and went on; a missing metamodel, a value that is not an individual, a URI that cannot
 be computed gave a warning and null; a duplicate URI was a printed `DuplicateURIException` and null. `AddXMLIndividual` without a model
@@ -52,3 +54,19 @@ textual FML: no `@FMLAttribute`), the strict ontology assertions.
 **Verified (2026-11-16).** Green through the openflexo-dev composite: xml-ta-test 33, flexo-ontology, owl-ta-test 40, emf-ta-test 57,
 openflexo-integration-tests (4 projects), formod (b-ta-test, formod-test), fml-cli-test 153. ECJ compiles flexo-ontology and xml-ta.
 Reviewed by `openflexo-reviewer` (its findings fixed or recorded here and in `XML-D-2`). Not checked in the running application.
+
+## XSD and schemas
+
+### XML-F-2 — An XML file conforming to an XSD that is not available  ·  `TODO`
+
+**GitHub:** [openflexo-team/openflexo-xml#2](https://github.com/openflexo-team/openflexo-xml/issues/2)
+
+**Problem.** A `FreeXMLModelSlot` cannot be connected to a resource pointing to an XML file conforming to an XSD that is not available as a metamodel.
+
+**Verified (2026-11-17, reading the code).** `FreeXMLURIProcessor` carries `XSDMetaModelResource mmResource = null;` (the metamodel lookup is commented out).
+
+**Options.** Infer a free metamodel from the document; accept a missing XSD with a warning; resolve the XSD from `xsi:schemaLocation`.
+
+**Original report** by `Luka-Le-Roux`, 2025-03-07 (issue openflexo-xml#2):
+
+> As of now it's not possible to have a FreeXMLModelSlot connected to a resource pointing to an XML file that is conform to an XSD.
