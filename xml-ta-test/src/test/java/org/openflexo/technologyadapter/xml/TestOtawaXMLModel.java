@@ -53,7 +53,7 @@ import java.util.logging.Logger;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openflexo.foundation.FlexoException;
+import org.openflexo.foundation.OpenflexoRuntimeException;
 import org.openflexo.foundation.resource.FlexoResourceCenter;
 import org.openflexo.foundation.resource.ResourceLoadingCancelledException;
 import org.openflexo.foundation.test.OpenflexoProjectAtRunTimeTestCase;
@@ -126,7 +126,7 @@ public class TestOtawaXMLModel extends OpenflexoProjectAtRunTimeTestCase {
 
 	@Test
 	@TestOrder(2)
-	public void testOtawaCache() throws FileNotFoundException, ResourceLoadingCancelledException, FlexoException, URISyntaxException {
+	public void testOtawaCache() throws FileNotFoundException, ResourceLoadingCancelledException, OpenflexoRuntimeException, URISyntaxException {
 
 		log("testOtawaCache()");
 
@@ -175,7 +175,7 @@ public class TestOtawaXMLModel extends OpenflexoProjectAtRunTimeTestCase {
 
 	@Test
 	@TestOrder(3)
-	public void testOtawaMemory() throws FileNotFoundException, ResourceLoadingCancelledException, FlexoException, URISyntaxException {
+	public void testOtawaMemory() throws FileNotFoundException, ResourceLoadingCancelledException, OpenflexoRuntimeException, URISyntaxException {
 
 		log("testOtawaMemory()");
 
@@ -228,7 +228,7 @@ public class TestOtawaXMLModel extends OpenflexoProjectAtRunTimeTestCase {
 
 	@Test
 	@TestOrder(4)
-	public void testOtawaPipeline() throws FileNotFoundException, ResourceLoadingCancelledException, FlexoException, URISyntaxException {
+	public void testOtawaPipeline() throws FileNotFoundException, ResourceLoadingCancelledException, OpenflexoRuntimeException, URISyntaxException {
 
 		log("testOtawaPipeline()");
 

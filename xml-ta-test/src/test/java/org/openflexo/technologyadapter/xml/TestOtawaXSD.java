@@ -50,7 +50,7 @@ import java.util.logging.Logger;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openflexo.foundation.FlexoException;
+import org.openflexo.foundation.OpenflexoRuntimeException;
 import org.openflexo.foundation.resource.FlexoResourceCenter;
 import org.openflexo.foundation.resource.ResourceLoadingCancelledException;
 import org.openflexo.foundation.test.OpenflexoTestCase;
@@ -126,14 +126,14 @@ public class TestOtawaXSD extends OpenflexoTestCase {
 	/**
 	 * Test Otawa cache XSD (http://mem4csd.telecom-paris.fr/OtawaCache)
 	 * 
-	 * @throws FlexoException
+	 * @throws OpenflexoRuntimeException
 	 * @throws ResourceLoadingCancelledException
 	 * @throws FileNotFoundException
 	 * 
 	 */
 	@Test
 	@TestOrder(4)
-	public void testOtawaCache() throws FileNotFoundException, ResourceLoadingCancelledException, FlexoException {
+	public void testOtawaCache() throws FileNotFoundException, ResourceLoadingCancelledException, OpenflexoRuntimeException {
 
 		XSDMetaModelResource mmRes = mmRepository.getResource("http://mem4csd.telecom-paris.fr/OtawaCache");
 
@@ -229,14 +229,14 @@ public class TestOtawaXSD extends OpenflexoTestCase {
 	/**
 	 * Test Otawa memory XSD (http://mem4csd.telecom-paris.fr/OtawaMemory)
 	 * 
-	 * @throws FlexoException
+	 * @throws OpenflexoRuntimeException
 	 * @throws ResourceLoadingCancelledException
 	 * @throws FileNotFoundException
 	 * 
 	 */
 	@Test
 	@TestOrder(5)
-	public void testOtawaMemory() throws FileNotFoundException, ResourceLoadingCancelledException, FlexoException {
+	public void testOtawaMemory() throws FileNotFoundException, ResourceLoadingCancelledException, OpenflexoRuntimeException {
 
 		XSDMetaModelResource mmRes = mmRepository.getResource("http://mem4csd.telecom-paris.fr/OtawaMemory");
 
@@ -294,14 +294,14 @@ public class TestOtawaXSD extends OpenflexoTestCase {
 	/**
 	 * Test Otawa pipeline XSD (http://mem4csd.telecom-paris.fr/OtawaPipeline)
 	 * 
-	 * @throws FlexoException
+	 * @throws OpenflexoRuntimeException
 	 * @throws ResourceLoadingCancelledException
 	 * @throws FileNotFoundException
 	 * 
 	 */
 	@Test
 	@TestOrder(5)
-	public void testOtawaPipeline() throws FileNotFoundException, ResourceLoadingCancelledException, FlexoException {
+	public void testOtawaPipeline() throws FileNotFoundException, ResourceLoadingCancelledException, OpenflexoRuntimeException {
 
 		XSDMetaModelResource mmRes = mmRepository.getResource("http://mem4csd.telecom-paris.fr/OtawaPipeline");
 

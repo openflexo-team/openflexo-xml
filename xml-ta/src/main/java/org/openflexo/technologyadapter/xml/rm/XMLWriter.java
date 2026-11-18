@@ -46,7 +46,7 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import org.openflexo.foundation.FlexoException;
+import org.openflexo.foundation.OpenflexoRuntimeException;
 import org.openflexo.foundation.resource.ResourceData;
 import org.openflexo.foundation.resource.ResourceLoadingCancelledException;
 import org.openflexo.foundation.technologyadapter.TechnologyAdapterResource;
@@ -86,7 +86,7 @@ public class XMLWriter<R extends TechnologyAdapterResource<RD, ?>, RD extends Re
 		outputStr = out;
 	}
 
-	public void writeDocument() throws XMLStreamException, ResourceLoadingCancelledException, FlexoException, IOException {
+	public void writeDocument() throws XMLStreamException, ResourceLoadingCancelledException, OpenflexoRuntimeException, IOException {
 
 		String NSPrefix = DEFAULT_NS;
 

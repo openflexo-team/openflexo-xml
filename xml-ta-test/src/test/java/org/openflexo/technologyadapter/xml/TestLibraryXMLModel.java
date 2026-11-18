@@ -53,7 +53,7 @@ import java.util.logging.Logger;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openflexo.foundation.FlexoException;
+import org.openflexo.foundation.OpenflexoRuntimeException;
 import org.openflexo.foundation.resource.FlexoResourceCenter;
 import org.openflexo.foundation.resource.ResourceLoadingCancelledException;
 import org.openflexo.foundation.test.OpenflexoProjectAtRunTimeTestCase;
@@ -124,7 +124,7 @@ public class TestLibraryXMLModel extends OpenflexoProjectAtRunTimeTestCase {
 
 	@Test
 	@TestOrder(3)
-	public void testExampleLibrary1() throws FileNotFoundException, ResourceLoadingCancelledException, FlexoException, URISyntaxException {
+	public void testExampleLibrary1() throws FileNotFoundException, ResourceLoadingCancelledException, OpenflexoRuntimeException, URISyntaxException {
 
 		log("testExampleLibrary1()");
 
@@ -187,7 +187,7 @@ public class TestLibraryXMLModel extends OpenflexoProjectAtRunTimeTestCase {
 
 	@Test
 	@TestOrder(4)
-	public void testExampleLibrary2() throws FileNotFoundException, ResourceLoadingCancelledException, FlexoException, URISyntaxException {
+	public void testExampleLibrary2() throws FileNotFoundException, ResourceLoadingCancelledException, OpenflexoRuntimeException, URISyntaxException {
 
 		log("testExampleLibrary2()");
 
@@ -202,7 +202,7 @@ public class TestLibraryXMLModel extends OpenflexoProjectAtRunTimeTestCase {
 
 	@Test
 	@TestOrder(5)
-	public void testExampleLibrary3() throws FileNotFoundException, ResourceLoadingCancelledException, FlexoException, URISyntaxException {
+	public void testExampleLibrary3() throws FileNotFoundException, ResourceLoadingCancelledException, OpenflexoRuntimeException, URISyntaxException {
 
 		log("testExampleLibrary3()");
 

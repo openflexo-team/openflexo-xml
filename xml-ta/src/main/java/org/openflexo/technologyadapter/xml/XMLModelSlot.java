@@ -47,7 +47,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.openflexo.foundation.FlexoException;
+import org.openflexo.foundation.OpenflexoRuntimeException;
 import org.openflexo.foundation.fml.FMLCompilationUnit;
 import org.openflexo.foundation.fml.FlexoRole;
 import org.openflexo.foundation.fml.annotations.DeclareActorReferences;
@@ -400,7 +400,7 @@ public interface XMLModelSlot extends TypeAwareModelSlot<XMLModel, XSDMetaModel,
 			} catch (ResourceLoadingCancelledException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} catch (FlexoException e) {
+			} catch (OpenflexoRuntimeException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

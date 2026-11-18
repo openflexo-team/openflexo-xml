@@ -51,7 +51,7 @@ import java.util.logging.Logger;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openflexo.foundation.FlexoException;
+import org.openflexo.foundation.OpenflexoRuntimeException;
 import org.openflexo.foundation.resource.FlexoResourceCenter;
 import org.openflexo.foundation.resource.ResourceLoadingCancelledException;
 import org.openflexo.foundation.test.OpenflexoProjectAtRunTimeTestCase;
@@ -115,7 +115,7 @@ public class TestPurchaseOrderXMLModel extends OpenflexoProjectAtRunTimeTestCase
 
 	@Test
 	@TestOrder(3)
-	public void testPO1() throws FileNotFoundException, ResourceLoadingCancelledException, FlexoException {
+	public void testPO1() throws FileNotFoundException, ResourceLoadingCancelledException, OpenflexoRuntimeException {
 
 		log("testPO1()");
 

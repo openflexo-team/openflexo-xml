@@ -51,7 +51,7 @@ import java.util.logging.Logger;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openflexo.foundation.FlexoException;
+import org.openflexo.foundation.OpenflexoRuntimeException;
 import org.openflexo.foundation.resource.FlexoResourceCenter;
 import org.openflexo.foundation.resource.ResourceLoadingCancelledException;
 import org.openflexo.foundation.test.OpenflexoProjectAtRunTimeTestCase;
@@ -119,11 +119,11 @@ public class TestFreeXMLDocument extends OpenflexoProjectAtRunTimeTestCase {
 	 * 
 	 * @throws FileNotFoundException
 	 * @throws ResourceLoadingCancelledException
-	 * @throws FlexoException
+	 * @throws OpenflexoRuntimeException
 	 */
 	@Test
 	@TestOrder(2)
-	public void testExampleLibrary0() throws FileNotFoundException, ResourceLoadingCancelledException, FlexoException {
+	public void testExampleLibrary0() throws FileNotFoundException, ResourceLoadingCancelledException, OpenflexoRuntimeException {
 
 		log("testExampleLibrary0()");
 
@@ -159,11 +159,11 @@ public class TestFreeXMLDocument extends OpenflexoProjectAtRunTimeTestCase {
 	 * 
 	 * @throws FileNotFoundException
 	 * @throws ResourceLoadingCancelledException
-	 * @throws FlexoException
+	 * @throws OpenflexoRuntimeException
 	 */
 	@Test
 	@TestOrder(3)
-	public void testMom2024acm() throws FileNotFoundException, ResourceLoadingCancelledException, FlexoException {
+	public void testMom2024acm() throws FileNotFoundException, ResourceLoadingCancelledException, OpenflexoRuntimeException {
 
 		log("testMom2024acm()");
 

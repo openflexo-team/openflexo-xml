@@ -43,7 +43,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.openflexo.foundation.FlexoException;
+import org.openflexo.foundation.OpenflexoRuntimeException;
 import org.openflexo.foundation.resource.FileIODelegate;
 import org.openflexo.foundation.resource.ResourceLoadingCancelledException;
 import org.openflexo.foundation.technologyadapter.FlexoMetaModelResource;
@@ -109,7 +109,7 @@ public interface XSDMetaModelResource
 				e.printStackTrace();
 			} catch (ResourceLoadingCancelledException e) {
 				e.printStackTrace();
-			} catch (FlexoException e) {
+			} catch (OpenflexoRuntimeException e) {
 				e.printStackTrace();
 			}
 			return null;
@@ -477,7 +477,7 @@ public interface XSDMetaModelResource
 			} catch (ResourceLoadingCancelledException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} catch (FlexoException e) {
+			} catch (OpenflexoRuntimeException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

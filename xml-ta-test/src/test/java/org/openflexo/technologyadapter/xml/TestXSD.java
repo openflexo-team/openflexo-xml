@@ -52,7 +52,7 @@ import java.util.logging.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openflexo.connie.type.ParameterizedTypeImpl;
-import org.openflexo.foundation.FlexoException;
+import org.openflexo.foundation.OpenflexoRuntimeException;
 import org.openflexo.foundation.resource.FlexoResourceCenter;
 import org.openflexo.foundation.resource.ResourceLoadingCancelledException;
 import org.openflexo.foundation.test.OpenflexoTestCase;
@@ -129,14 +129,14 @@ public class TestXSD extends OpenflexoTestCase {
 	/**
 	 * Test Library XSD
 	 * 
-	 * @throws FlexoException
+	 * @throws OpenflexoRuntimeException
 	 * @throws ResourceLoadingCancelledException
 	 * @throws FileNotFoundException
 	 * 
 	 */
 	@Test
 	@TestOrder(2)
-	public void testLibraryMetamodel() throws FileNotFoundException, ResourceLoadingCancelledException, FlexoException {
+	public void testLibraryMetamodel() throws FileNotFoundException, ResourceLoadingCancelledException, OpenflexoRuntimeException {
 
 		XSDMetaModelResource mmRes = mmRepository.getResource("http://www.example.org/Library");
 
@@ -211,14 +211,14 @@ public class TestXSD extends OpenflexoTestCase {
 	/**
 	 * Test PurchaseOrderSchema XSD (http://tempuri.org/PurchaseOrderSchema.xsd)
 	 * 
-	 * @throws FlexoException
+	 * @throws OpenflexoRuntimeException
 	 * @throws ResourceLoadingCancelledException
 	 * @throws FileNotFoundException
 	 * 
 	 */
 	@Test
 	@TestOrder(3)
-	public void testPurchaseOrderSchema() throws FileNotFoundException, ResourceLoadingCancelledException, FlexoException {
+	public void testPurchaseOrderSchema() throws FileNotFoundException, ResourceLoadingCancelledException, OpenflexoRuntimeException {
 
 		XSDMetaModelResource mmRes = mmRepository.getResource("http://tempuri.org/PurchaseOrderSchema.xsd");
 
@@ -287,14 +287,14 @@ public class TestXSD extends OpenflexoTestCase {
 	/**
 	 * Test Maven XSD (http://maven.apache.org/POM/4.0.0)
 	 * 
-	 * @throws FlexoException
+	 * @throws OpenflexoRuntimeException
 	 * @throws ResourceLoadingCancelledException
 	 * @throws FileNotFoundException
 	 * 
 	 */
 	@Test
 	@TestOrder(4)
-	public void testMavenMetamodel() throws FileNotFoundException, ResourceLoadingCancelledException, FlexoException {
+	public void testMavenMetamodel() throws FileNotFoundException, ResourceLoadingCancelledException, OpenflexoRuntimeException {
 
 		XSDMetaModelResource mmRes = mmRepository.getResource("http://maven.apache.org/POM/4.0.0");
 

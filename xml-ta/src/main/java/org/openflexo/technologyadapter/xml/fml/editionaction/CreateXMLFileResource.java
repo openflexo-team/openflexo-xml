@@ -41,7 +41,7 @@ package org.openflexo.technologyadapter.xml.fml.editionaction;
 import java.io.FileNotFoundException;
 import java.lang.reflect.Type;
 
-import org.openflexo.foundation.FlexoException;
+import org.openflexo.foundation.OpenflexoRuntimeException;
 import org.openflexo.foundation.fml.annotations.FML;
 import org.openflexo.foundation.fml.editionaction.AbstractCreateResource;
 import org.openflexo.foundation.fml.editionaction.EditionAction;
@@ -100,7 +100,7 @@ public interface CreateXMLFileResource extends AbstractCreateResource<FreeXMLMod
 				throw new FMLInternalError(e);
 			} catch (ResourceLoadingCancelledException e) {
 				throw new FMLCancellation("Loading of the new XML document was cancelled", e);
-			} catch (FileNotFoundException | FlexoException e) {
+			} catch (FileNotFoundException | OpenflexoRuntimeException e) {
 				throw new FMLTechnologyError("Cannot create the XML document: " + e.getMessage(), e);
 			}
 		}

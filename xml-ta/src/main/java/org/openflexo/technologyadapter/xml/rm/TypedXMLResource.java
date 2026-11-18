@@ -50,7 +50,7 @@ import java.util.logging.Logger;
 
 import javax.xml.stream.XMLStreamException;
 
-import org.openflexo.foundation.FlexoException;
+import org.openflexo.foundation.OpenflexoRuntimeException;
 import org.openflexo.foundation.resource.FileIODelegate;
 import org.openflexo.foundation.resource.FileWritingLock;
 import org.openflexo.foundation.resource.ResourceLoadingCancelledException;
@@ -124,7 +124,7 @@ public interface TypedXMLResource extends XMLResource<XMLModel, XMLModelFactory>
 				e.printStackTrace();
 			} catch (ResourceLoadingCancelledException e) {
 				e.printStackTrace();
-			} catch (FlexoException e) {
+			} catch (OpenflexoRuntimeException e) {
 				e.printStackTrace();
 			}
 			return null;
@@ -190,7 +190,7 @@ public interface TypedXMLResource extends XMLResource<XMLModel, XMLModelFactory>
 			}
 		}
 
-		private void write(OutputStream out) throws IOException, XMLStreamException, ResourceLoadingCancelledException, FlexoException {
+		private void write(OutputStream out) throws IOException, XMLStreamException, ResourceLoadingCancelledException, OpenflexoRuntimeException {
 			System.out.println("Writing xml file in : " + getIODelegate().getSerializationArtefact());
 			try (OutputStreamWriter outSW = new OutputStreamWriter(out, "UTF-8")) {
 				XMLWriter<TypedXMLResource, XMLModel> writer = new XMLWriter<>(this, outSW);

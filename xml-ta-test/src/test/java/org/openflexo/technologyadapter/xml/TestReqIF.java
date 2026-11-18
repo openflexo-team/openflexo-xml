@@ -50,7 +50,7 @@ import java.util.logging.Logger;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openflexo.foundation.FlexoException;
+import org.openflexo.foundation.OpenflexoRuntimeException;
 import org.openflexo.foundation.resource.FlexoResourceCenter;
 import org.openflexo.foundation.resource.ResourceLoadingCancelledException;
 import org.openflexo.foundation.test.OpenflexoTestCase;
@@ -115,14 +115,14 @@ public class TestReqIF extends OpenflexoTestCase {
 	/**
 	 * Test Library XSD
 	 * 
-	 * @throws FlexoException
+	 * @throws OpenflexoRuntimeException
 	 * @throws ResourceLoadingCancelledException
 	 * @throws FileNotFoundException
 	 * 
 	 */
 	@Test
 	@TestOrder(2)
-	public void testReqIFMetamodel() throws FileNotFoundException, ResourceLoadingCancelledException, FlexoException {
+	public void testReqIFMetamodel() throws FileNotFoundException, ResourceLoadingCancelledException, OpenflexoRuntimeException {
 
 		XSDMetaModelResource mmRes = mmRepository.getResource("http://www.omg.org/spec/ReqIF/20110401/reqif.xsd");
 
@@ -143,7 +143,7 @@ public class TestReqIF extends OpenflexoTestCase {
 
 	@Test
 	@TestOrder(3)
-	public void testSample() throws FileNotFoundException, ResourceLoadingCancelledException, FlexoException, URISyntaxException {
+	public void testSample() throws FileNotFoundException, ResourceLoadingCancelledException, OpenflexoRuntimeException, URISyntaxException {
 
 		log("testSample()");
 
