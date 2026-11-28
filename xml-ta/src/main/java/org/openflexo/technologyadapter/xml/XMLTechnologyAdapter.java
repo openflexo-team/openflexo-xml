@@ -65,9 +65,14 @@ import org.openflexo.technologyadapter.xml.rm.XSDMetaModelRepository;
 import org.openflexo.technologyadapter.xml.rm.XSDMetaModelResourceFactory;
 
 /**
+ * Technology adapter connecting FML to XML documents. It knows three kinds of resources: XSD metamodels ({@code .xsd}), XML documents
+ * typed by one of them, whose elements are {@link org.openflexo.technologyadapter.xml.model.typed.XMLIndividual}s of the XSD types, and
+ * free XML documents, read element by element without any schema. Four model slots give access to them: {@link XMLModelSlot} (typed
+ * document), {@link FreeXMLModelSlot} (free document), {@link XMLMetaModelSlot} (the XSD itself) and {@link FMLXMLModelSlot} (a free
+ * document reflected as instances of the concepts of a VirtualModel).<br>
+ * Saving: a free document is written back; a typed document and an XSD metamodel are not written (a warning says so, XML-D-4).
  * 
  * @author sylvain, luka, Christophe
- * 
  */
 
 @DeclareModelSlots({ FreeXMLModelSlot.class, XMLModelSlot.class, XMLMetaModelSlot.class, FMLXMLModelSlot.class })

@@ -40,12 +40,15 @@ package org.openflexo.technologyadapter.xml.rm;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.openflexo.foundation.OpenflexoRuntimeException;
 import org.openflexo.foundation.resource.FileIODelegate;
 import org.openflexo.foundation.resource.ResourceLoadingCancelledException;
+import org.openflexo.foundation.resource.SaveResourceException;
 import org.openflexo.foundation.technologyadapter.FlexoMetaModelResource;
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
@@ -98,6 +101,26 @@ public interface XSDMetaModelResource
 
 		private static final Logger logger = Logger.getLogger(XSDMetaModelResourceImpl.class.getPackage().getName());
 
+		/**
+		 * An XSD metamodel is never written: Openflexo reads XSD files, it has no XSD writer. A change made in memory (by
+		 * {@code AddXMLType}, say) is not saved, and a warning says so; the file is left as it is.
+		 */
+		@Override
+		protected void performSave(boolean clearIsModified) throws SaveResourceException {
+			if (resourceData != null && resourceData.isModified()) {
+				logger.warning("XSD metamodels cannot be saved: " + getIODelegate().getSerializationArtefact()
+						+ " is left unchanged, the changes made in Openflexo are not written");
+			}
+		}
+
+		/**
+		 * Not used: {@link #performSave(boolean)} never writes an XSD.
+		 */
+		@Override
+		protected void write(OutputStream out) throws Exception {
+			throw new UnsupportedOperationException("Saving an XSD metamodel is not supported");
+		}
+
 		private XSSchemaSet schemaSet;
 		private XSDeclarationsFetcher fetcher;
 
@@ -105,12 +128,8 @@ public interface XSDMetaModelResource
 		public XSDMetaModel getMetaModelData() {
 			try {
 				return getResourceData();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (ResourceLoadingCancelledException e) {
-				e.printStackTrace();
-			} catch (OpenflexoRuntimeException e) {
-				e.printStackTrace();
+			} catch (FileNotFoundException | ResourceLoadingCancelledException | OpenflexoRuntimeException e) {
+				logger.log(Level.WARNING, "Cannot load " + this, e);
 			}
 			return null;
 		}
@@ -119,17 +138,6 @@ public interface XSDMetaModelResource
 			// TODO if a declaration (base) type is derived, get the correct
 			if (resourceData != null) {
 
-				/*System.out.println("------> ce qu'on obtient");
-				for (XSComplexType complexType : fetcher.getComplexTypes()) {
-					System.out.println(" > complexType : " + complexType + " uri=" + fetcher.getUri(complexType));
-				}
-				for (XSSimpleType simpleType : fetcher.getSimpleTypes()) {
-					System.out.println(" > simpleType : " + simpleType + " uri=" + fetcher.getUri(simpleType));
-				}
-				for (XSElementDecl element : fetcher.getElementDecls()) {
-					System.out.println(" > element : " + element);
-				}
-				System.out.println("<------ DONE");*/
 
 				for (XSComplexType complexType : fetcher.getComplexTypes()) {
 					ensureTypeExists(complexType);
@@ -143,7 +151,6 @@ public interface XSDMetaModelResource
 						// If we find anonymous typesForURI, we use the element as the base of a XMLComplexType
 						if (!element.getType().isGlobal()) {
 
-							// System.out.println("******* Found " + element.getType() + " of " + element.getType().getClass());
 
 							XMLComplexType returned = getFactory().makeComplexType(fetcher.getUri(element), element.getName(),
 									resourceData);
@@ -161,7 +168,6 @@ public interface XSDMetaModelResource
 							XMLComplexType existingType = (XMLComplexType) resourceData.getTypeFromURI(uri);
 							if (!existingType.getName().equals(element.getName())) {
 								// type name is different from element type, also register element name as alternative name
-								// System.out.println("For " + existingType.getName() + " register alternative name " + element.getName());
 								// TODO : may we have multiple alternative names ??? Check this
 								existingType.addToElementOccurences(element.getName());
 							}
@@ -203,7 +209,6 @@ public interface XSDMetaModelResource
 			}
 			else if (type.isSimpleType()) {
 
-				// System.out.println("SimpleType: " + type.getClass().getSimpleName() + " " + type.getName() + " uri=" + uri);
 
 				if (type instanceof XSRestrictionSimpleType) {
 					XSRestrictionSimpleType restrictionType = (XSRestrictionSimpleType) type;
@@ -212,7 +217,6 @@ public interface XSDMetaModelResource
 						// This is an enumeration
 						XMLEnumerationType returned = getFactory().makeEnumerationType(uri, type.getName(), resourceData);
 						for (XSFacet xsFacet : facets) {
-							// System.out.println(" > " + xsFacet.getName() + "=" + xsFacet.getValue() + " fixed:" + xsFacet.isFixed());
 							getFactory().makeEnumValue(xsFacet.getValue().toString(), returned);
 						}
 						return returned;
@@ -379,7 +383,6 @@ public interface XSDMetaModelResource
 			if (returned == null) {
 				// Maybe the type is to be found in simple typesForURI found in the fetcher
 				for (XSSimpleType simpleType : fetcher.getSimpleTypes()) {
-					// System.out.println(" > " + fetcher.getUri(simpleType));
 					if (fetcher.getUri(simpleType).equals(typeURI)) {
 						// Found new type to add
 						return buildType(simpleType);
@@ -434,16 +437,7 @@ public interface XSDMetaModelResource
 
 				// Easyest way
 				String uri = metaModel.getURI() + "#" + objectIdentifier;
-				// System.out.println("Je cherche " + uri);
 				XMLType returned = metaModel.getTypeFromURI(uri);
-				// System.out.println("Je trouve " + returned);
-
-				/*if (returned instanceof XMLComplexType) {
-					XMLComplexType cType = (XMLComplexType) returned;
-					for (XMLProperty xmlProperty : cType.getProperties()) {
-						System.out.println(" > " + xmlProperty + " name=" + xmlProperty.getName());
-					}
-				}*/
 
 				return returned;
 
@@ -471,15 +465,8 @@ public interface XSDMetaModelResource
 						return owlIndividual;
 					}
 				}*/
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ResourceLoadingCancelledException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (OpenflexoRuntimeException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (FileNotFoundException | ResourceLoadingCancelledException | OpenflexoRuntimeException e) {
+				logger.log(Level.WARNING, "Cannot load " + this + " to find " + objectIdentifier, e);
 			}
 
 			return null;

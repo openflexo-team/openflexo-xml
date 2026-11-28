@@ -50,6 +50,10 @@ import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
 import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 
+/**
+ * Role of a FlexoConcept played by an {@link XMLType}: a type of an XSD metamodel, accessed through an
+ * {@link org.openflexo.technologyadapter.xml.XMLMetaModelSlot}.
+ */
 @ModelEntity
 @ImplementationClass(XMLTypeRole.XMLTypeRoleImpl.class)
 @FML("XMLTypeRole")

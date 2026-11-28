@@ -2,8 +2,8 @@ dependencies {
 
   implementation project(":xml-ta")
 
-  // openflexo dep
-  implementation 'junit:junit:4.13.2'
+  // testing dep (junit 4 comes with testUtils)
+  implementation testUtils()
 
   // testing dep
   testImplementation flexoFoundation()

@@ -41,6 +41,8 @@ package org.openflexo.technologyadapter.xml;
 
 import java.lang.reflect.Type;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.openflexo.connie.type.ProxyType;
 import org.openflexo.foundation.fml.TechnologyAdapterTypeFactory;
@@ -60,6 +62,8 @@ import org.openflexo.toolbox.StringUtils;
  *
  */
 public class XMLIndividualType extends PropertyChangedSupportDefaultImplementation implements TechnologySpecificType<XMLTechnologyAdapter> {
+
+	private static final Logger logger = Logger.getLogger(XMLIndividualType.class.getPackage().getName());
 
 	private final XMLComplexType xmlType;
 
@@ -186,7 +190,6 @@ public class XMLIndividualType extends PropertyChangedSupportDefaultImplementati
 
 	@Override
 	public boolean isTypeAssignableFrom(Type aType, boolean permissive) {
-		// System.out.println("isTypeAssignableFrom " + aType + " (i am a " + this + ")");
 		if (aType instanceof ProxyType) {
 			return isTypeAssignableFrom(((ProxyType) aType).getReferencedType(), permissive);
 		}
@@ -196,8 +199,10 @@ public class XMLIndividualType extends PropertyChangedSupportDefaultImplementati
 			}
 			return getXMLType().equals(((XMLIndividualType) aType).getXMLType());
 		}
-		System.out.println(
-				"TODO !!!!! isTypeAssignableFrom() in XMLIndividualType " + getXMLType() + " for " + aType + " of " + aType.getClass());
+		if (logger.isLoggable(Level.FINE)) {
+			logger.fine("isTypeAssignableFrom() not implemented in XMLIndividualType " + getXMLType() + " for " + aType + " of "
+					+ aType.getClass());
+		}
 		if (aType instanceof XMLIndividual) {
 			// TODO: something better to do here !!!
 			return true;

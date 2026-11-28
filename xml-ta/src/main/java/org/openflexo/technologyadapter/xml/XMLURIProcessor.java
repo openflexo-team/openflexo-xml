@@ -45,6 +45,7 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.openflexo.foundation.ontology.DuplicateURIException;
@@ -203,16 +204,14 @@ public interface XMLURIProcessor extends AbstractXMLURIProcessor {
 						logger.severe("XSURI: unable to compute an URI for given object");
 					}
 				} catch (UnsupportedEncodingException e) {
-					logger.warning("Cannot process URI - Unexpected encoding error");
-					e.printStackTrace();
+					logger.log(Level.WARNING, "Cannot process URI - Unexpected encoding error", e);
 				}
 			}
 			else if (getMappingStyle() == MappingStyle.SINGLETON) {
 				try {
 					builtURI = URLEncoder.encode(((XMLIndividual) xsO).getType().getURI(), "UTF-8");
 				} catch (UnsupportedEncodingException e) {
-					logger.warning("Cannot process URI - Unexpected encoding error");
-					e.printStackTrace();
+					logger.log(Level.WARNING, "Cannot process URI - Unexpected encoding error", e);
 				}
 			}
 			else {
@@ -263,7 +262,7 @@ public interface XMLURIProcessor extends AbstractXMLURIProcessor {
 								return obj;
 							}
 						} catch (UnsupportedEncodingException e) {
-							e.printStackTrace();
+							logger.log(Level.WARNING, "Cannot decode URI " + objectURI, e);
 						}
 					}
 

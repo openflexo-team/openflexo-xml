@@ -42,6 +42,8 @@ import java.awt.BorderLayout;
 import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -68,6 +70,8 @@ import org.openflexo.view.controller.model.FlexoPerspective;
 @SuppressWarnings("serial")
 public class XMLDocumentTextualView extends JPanel implements SelectionSynchronizedModuleView<AbstractXMLDocument<?>> {
 
+	private static final Logger logger = Logger.getLogger(XMLDocumentTextualView.class.getPackage().getName());
+
 	private final AbstractXMLDocument<?> document;
 	private final FlexoPerspective declaredPerspective;
 
@@ -92,7 +96,7 @@ public class XMLDocumentTextualView extends JPanel implements SelectionSynchroni
 				try {
 					return FileUtils.fileContents(((StreamIODelegate) resource.getIODelegate()).getInputStream(), "UTF-8");
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.log(Level.WARNING, "Cannot read " + resource, e);
 				}
 			}
 		}

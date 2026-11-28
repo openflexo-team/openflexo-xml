@@ -64,12 +64,10 @@ public abstract class AbstractXMLResourceFactory<R extends TechnologyAdapterReso
 		if (returned != null) {
 			if (returned.equals(NONE_XSD_SCHEMA_URI)) {
 				// already computed : NONE
-				// System.out.println("already computed : NONE");
 				return null;
 			}
 			else {
 				// already computed
-				// System.out.println("already computed : " + returned);
 			}
 			return returned;
 		}
@@ -82,12 +80,10 @@ public abstract class AbstractXMLResourceFactory<R extends TechnologyAdapterReso
 		if (xmlRootElementInfo != null) {
 			String returned = xmlRootElementInfo.getURI();
 			if (StringUtils.isNotEmpty(returned)) {
-				// System.out.println("Compute and save : " + returned);
 				saveSchemaURI(returned, serializationArtefact, resourceCenter);
 				return returned;
 			}
 			else {
-				// System.out.println("Compute : NONE and save");
 				saveSchemaURI(NONE_XSD_SCHEMA_URI, serializationArtefact, resourceCenter);
 				return null;
 			}

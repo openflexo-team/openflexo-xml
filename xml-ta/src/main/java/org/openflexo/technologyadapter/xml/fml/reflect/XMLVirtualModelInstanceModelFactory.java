@@ -74,8 +74,6 @@ public class XMLVirtualModelInstanceModelFactory<RD extends AbstractXMLDocument<
 			VirtualModelInstance<?, ?> ownerVirtualModelInstance, AbstractCreationScheme creationScheme,
 			RunTimeEvaluationContext evaluationContext) {
 		// Builds and registers the reflected instance of a parsed element: no creation scheme runs here, and nothing can fail (CORE-F-11)
-		// System.err.println(
-		// "makeNewFlexoConceptInstance with " + supportObject + " of " + (supportObject != null ? supportObject.getClass() : null));
 		XMLFlexoConceptInstance returned = newInstance(XMLFlexoConceptInstance.class, concept, supportObject);
 		ownerVirtualModelInstance.addToFlexoConceptInstances(returned);
 		return returned;

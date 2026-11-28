@@ -73,7 +73,6 @@ public class XSDMetaModelFactory extends AbstractXMLDocumentFactory<XSDMetaModel
 	}
 
 	public XMLComplexType makeComplexType(String uri, String localName, XSDMetaModel metaModel) {
-		// System.out.println("Creating a XMLComplexType " + localName + " " + uri);
 		XMLComplexType returned = newInstance(XMLComplexType.class);
 		returned.setIsAbstract(false);
 		returned.setURI(uri);
@@ -83,7 +82,6 @@ public class XSDMetaModelFactory extends AbstractXMLDocumentFactory<XSDMetaModel
 	}
 
 	public XMLSimpleType makeSimpleType(String uri, String localName, XSDMetaModel metaModel) {
-		System.out.println("Creating a XMLSimpleType " + localName + " " + uri);
 		XMLSimpleType returned = newInstance(XMLSimpleType.class);
 		returned.setIsAbstract(false);
 		XMLSchemaPrimitiveType primitiveType = XMLSimpleType.getPrimitiveFromURI(uri);
@@ -111,7 +109,6 @@ public class XSDMetaModelFactory extends AbstractXMLDocumentFactory<XSDMetaModel
 	}
 
 	public XMLEnumerationType makeEnumerationType(String uri, String localName, XSDMetaModel metaModel) {
-		// System.out.println("Creating a XMLEnumerationType " + localName + " " + uri);
 		XMLEnumerationType returned = newInstance(XMLEnumerationType.class);
 		returned.setIsAbstract(false);
 		returned.setURI(uri);

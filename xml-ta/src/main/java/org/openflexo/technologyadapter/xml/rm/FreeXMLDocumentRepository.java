@@ -39,6 +39,9 @@
 
 package org.openflexo.technologyadapter.xml.rm;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.openflexo.foundation.resource.FlexoResourceCenter;
 import org.openflexo.foundation.technologyadapter.TechnologyAdapterResourceRepository;
 import org.openflexo.pamela.annotations.ModelEntity;
@@ -69,7 +72,7 @@ public interface FreeXMLDocumentRepository<I>
 			newRepository.getRootFolder().setRepositoryContext(null);
 			return newRepository;
 		} catch (ModelDefinitionException e) {
-			e.printStackTrace();
+			Logger.getLogger(FreeXMLDocumentRepository.class.getPackage().getName()).log(Level.SEVERE, "Cannot create a FreeXMLDocumentRepository", e);
 		}
 		return null;
 	}

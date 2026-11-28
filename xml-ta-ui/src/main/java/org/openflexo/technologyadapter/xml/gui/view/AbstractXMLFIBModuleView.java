@@ -142,7 +142,6 @@ public abstract class AbstractXMLFIBModuleView<T extends XMLObject> extends Sele
 				returned.add((XMLObject) o);
 			}
 		}
-		// System.out.println("Returned: (" + returned.size() + ") " + returned);
 		return returned;
 	}
 

@@ -119,7 +119,6 @@ public interface XMLFlexoConceptInstance
 			if (flexoRole instanceof SEColumnRole) {
 				SEColumnRole<T> columnRole = (SEColumnRole<T>) flexoRole;
 				Cell cell = row.getCell(columnRole.getColumnIndex());
-				// System.out.println("cell: " + cell);
 				switch (columnRole.getPrimitiveType()) {
 					case String:
 						if (cell != null) {
@@ -158,7 +157,6 @@ public interface XMLFlexoConceptInstance
 			if (flexoRole instanceof SEColumnRole) {
 				SEColumnRole<T> columnRole = (SEColumnRole<T>) flexoRole;
 				Cell cell = row.getCell(columnRole.getColumnIndex());
-				// System.out.println("cell: " + cell);
 				switch (columnRole.getPrimitiveType()) {
 					case String:
 						cell.setCellValue((String) object);

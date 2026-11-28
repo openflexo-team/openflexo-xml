@@ -62,13 +62,10 @@ public class XMLFIBController extends FlexoFIBController {
 
 	public FIBInspector inspectorForObject(Object object) {
 
-		System.out.println("Pour l'objet " + object);
-		System.out.println("flexoController: " + getFlexoController());
 		if (getFlexoController() == null) {
 			return null;
 		}
 
-		System.out.println("On retourne: " + getFlexoController().getModuleInspectorController().inspectorForObject(object));
 
 		return getFlexoController().getModuleInspectorController().inspectorForObject(object);
 	}

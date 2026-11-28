@@ -385,6 +385,16 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 			}
 		}
 
+		/**
+		 * The values of the properties are kept outside PAMELA, which does not see them change: the model is marked modified here, so
+		 * that the resource knows it has something to save. Loading clears it at the end.
+		 */
+		private void markModified() {
+			if (getResourceData() != null) {
+				getResourceData().setIsModified();
+			}
+		}
+
 		@Override
 		public <T> void setPropertyValue(String propertyName, T value) {
 			XMLProperty<?, T> property = (XMLProperty<?, T>) getType().getPropertyByName(propertyName);
@@ -403,6 +413,7 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 			}
 			if (!property.isMultiple()) {
 				singlePropertyValues.put(property, value);
+				markModified();
 			}
 			else {
 				logger.warning("Inconsistent data : called SET for a MULTIPLE property: " + property.getName());
@@ -432,6 +443,7 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 					multiplePropertyValues.put(property, l);
 				}
 				l.add(value);
+				markModified();
 			}
 			else {
 				logger.warning("Inconsistent data : called ADD for a SINGLE property: " + property.getName());
@@ -458,8 +470,8 @@ public interface XMLIndividual extends XMLObject<XMLModel> {
 			}
 			if (property.isMultiple()) {
 				List<T> l = multiplePropertyValues.get(property);
-				if (l != null) {
-					l.remove(value);
+				if (l != null && l.remove(value)) {
+					markModified();
 				}
 			}
 			else {

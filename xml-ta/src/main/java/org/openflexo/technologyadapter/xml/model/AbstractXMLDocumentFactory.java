@@ -102,7 +102,6 @@ public class AbstractXMLDocumentFactory<R extends XMLResource<RD, F>, RD extends
 		if (editingContext != null && editingContext.getUndoManager() instanceof FlexoUndoManager) {
 			undoManager = (FlexoUndoManager) editingContext.getUndoManager();
 			undoManager.addToIgnoreHandlers(ignoreHandler = new IgnoreLoadingEdits(resource));
-			// System.out.println("@@@@@@@@@@@@@@@@ START LOADING RESOURCE " + resource.getURI());
 		}
 
 	}
@@ -111,7 +110,6 @@ public class AbstractXMLDocumentFactory<R extends XMLResource<RD, F>, RD extends
 	public synchronized void stopDeserializing() {
 		if (ignoreHandler != null) {
 			undoManager.removeFromIgnoreHandlers(ignoreHandler);
-			// System.out.println("@@@@@@@@@@@@@@@@ END LOADING RESOURCE " + resource.getURI());
 		}
 
 	}

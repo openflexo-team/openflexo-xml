@@ -40,7 +40,7 @@ package org.openflexo.technologyadapter.xml.model.free;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -139,7 +139,8 @@ public interface XMLElement extends XMLObject<FreeXMLDocument> {
 		private Map<String, Object> attributeValues;
 
 		public XMLElementImpl() {
-			attributeValues = new HashMap<String, Object>();
+			// Keeps the order of the attributes in the document, which saving writes back
+			attributeValues = new LinkedHashMap<String, Object>();
 		}
 
 		// Can be safely cast to FreeXMLResource
@@ -162,6 +163,10 @@ public interface XMLElement extends XMLObject<FreeXMLDocument> {
 		@Override
 		public void setAttributeValue(String attributeName, Object value) {
 			attributeValues.put(attributeName, value);
+			// The attributes are kept outside PAMELA, which does not see them change; loading clears the flag at its end
+			if (getDocument() != null) {
+				getDocument().setIsModified();
+			}
 		}
 
 		@Override

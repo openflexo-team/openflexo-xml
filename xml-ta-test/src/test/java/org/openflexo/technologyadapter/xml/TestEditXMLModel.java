@@ -59,7 +59,7 @@ import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
 import org.openflexo.test.OrderedRunner;
 import org.openflexo.test.TestOrder;
 
-@Ignore // Not yet supported
+@Ignore("XML-D-7: builds a metamodel without resource, so its model factory is null")
 @RunWith(OrderedRunner.class)
 public class TestEditXMLModel extends OpenflexoTestCase {
 

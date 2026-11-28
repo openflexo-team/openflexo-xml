@@ -45,6 +45,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.openflexo.foundation.OpenflexoRuntimeException;
@@ -278,7 +279,7 @@ public interface XMLModelSlot extends TypeAwareModelSlot<XMLModel, XSDMetaModel,
 				try {
 					return mapParams.retrieveObjectWithURI(model, objectURI);
 				} catch (DuplicateURIException e) {
-					e.printStackTrace();
+					logger.log(Level.WARNING, "Several objects found for URI " + objectURI, e);
 				}
 			}
 
@@ -394,15 +395,8 @@ public interface XMLModelSlot extends TypeAwareModelSlot<XMLModel, XSDMetaModel,
 				if (metaModelResource != null) {
 					getPropertyChangeSupport().firePropertyChange(META_MODEL_KEY, null, metaModelResource.getResourceData());
 				}
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ResourceLoadingCancelledException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (OpenflexoRuntimeException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (FileNotFoundException | ResourceLoadingCancelledException | OpenflexoRuntimeException e) {
+				logger.log(Level.WARNING, "Cannot load the metamodel " + metaModelResource, e);
 			}
 		}
 
@@ -429,10 +423,8 @@ public interface XMLModelSlot extends TypeAwareModelSlot<XMLModel, XSDMetaModel,
 				newXMLFileResource = factory.makeResource(serializationArtefact, (FlexoResourceCenter) rc, filename, modelUri, true);
 				newXMLFileResource.setMetaModelResource((FlexoMetaModelResource) metaModelResource);
 				return newXMLFileResource;
-			} catch (SaveResourceException e) {
-				e.printStackTrace();
-			} catch (ModelDefinitionException e) {
-				e.printStackTrace();
+			} catch (SaveResourceException | ModelDefinitionException e) {
+				logger.log(Level.WARNING, "Cannot create the XML resource " + filename, e);
 			}
 			return null;
 		}
@@ -454,10 +446,8 @@ public interface XMLModelSlot extends TypeAwareModelSlot<XMLModel, XSDMetaModel,
 
 				try {
 					return createEmptyXMLFileResource(xmlFile, modelRepository, (XSDMetaModelResource) metaModelResource);
-				} catch (SaveResourceException e) {
-					e.printStackTrace();
-				} catch (ModelDefinitionException e) {
-					e.printStackTrace();
+				} catch (SaveResourceException | ModelDefinitionException e) {
+					logger.log(Level.WARNING, "Cannot create the XML resource " + xmlFile, e);
 				}
 			}
 			return null;
@@ -486,7 +476,7 @@ public interface XMLModelSlot extends TypeAwareModelSlot<XMLModel, XSDMetaModel,
 					modelRepository.registerResource(returned);
 				}
 			} catch (IOException e1) {
-				e1.printStackTrace();
+				logger.log(Level.WARNING, "Cannot register " + xmlFile + " in its repository folder", e1);
 			}
 
 			if (metaModelResource != null && returned != null) {

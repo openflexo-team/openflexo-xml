@@ -56,6 +56,7 @@
 package org.openflexo.technologyadapter.xml;
 
 import java.io.IOException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.openflexo.foundation.fml.FlexoRole;
@@ -129,11 +130,6 @@ public interface FMLXMLModelSlot<RD extends AbstractXMLDocument<RD>>
 				XMLVirtualModelInstance<RD> xmlVmi = factory.newInstance(XMLVirtualModelInstance.class);
 				xmlVmi.setReflectedModelFactory(factory);
 
-				/*System.out.println("Built VMI: " + xmlVmi);
-				System.out.println("Factory: " + xmlVmi.getReflectedModelFactory());
-				System.out.println("Resource: " + xmlVmi.getReflectedModelFactory().getResource());
-				System.out.println("VM: " + getAccessedVirtualModel());*/
-
 				if (xmlVmi.getReflectedModelFactory().getReflectedResource() != null
 						&& xmlVmi.getReflectedModelFactory().getReflectedResource().getIODelegate() instanceof StreamIODelegate) {
 
@@ -150,12 +146,10 @@ public interface FMLXMLModelSlot<RD extends AbstractXMLDocument<RD>>
 				return modelSlotInstance;
 
 			} catch (ModelDefinitionException e) {
-				logger.warning("Unexpected ModelDefinitionException: " + e);
-				e.printStackTrace();
+				logger.log(Level.WARNING, "Unexpected ModelDefinitionException while connecting to " + resource, e);
 				return null;
 			} catch (IOException e) {
-				logger.warning("Unexpected IOException: " + e);
-				e.printStackTrace();
+				logger.log(Level.WARNING, "Cannot read " + resource, e);
 				return null;
 			}
 

@@ -51,6 +51,9 @@ import org.openflexo.technologyadapter.xml.XMLModelSlot;
 import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
 import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
 
+/**
+ * Edition action returning the root {@link XMLIndividual} of the typed XML document of its receiver; null when the document has no root.
+ */
 @ModelEntity
 @ImplementationClass(GetXMLDocumentRoot.GetXMLDocumentRootImpl.class)
 @FML("GetXMLDocumentRoot")

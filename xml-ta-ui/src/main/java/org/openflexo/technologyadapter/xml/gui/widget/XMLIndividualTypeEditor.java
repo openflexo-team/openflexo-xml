@@ -143,7 +143,6 @@ public class XMLIndividualTypeEditor extends DefaultCustomTypeEditorImpl<XMLIndi
 	public Resource getFIBComponentResource() {
 		// TODO Auto-generated method stub
 		Resource returned = super.getFIBComponentResource();
-		System.out.println("Cool on retourne " + returned);
 		return returned;
 	}*/
 
@@ -184,7 +183,6 @@ public class XMLIndividualTypeEditor extends DefaultCustomTypeEditorImpl<XMLIndi
 		// logger.info("*************** updateMatchingClasses() for " + filteredClassName);
 
 		final List<XMLComplexType> oldMatchingValues = new ArrayList<>(getMatchingValues());
-		// System.out.println("updateMatchingValues() with " + getFilteredName());
 		matchingValues.clear();
 
 		if (StringUtils.isNotEmpty(getFilteredClassName())) {

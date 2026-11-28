@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.openflexo.connie.type.TypeUtils;
@@ -89,13 +90,11 @@ public class FMLXMLModelBuilder
 
 			@Override
 			public void visitVirtualModel(VirtualModel virtualModel) {
-				// System.out.println("visitVirtualModel: " + virtualModel);
 				registerConcept(virtualModel);
 			}
 
 			@Override
 			public void visitFlexoConcept(FlexoConcept flexoConcept) {
-				// System.out.println("visitFlexoConcept: " + flexoConcept);
 				registerConcept(flexoConcept);
 			}
 		});
@@ -119,7 +118,6 @@ public class FMLXMLModelBuilder
 			l.add(concept);
 		}
 		else if (metaData instanceof SingleMetaData) {
-			// System.out.println("Found : " + metaData + " of " + metaData.getClass() + " for " + concept);
 			String xmlElementName = ((SingleMetaData<String>) metaData).getValue(String.class);
 			List<FlexoConcept> l = conceptsByXMLElementName.get(xmlElementName);
 			if (l == null) {
@@ -143,7 +141,6 @@ public class FMLXMLModelBuilder
 
 	@Override
 	public Type getType(String typeURI, String localName, FlexoConceptInstance container) {
-		// System.out.println("getTypeForObject() ??? " + typeURI + " container: " + container + " objectName=" + objectName);
 
 		List<FlexoConcept> matchingConcepts = conceptsByXMLElementName.get(typeURI);
 
@@ -204,7 +201,6 @@ public class FMLXMLModelBuilder
 
 		for (FlexoProperty<?> p : concept.getAccessibleProperties()) {
 			FMLMetaData metaData = p.getMetaData(XML_ELEMENT);
-			// System.err.println("Property: " + p + " metaData=" + metaData);
 			if (metaData instanceof BasicMetaData) {
 				// Basic @XMLElement where XML tag is not specified : use property name
 				if (elementName.equals(p.getName())) {
@@ -249,7 +245,6 @@ public class FMLXMLModelBuilder
 
 		for (FlexoProperty<?> p : concept.getAccessibleProperties()) {
 			FMLMetaData metaData = p.getMetaData(XML_ATTRIBUTE);
-			// System.err.println("Property: " + p + " metaData=" + metaData);
 			if (metaData instanceof BasicMetaData) {
 				// Basic @XMLAttribute where XML tag is not specified : use property name
 				if (attributeName.equals(p.getName())) {
@@ -278,8 +273,6 @@ public class FMLXMLModelBuilder
 
 	private <T> void addPropertyValue(FlexoConceptInstance object, FlexoProperty<T> property, Object value) {
 		if (property != null) {
-			// System.err.println(
-			// "addPropertyValue for " + object + " will set " + property + " with " + value + " type=" + property.getType());
 
 			Class<?> typeClass = TypeUtils.getBaseClass(property.getType());
 
@@ -288,7 +281,7 @@ public class FMLXMLModelBuilder
 					T val = (T) StringConverterLibrary.getInstance().getConverter(typeClass).convertFromString((String) value, null);
 					object.setFlexoPropertyValue(property, val);
 				} catch (InvalidDataException e) {
-					e.printStackTrace();
+					logger.log(Level.WARNING, "Cannot convert " + value + " for property " + property.getName(), e);
 				}
 			}
 		}

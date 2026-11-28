@@ -65,10 +65,8 @@ public class FreeXMLDocumentBuilder extends SaxBasedObjectGraphFactory<FreeXMLDo
 	@Override
 	public XMLElement createInstance(Type aType, String name, ParsedElement<XMLElement, XMLObject<FreeXMLDocument>, String> parsed) {
 
-		// System.out.println("Called createInstance() with " + aType + " and " + name);
 
 		if (aType == XMLElement.class) {
-			// System.out.println("Creating Element " + name);
 			return getModelFactory().makeXMLElement(name, getModelContext());
 		}
 
@@ -78,8 +76,6 @@ public class FreeXMLDocumentBuilder extends SaxBasedObjectGraphFactory<FreeXMLDo
 	@Override
 	public Type getType(String typeURI, String localName, XMLObject<FreeXMLDocument> container) {
 
-		// System.out.println(
-		// "Called getTypeForObject() with typeURI=" + typeURI + " and container=" + container + " and objectName=" + objectName);
 
 		return XMLElement.class;
 	}
@@ -103,7 +99,6 @@ public class FreeXMLDocumentBuilder extends SaxBasedObjectGraphFactory<FreeXMLDo
 	@Override
 	public void setModelProperty(String propertyName, Object value) {
 
-		// System.out.println("setContextProperty with " + propertyName + " and " + value);
 
 	}
 
@@ -133,7 +128,6 @@ public class FreeXMLDocumentBuilder extends SaxBasedObjectGraphFactory<FreeXMLDo
 	@Override
 	public void addChildToObject(XMLElement currentObject, XMLObject<FreeXMLDocument> currentContainer) {
 
-		// System.out.println("addChildToObject with " + currentObject + " and " + currentContainer);
 
 		if (currentObject instanceof XMLElement && currentContainer instanceof XMLElement) {
 			((XMLElement) currentContainer).addToChildElements(currentObject);

@@ -96,11 +96,7 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory<XMLModel, XMLInd
 		}
 
 		if (returned == null) {
-			// System.out.println("Not found : " + typeURI);
 			returned = mm.getTypeFromContextualURI(typeURI);
-			/*if (returned == null) {
-				System.out.println("Still not found : " + typeURI);
-			}*/
 		}
 
 		// Try to match as local uri
@@ -122,8 +118,6 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory<XMLModel, XMLInd
 			}
 		}
 
-		// System.out.println(
-		// "getTypeForObject() ??? " + typeURI + " container: " + container + " objectName=" + objectName + " returns " + returned);
 
 		if (returned == null) {
 			logger.warning("Cannot find type " + typeURI + " container: " + container + " objectName=" + localName);
@@ -259,7 +253,6 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory<XMLModel, XMLInd
 
 	private <T> void addOrSetPropertyValue(XMLObject<XMLModel> targetObject, XMLProperty<?, T> property, Object value) {
 
-		// System.err.println("***** addOrSetPropertyValue object=" + targetObject + " property=" + property + " value=" + value);
 
 		if (targetObject instanceof XMLIndividual) {
 
@@ -277,7 +270,6 @@ public class XMLModelBuilder extends SaxBasedObjectGraphFactory<XMLModel, XMLInd
 				individual.setPropertyValue(property, valueForProperty(property, value));
 				if (property.getType() instanceof XMLSimpleType
 						&& ((XMLSimpleType) property.getType()).getPrimitiveType() == XMLSchemaPrimitiveType.ID) {
-					// System.out.println(" ##### nouvel ID " + value + " of " + value.getClass() + " pour " + object);
 					individual.setUUID((String) value);
 				}
 

@@ -62,8 +62,9 @@ import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
 
 /**
- * @author xtof
+ * Role of a FlexoConcept played by an {@link XMLIndividual}: an element of a typed XML document, whose XSD type is the type of the role.
  * 
+ * @author xtof
  */
 @ModelEntity
 @ImplementationClass(XMLIndividualRole.XMLIndividualRoleImpl.class)

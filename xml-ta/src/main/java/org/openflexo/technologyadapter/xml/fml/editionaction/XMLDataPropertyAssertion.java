@@ -60,6 +60,10 @@ import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 import org.openflexo.technologyadapter.xml.metamodel.XMLDataProperty;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 
+/**
+ * Assertion of an {@link AddXMLIndividual}: sets a data property (an attribute or a text element of the XSD type) of the new individual
+ * to the value of a binding.
+ */
 @ModelEntity
 @ImplementationClass(XMLDataPropertyAssertion.XMLDataPropertyAssertionImpl.class)
 public interface XMLDataPropertyAssertion extends AbstractAssertion {

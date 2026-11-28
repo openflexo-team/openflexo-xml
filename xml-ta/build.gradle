@@ -3,7 +3,6 @@ dependencies {
   implementation flexoFoundation()
   api flexoOntology()
   // external dep
-  //implementation 'com.sun.xsom:xsom:20140925'
-  implementation 'org.glassfish.jaxb:xsom:4.0.9'
+  implementation xsom()
 
 }

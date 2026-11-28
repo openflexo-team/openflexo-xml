@@ -107,8 +107,6 @@ public interface XMLComplexType extends XMLType {
 		public XMLComplexTypeImpl() {
 			super();
 			this.properties = new HashMap<>();
-			// System.out.println("Hop un ComplexTypeImpl");
-			// Thread.dumpStack();
 		}
 
 		@SuppressWarnings("unchecked")
@@ -199,7 +197,6 @@ public interface XMLComplexType extends XMLType {
 				}
 				// Creates the property for PCDATA
 				/*if (prop == null && name.equals(XMLCst.CDATA_ATTR_NAME)) {
-					System.out.println("mm=" + getMetamodel());
 					prop = getModelFactory().makeProperty(name, this.getMetamodel().getTypeFromURI(XSDMetaModel.STRING_URI),
 							XMLSupport.CDATA, null);
 				}*/

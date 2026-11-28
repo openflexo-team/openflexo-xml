@@ -58,6 +58,10 @@ import org.openflexo.technologyadapter.xml.metamodel.XMLType;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
 
+/**
+ * Edition action creating a new type in an XSD metamodel: a complex type (or a simple type) of the given name, optionally derived from
+ * a super type.
+ */
 @ModelEntity
 @ImplementationClass(AddXMLType.AddXMLTypeImpl.class)
 @FML("AddXMLType")

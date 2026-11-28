@@ -55,6 +55,10 @@ import org.openflexo.pamela.annotations.XMLElement;
 import org.openflexo.technologyadapter.xml.XMLObject;
 import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
 
+/**
+ * Reference from a FlexoConceptInstance to the {@link XMLObject} that plays one of its roles, stored as the URI of the object in its
+ * document and resolved again through the model slot instance after a reload.
+ */
 @ModelEntity
 @ImplementationClass(XMLActorReference.XMLActorReferenceImpl.class)
 @XMLElement

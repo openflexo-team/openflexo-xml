@@ -67,24 +67,21 @@ public class XSOMUtils {
 			@Override
 			public void error(SAXParseException exception) throws SAXException {
 				if (logger.isLoggable(Level.WARNING)) {
-					exception.printStackTrace();
-					logger.warning("XSOM-Error: " + exception.getMessage());
+					logger.log(Level.WARNING, "XSOM-Error: " + exception.getMessage(), exception);
 				}
 			}
 
 			@Override
 			public void fatalError(SAXParseException exception) throws SAXException {
 				if (logger.isLoggable(Level.WARNING)) {
-					exception.printStackTrace();
-					logger.warning("XSOM-Fatal: " + exception.getMessage());
+					logger.log(Level.WARNING, "XSOM-Fatal: " + exception.getMessage(), exception);
 				}
 			}
 
 			@Override
 			public void warning(SAXParseException exception) throws SAXException {
 				if (logger.isLoggable(Level.WARNING)) {
-					exception.printStackTrace();
-					logger.warning("XSOM-Warning: " + exception.getMessage());
+					logger.log(Level.WARNING, "XSOM-Warning: " + exception.getMessage(), exception);
 				}
 			}
 
@@ -98,13 +95,13 @@ public class XSOMUtils {
 				}
 			});
 		} catch (SAXException e) {
-			e.printStackTrace();
+			logger.log(Level.WARNING, "Cannot parse the XSD " + uri, e);
 		}
 		XSSchemaSet result = null;
 		try {
 			result = parser.getResult();
 		} catch (SAXException e) {
-			e.printStackTrace();
+			logger.log(Level.WARNING, "Cannot build the schema set of the XSD " + uri, e);
 		}
 		return result;
 	}

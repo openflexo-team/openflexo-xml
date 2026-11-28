@@ -40,13 +40,23 @@
 package org.openflexo.technologyadapter.xml.rm;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
+import org.openflexo.foundation.resource.SaveResourceException;
 import org.openflexo.pamela.annotations.ImplementationClass;
 import org.openflexo.pamela.annotations.ModelEntity;
 import org.openflexo.technologyadapter.xml.model.free.FreeXMLDocument;
 import org.openflexo.technologyadapter.xml.model.free.FreeXMLDocumentBuilder;
 import org.openflexo.technologyadapter.xml.model.free.FreeXMLDocumentFactory;
+import org.openflexo.technologyadapter.xml.model.free.XMLElement;
 
 /**
  * A resource allowing access to a plain XML document without any conformance nor typing
@@ -87,6 +97,67 @@ public interface FreeXMLResource extends XMLResource<FreeXMLDocument, FreeXMLDoc
 			notifyResourceLoaded();
 
 			return resourceData;
+		}
+
+		/**
+		 * Writes the document in UTF-8, one element per line, indented. A free document keeps the local name, the attributes, the text and
+		 * the children of each element: namespaces, comments and processing instructions of the original file are not part of it, so
+		 * they are not written.
+		 */
+		/**
+		 * A document without root element (a new, empty one) is not written: a file without root would not be well-formed XML, and
+		 * could not be loaded again.
+		 */
+		@Override
+		protected void performSave(boolean clearIsModified) throws SaveResourceException {
+			if (resourceData == null || resourceData.getRootElement() == null) {
+				if (logger.isLoggable(Level.FINE)) {
+					logger.fine("Nothing to write for " + this + ": the document has no root element");
+				}
+				return;
+			}
+			super.performSave(clearIsModified);
+		}
+
+		@Override
+		protected void write(OutputStream out) throws IOException, XMLStreamException {
+			OutputStreamWriter outSW = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+			XMLStreamWriter writer = XMLOutputFactory.newInstance().createXMLStreamWriter(outSW);
+			writer.writeStartDocument("UTF-8", "1.0");
+			writeElement(writer, resourceData.getRootElement(), 0);
+			writer.writeCharacters("\n");
+			writer.writeEndDocument();
+			writer.flush();
+			writer.close();
+			outSW.flush();
+		}
+
+		private static void writeElement(XMLStreamWriter writer, XMLElement element, int depth) throws XMLStreamException {
+			writer.writeCharacters("\n" + "  ".repeat(depth));
+			boolean empty = element.getChildElements().isEmpty() && element.getValue() == null;
+			if (empty) {
+				writer.writeEmptyElement(element.getName());
+			}
+			else {
+				writer.writeStartElement(element.getName());
+			}
+			for (String attribute : element.getAttributes()) {
+				Object value = element.getAttributeValue(attribute);
+				writer.writeAttribute(attribute, value != null ? value.toString() : "");
+			}
+			if (empty) {
+				return;
+			}
+			if (element.getValue() != null) {
+				writer.writeCharacters(element.getValue().toString());
+			}
+			for (XMLElement child : element.getChildElements()) {
+				writeElement(writer, child, depth + 1);
+			}
+			if (!element.getChildElements().isEmpty()) {
+				writer.writeCharacters("\n" + "  ".repeat(depth));
+			}
+			writer.writeEndElement();
 		}
 
 	}

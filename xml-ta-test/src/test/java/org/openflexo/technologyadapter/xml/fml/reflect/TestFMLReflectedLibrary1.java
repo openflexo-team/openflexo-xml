@@ -48,7 +48,6 @@ import java.io.FileNotFoundException;
 import java.util.List;
 
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openflexo.foundation.FlexoEditor;
 import org.openflexo.foundation.OpenflexoRuntimeException;
@@ -65,7 +64,6 @@ import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
 import org.openflexo.technologyadapter.xml.rm.FreeXMLResource;
 import org.openflexo.test.OrderedRunner;
 import org.openflexo.test.TestOrder;
-import org.openflexo.test.UITest;
 
 /**
  * Test the creation and some manipulations of a {@link VirtualModel} with {@link FMLControlledDocXVirtualModelNature}<br>
@@ -94,7 +92,6 @@ public class TestFMLReflectedLibrary1 extends OpenflexoProjectAtRunTimeTestCase 
 	 */
 	@Test
 	@TestOrder(1)
-	@Category(UITest.class)
 	public void testLoadViewPoint() throws FileNotFoundException, ResourceLoadingCancelledException, OpenflexoRuntimeException {
 		instanciateTestServiceManager(XMLTechnologyAdapter.class);
 
@@ -132,7 +129,6 @@ public class TestFMLReflectedLibrary1 extends OpenflexoProjectAtRunTimeTestCase 
 
 	@Test
 	@TestOrder(2)
-	@Category(UITest.class)
 	public void testCreateProject() {
 		editor = createStandaloneProject("TestProject");
 		project = (FlexoProject<File>) editor.getProject();
@@ -142,7 +138,6 @@ public class TestFMLReflectedLibrary1 extends OpenflexoProjectAtRunTimeTestCase 
 
 	@Test
 	@TestOrder(3)
-	@Category(UITest.class)
 	public void testCreateInstance() throws FileNotFoundException, ResourceLoadingCancelledException, OpenflexoRuntimeException {
 
 		System.err.println("testCreateInstance()");

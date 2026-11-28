@@ -21,6 +21,7 @@
 package org.openflexo.technologyadapter.xml.rm;
 
 import java.io.IOException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.openflexo.foundation.resource.FlexoResourceCenter;
@@ -106,7 +107,7 @@ public class XSDMetaModelResourceFactory extends AbstractXMLResourceFactory<XSDM
 	
 			return returned;
 		} catch (ModelDefinitionException e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "Cannot create an XSD metamodel resource", e);
 		}
 		return null;
 	}*/

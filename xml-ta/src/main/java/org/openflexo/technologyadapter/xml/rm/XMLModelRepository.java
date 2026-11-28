@@ -39,6 +39,9 @@
 
 package org.openflexo.technologyadapter.xml.rm;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.openflexo.foundation.resource.FlexoResourceCenter;
 import org.openflexo.foundation.technologyadapter.ModelRepository;
 import org.openflexo.pamela.annotations.ModelEntity;
@@ -70,7 +73,7 @@ public interface XMLModelRepository<I>
 			newRepository.getRootFolder().setRepositoryContext(resourceCenter.getLocales().localizedForKey("[XMLModels]"));
 			return newRepository;
 		} catch (ModelDefinitionException e) {
-			e.printStackTrace();
+			Logger.getLogger(XMLModelRepository.class.getPackage().getName()).log(Level.SEVERE, "Cannot create a XMLModelRepository", e);
 		}
 		return null;
 	}

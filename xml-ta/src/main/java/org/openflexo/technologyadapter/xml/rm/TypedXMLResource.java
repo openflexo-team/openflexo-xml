@@ -39,20 +39,13 @@
 
 package org.openflexo.technologyadapter.xml.rm;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.xml.stream.XMLStreamException;
-
 import org.openflexo.foundation.OpenflexoRuntimeException;
-import org.openflexo.foundation.resource.FileIODelegate;
-import org.openflexo.foundation.resource.FileWritingLock;
 import org.openflexo.foundation.resource.ResourceLoadingCancelledException;
 import org.openflexo.foundation.resource.SaveResourceException;
 import org.openflexo.foundation.technologyadapter.FlexoModelResource;
@@ -63,7 +56,6 @@ import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
 import org.openflexo.technologyadapter.xml.model.typed.XMLModelBuilder;
 import org.openflexo.technologyadapter.xml.model.typed.XMLModelFactory;
-import org.openflexo.toolbox.FileUtils;
 
 /**
  * A resource allowing access to an XML document conform to an XSD grammar (its metamodel)
@@ -120,88 +112,37 @@ public interface TypedXMLResource extends XMLResource<XMLModel, XMLModelFactory>
 
 			try {
 				return getResourceData();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (ResourceLoadingCancelledException e) {
-				e.printStackTrace();
-			} catch (OpenflexoRuntimeException e) {
-				e.printStackTrace();
+			} catch (FileNotFoundException | ResourceLoadingCancelledException | OpenflexoRuntimeException e) {
+				logger.log(Level.WARNING, "Cannot load " + this, e);
 			}
 			return null;
 
 		}
 
-		protected void _saveResourceData(boolean clearIsModified) throws SaveResourceException {
-
-			if (getFlexoIOStreamDelegate() == null) {
-				throw new SaveResourceException(getIODelegate());
-			}
-
-			FileWritingLock lock = getFlexoIOStreamDelegate().willWriteOnDisk();
-
-			if (logger.isLoggable(Level.INFO)) {
-				logger.info("Saving resource " + this + " : " + getIODelegate().getSerializationArtefact());
-			}
-
-			if (getFlexoIOStreamDelegate() instanceof FileIODelegate) {
-				File temporaryFile = null;
-				try {
-					File fileToSave = ((FileIODelegate) getFlexoIOStreamDelegate()).getFile();
-					// Make local copy
-					makeLocalCopy(fileToSave);
-					// Using temporary file
-					temporaryFile = ((FileIODelegate) getIODelegate()).createTemporaryArtefact(".pdf");
-					if (logger.isLoggable(Level.FINE)) {
-						logger.finer("Creating temp file " + temporaryFile.getAbsolutePath());
-					}
-					try (FileOutputStream fos = new FileOutputStream(temporaryFile)) {
-						write(fos);
-					}
-					System.out.println("Renamed " + temporaryFile + " to " + fileToSave);
-					FileUtils.rename(temporaryFile, fileToSave);
-				} catch (Exception e) {
-					e.printStackTrace();
-					if (temporaryFile != null) {
-						temporaryFile.delete();
-					}
-					if (logger.isLoggable(Level.WARNING)) {
-						logger.warning("Failed to save resource " + this);
-					}
-					getFlexoIOStreamDelegate().hasWrittenOnDisk(lock);
-					throw new SaveResourceException(getIODelegate(), e);
+		/**
+		 * Saving a typed XML document is not supported yet (XML-D-4): {@link XMLWriter} predates the current model (single and multiple
+		 * property values, sub-elements held both as children and as object property values) and the order of the elements required
+		 * by the XSD is not kept. The file is left as it is and a warning says so; no exception is raised, so that saving a project
+		 * goes on with its other resources. The change made in memory is lost when the resource is unloaded.
+		 */
+		@Override
+		protected void performSave(boolean clearIsModified) throws SaveResourceException {
+			if (resourceData == null || resourceData.getRoot() == null) {
+				if (logger.isLoggable(Level.FINE)) {
+					logger.fine("Nothing to write for " + this + ": the document has no root");
 				}
+				return;
 			}
-			else {
-				try {
-					write(getOutputStream());
-				} catch (Exception e) {
-					e.printStackTrace();
-					if (logger.isLoggable(Level.WARNING)) {
-						logger.warning("Failed to save resource " + this);
-					}
-					getFlexoIOStreamDelegate().hasWrittenOnDisk(lock);
-					throw new SaveResourceException(getIODelegate(), e);
-				}
-			}
-
-			getFlexoIOStreamDelegate().hasWrittenOnDisk(lock);
-			if (clearIsModified) {
-				notifyResourceStatusChanged();
-			}
+			logger.warning("Typed XML documents (conform to an XSD) cannot be saved yet: " + getIODelegate().getSerializationArtefact()
+					+ " is left unchanged, the changes made in Openflexo are not written");
 		}
 
-		private void write(OutputStream out) throws IOException, XMLStreamException, ResourceLoadingCancelledException, OpenflexoRuntimeException {
-			System.out.println("Writing xml file in : " + getIODelegate().getSerializationArtefact());
-			try (OutputStreamWriter outSW = new OutputStreamWriter(out, "UTF-8")) {
-				XMLWriter<TypedXMLResource, XMLModel> writer = new XMLWriter<>(this, outSW);
-				writer.writeDocument();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-				throw new SaveResourceException(getIODelegate());
-			} finally {
-				out.close();
-			}
-			System.out.println("Wrote : " + getIODelegate().getSerializationArtefact());
+		/**
+		 * Not used while {@link #performSave(boolean)} does not write (XML-D-4).
+		 */
+		@Override
+		protected void write(OutputStream out) throws Exception {
+			throw new UnsupportedOperationException("Saving a typed XML document is not supported yet");
 		}
 
 	}

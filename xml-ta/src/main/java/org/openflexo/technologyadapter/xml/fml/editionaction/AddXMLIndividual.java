@@ -71,8 +71,11 @@ import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
 import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
 
 /**
- * @author xtof
+ * Edition action creating a new {@link XMLIndividual} of a given XSD type in the typed XML document of an {@link XMLModelSlot}, its data
+ * properties set by {@link XMLDataPropertyAssertion}s. Known defect: with a model slot the URI of the new individual cannot be computed,
+ * so the action fails (XML-D-2).
  * 
+ * @author xtof
  */
 
 @ModelEntity

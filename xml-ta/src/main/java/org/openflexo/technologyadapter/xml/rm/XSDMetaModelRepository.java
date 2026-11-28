@@ -38,6 +38,9 @@
 
 package org.openflexo.technologyadapter.xml.rm;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.openflexo.foundation.resource.FlexoResourceCenter;
 import org.openflexo.foundation.technologyadapter.MetaModelRepository;
 import org.openflexo.pamela.annotations.ModelEntity;
@@ -69,7 +72,7 @@ public interface XSDMetaModelRepository<I>
 			newRepository.getRootFolder().setRepositoryContext(resourceCenter.getLocales().localizedForKey("[XSDMetamodels]"));
 			return newRepository;
 		} catch (ModelDefinitionException e) {
-			e.printStackTrace();
+			Logger.getLogger(XSDMetaModelRepository.class.getPackage().getName()).log(Level.SEVERE, "Cannot create a XSDMetaModelRepository", e);
 		}
 		return null;
 	}

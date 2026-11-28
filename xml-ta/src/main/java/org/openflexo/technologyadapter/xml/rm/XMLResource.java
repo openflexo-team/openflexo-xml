@@ -38,11 +38,18 @@
 
 package org.openflexo.technologyadapter.xml.rm;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.openflexo.foundation.resource.FileIODelegate;
+import org.openflexo.foundation.resource.FileWritingLock;
 import org.openflexo.foundation.resource.PamelaResource;
 import org.openflexo.foundation.resource.PamelaResourceImpl;
 import org.openflexo.foundation.resource.ResourceData;
+import org.openflexo.foundation.resource.SaveResourceException;
 import org.openflexo.foundation.technologyadapter.TechnologyAdapterResource;
 import org.openflexo.pamela.annotations.Getter;
 import org.openflexo.pamela.annotations.ImplementationClass;
@@ -53,6 +60,7 @@ import org.openflexo.technologyadapter.xml.XMLTechnologyAdapter;
 import org.openflexo.technologyadapter.xml.XMLTechnologyContextManager;
 import org.openflexo.technologyadapter.xml.model.AbstractXMLDocument;
 import org.openflexo.technologyadapter.xml.model.AbstractXMLDocumentFactory;
+import org.openflexo.toolbox.FileUtils;
 
 /**
  * An XML resource, typically represented as an .xml file<br>
@@ -86,6 +94,67 @@ public interface XMLResource<RD extends AbstractXMLDocument<RD>, F extends Abstr
 			extends PamelaResourceImpl<RD, F> implements XMLResource<RD, F> {
 
 		protected static final Logger logger = Logger.getLogger(XMLResourceImpl.class.getPackage().getName());
+
+		/**
+		 * Writes the resource data, as an XML document, to the supplied stream. The stream is closed by the caller.
+		 * 
+		 * @param out
+		 *            the stream receiving the document
+		 * @throws Exception
+		 *             when the document cannot be written
+		 */
+		protected abstract void write(OutputStream out) throws Exception;
+
+		/**
+		 * Saves the document: in a file, through a temporary file renamed at the end (the file is never left half-written); otherwise
+		 * in the output stream of the I/O delegate.
+		 */
+		@Override
+		protected void performSave(boolean clearIsModified) throws SaveResourceException {
+			if (getFlexoIOStreamDelegate() == null) {
+				throw new SaveResourceException(getIODelegate());
+			}
+
+			FileWritingLock lock = getFlexoIOStreamDelegate().willWriteOnDisk();
+
+			if (logger.isLoggable(Level.INFO)) {
+				logger.info("Saving resource " + this + " : " + getIODelegate().getSerializationArtefact());
+			}
+
+			try {
+				if (getFlexoIOStreamDelegate() instanceof FileIODelegate) {
+					File temporaryFile = null;
+					try {
+						File fileToSave = ((FileIODelegate) getFlexoIOStreamDelegate()).getFile();
+						makeLocalCopy(fileToSave);
+						temporaryFile = ((FileIODelegate) getIODelegate()).createTemporaryArtefact(XML_FILE_EXTENSION);
+						try (FileOutputStream fos = new FileOutputStream(temporaryFile)) {
+							write(fos);
+						}
+						FileUtils.rename(temporaryFile, fileToSave);
+						if (logger.isLoggable(Level.FINE)) {
+							logger.fine("Renamed " + temporaryFile + " to " + fileToSave);
+						}
+					} catch (Exception e) {
+						if (temporaryFile != null) {
+							temporaryFile.delete();
+						}
+						logger.log(Level.WARNING, "Failed to save resource " + this, e);
+						throw new SaveResourceException(getIODelegate(), e);
+					}
+				}
+				else {
+					try (OutputStream out = getOutputStream()) {
+						write(out);
+					} catch (Exception e) {
+						logger.log(Level.WARNING, "Failed to save resource " + this, e);
+						throw new SaveResourceException(getIODelegate(), e);
+					}
+				}
+			} finally {
+				getFlexoIOStreamDelegate().hasWrittenOnDisk(lock);
+			}
+		}
 
 	}
 

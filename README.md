@@ -9,6 +9,7 @@ Connects FML to XML documents: free documents navigated element by element, and 
 | Technology | XML and XML Schema (XSD), through XSOM |
 | Libraries | `xsom` 4.0.9 |
 | Family | `DOC` · `R/W` (see the classification of `openflexo-technology-adapters/TA-CATALOG.md`) |
+| Saving | free documents are written back (without namespaces nor comments, `XML-D-6`); typed documents and XSD metamodels are not written: their save leaves the file unchanged with a warning (`XML-D-4`) |
 | Resource factories | `XSDMetaModelResourceFactory` (.xsd), `TypedXMLResourceFactory` (.xml), `FreeXMLResourceFactory` |
 | Test resource center | `http://openflexo.org/xml-test` |
 
@@ -43,6 +44,7 @@ public model TestFMLReflect1 {
 ```
 
 Scripts: `xml-ta-test-rc/…/TestResourceCenter/AutomatedTests/`, `xml-ta-test-rc/…/TestResourceCenter/XMLErrorKinds/`.
+Save: `TestXMLRoundTrip` (xml-ta-test) makes the round trip of a free document in a resource center of its own.
 
 ## Modules
 

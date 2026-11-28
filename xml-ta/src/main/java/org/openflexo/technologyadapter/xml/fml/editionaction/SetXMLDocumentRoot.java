@@ -60,6 +60,10 @@ import org.openflexo.technologyadapter.xml.fml.XMLActorReference;
 import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
 import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
 
+/**
+ * Edition action setting the root of the typed XML document of its receiver to the {@link XMLIndividual} given as parameter, and
+ * returning it.
+ */
 @ModelEntity
 @ImplementationClass(SetXMLDocumentRoot.SetXMLDocumentRootImpl.class)
 @Imports({ @Import(XMLActorReference.class), })
